@@ -21,6 +21,7 @@ day = len(close)
 
 
 
+
 ma20 = []
 BBands_up = []
 BBands_down = []

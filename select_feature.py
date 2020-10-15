@@ -14,3 +14,15 @@ for i in range(0,len(choose_feature)):
     new_df = pd.concat([new_df, df.iloc[:,choose_feature[i]]], axis=1)
 
 new_df.columns
+
+
+str_in = input("Whic feature you want to choose？")
+year = eval(input("Input your year?"))
+
+if str_in.lower() == "all":
+    new_df = df
+else:
+    choose_feature = [int(n) for n in str_in.split()]
+    new_df = df[['Date', 'Close']]
+    for i in range(0,len(choose_feature)):
+        new_df = pd.concat([new_df, df.iloc[:, choose_feature[i]]], axis=1)
