@@ -16,6 +16,7 @@ import tensorflow as tf
 from keras.layers import LSTM,Dropout,Dense
 from tensorflow.keras.callbacks import EarlyStopping
 from neupy import algorithms
+from feature_list import chose_list
 
 # 控制顯卡內核
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
@@ -32,19 +33,26 @@ def get_result(path,fd,fd_2):
     year = fd_2.strip(f'{fd}')
     year = int(year.strip('_.csv'))
 
+    #get feature list
+    feature_list = chose_list(fd_2)
+
+    new_df = df[['Date', 'Close']]
+    for i in range(0, len(feature_list)):
+        new_df = pd.concat([new_df, df.iloc[:, feature_list[i]]], axis=1)
+
     split_no = 0
     while date_array.iloc[split_no] < datetime(year, 11, 1, 0, 0):
         split_no +=1
     print(split_no)
 
-    df.drop(['Date'] ,axis=1 ,inplace=True)
-    df.head(5)
+    new_df.drop(['Date'] ,axis=1 ,inplace=True)
+    new_df.head(5)
 
     sc_df = MinMaxScaler(feature_range=(0, 1))
-    df = sc_df.fit_transform(df)
+    new_df = sc_df.fit_transform(new_df)
 
-    train_set = df[:split_no, :]
-    test_set = df[split_no:, :]
+    train_set = new_df[:split_no, :]
+    test_set = new_df[split_no:, :]
 
     train_data = train_set[:, 1:]
     train_label = train_set[:, 0]
@@ -60,7 +68,7 @@ def get_result(path,fd,fd_2):
 
 
     new_test_label = []
-    all_length = len(df)
+    all_length = len(new_df)
     n = split_no
 
     for i in range(0, all_length - split_no):
@@ -149,10 +157,4 @@ finish_time = time.time()
 print('Total times : {:.3f}'.format(finish_time-start_time))
 
 output.to_csv(os.path.join(path, 'GRNN_result.csv'), index=0, header=1)
-
-from sklearn.ensemble import RandomForestClassifier
-from xgboost import XGBModel
-
-from statsmodels.tsa.arima_model import ARIMA
-model = ARIMA()
 

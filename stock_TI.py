@@ -51,7 +51,7 @@ for fd in os.listdir(dir_path):
 
         ma20 = pd.DataFrame(ma20)
         data = pd.concat([data, ma20], axis=1)
-        data = data.rename(columns={0: 'Ma20'})
+        data = data.rename(columns={0: 'MA_20'})
 
         BBands_up = pd.DataFrame(BBands_up)
         data = pd.concat([data, BBands_up], axis=1)
