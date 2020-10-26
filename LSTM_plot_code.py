@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 from tensorflow.keras.callbacks import EarlyStopping
 from keras.layers import LSTM,Dropout,Dense
 import tensorflow as tf
+from sklearn.preprocessing import StandardScaler
 
 # 控制顯卡內核
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
@@ -25,71 +26,42 @@ config.gpu_options.allow_growth = True
 sess0 = tf.compat.v1.InteractiveSession(config=config)
 
 fd_path = 'D:/Time_Series_Research/new_data/GSPC/GSPC_2012.csv'
-df = pd.read_csv(fd_path,sep=',',header=0)
-date_array = pd.to_datetime(df['Date'] )
-print("Number of rows and columns:", df.shape)
+data = pd.read_csv(fd_path, sep=',', header=0)
+date_array = pd.to_datetime(data['Date'])
+print("Number of rows and columns:", data.shape)
 
 id = 0
-while date_array.iloc[id] < datetime(2000, 11, 1, 0, 0):
+while date_array.iloc[id] < datetime(2012, 11, 1, 0, 0):
     id +=1
 print(id)
 
-df.drop(['Date'] ,axis=1 ,inplace=True)
-df.head(5)
+data.drop(['Date'], axis=1, inplace=True)
+data.head(5)
 
 
-sc_df = MinMaxScaler(feature_range = (0, 1))
-df = sc_df.fit_transform(df)
+# sc_df = MinMaxScaler(feature_range = (0, 1))
+# data = sc_df.fit_transform(data)
 
-train_set = df[:id,:]
-test_set = df[id:, :]
+train_set = data.iloc[:id, :]
+test_set = data.iloc[id:, :]
 
-train_data = train_set[:,1:]
-train_label = train_set[:,0]
-test_data = test_set[:,1:]
-test_label = test_set[:,0]
+train_data = train_set.iloc[:,1:]
+train_label = train_set.iloc[:,0]
+test_data = test_set.iloc[:,1:]
+test_label = test_set.iloc[:,0]
 
-train_data = train_data.reshape((train_data.shape[0], train_data.shape[1], 1))
-train_label = train_label.reshape(train_label.shape[0], 1)
-test_data = test_data.reshape((test_data.shape[0], test_data.shape[1], 1))
+s_scaler = StandardScaler()
+train_data = s_scaler.fit_transform(train_data.astype(np.float))
+test_data = s_scaler.fit_transform(test_data.astype(np.float))
+#
+# train_data = train_data.reshape((train_data.shape[0], train_data.shape[1], 1))
+# train_label = train_label.reshape(train_label.shape[0], 1)
+# test_data = test_data.reshape((test_data.shape[0], test_data.shape[1], 1))
 
 print(f"Train_data shape : {train_data.shape}\n"
       f"Train_label shape :{train_label.shape}\n"
       f"Test_data shape :{test_data.shape}\n"
       f"Test_label shape :{test_label.shape}")
-
-# training_set = df.iloc[:id,:]
-# test_set = df.iloc[id:,:]
-# training_set, test_set = np.array(training_set), np.array(test_set)
-#
-# #訓練資列統一做歸一後再拆分
-# sc_train = MinMaxScaler(feature_range = (0, 1))
-#
-# training_set_scaled = sc_train.fit_transform(training_set)
-#
-# train_data = training_set_scaled[:, 1:]
-# train_label = training_set_scaled[:, 0]
-#
-# #測試資料先拆分在做歸一化
-# test_data = test_set[:,1:]
-# test_label = test_set[:,0]
-#
-# #label先做reshape
-# train_label = train_label.reshape(train_label.shape[0], 1)
-# test_label = test_label.reshape(test_label.shape[0],1)
-#
-# sc_test_data = MinMaxScaler(feature_range = (0, 1))
-# test_data = sc_test_data.fit_transform(test_data)
-#
-# sc_test_label = MinMaxScaler(feature_range = (0, 1))
-# test_label = sc_test_label.fit_transform(test_label)
-#
-# #reshape
-# train_data = train_data.reshape((train_data.shape[0], train_data.shape[1], 1))
-# test_data = test_data.reshape((test_data.shape[0],test_data.shape[1],1))
-
-# inputs = (training_data.shape[1],training_data.shape[2])
-# model = load_model('D:/Data/Model_LSTM.h5')
 
 custom_early_stopping = EarlyStopping(
     monitor='loss',

@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 from tensorflow.keras.callbacks import EarlyStopping
 from keras.layers import LSTM, Dropout, Dense
 import tensorflow as tf
+from sklearn.preprocessing import StandardScaler
 
 # 控制顯卡內核
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
@@ -52,6 +53,21 @@ print(split_no)
 new_df.drop(['Date'], axis=1, inplace=True)
 new_df.head(5)
 
+# train_set = new_df.iloc[:split_no, :]
+# test_set = new_df.iloc[split_no:, :]
+#
+# train_data = train_set.iloc[:,1:]
+# train_label = train_set.iloc[:,0]
+# test_data = test_set.iloc[:,1:]
+# test_label = test_set.iloc[:,0]
+#
+# train_label = np.array(train_label)
+# test_label = np.array(test_label)
+#
+# s_scaler = StandardScaler()
+# train_data = s_scaler.fit_transform(train_data.astype(np.float))
+# test_data = s_scaler.fit_transform(test_data.astype(np.float))
+#
 sc_df = MinMaxScaler(feature_range = (0, 1))
 new_df = sc_df.fit_transform(new_df)
 
@@ -133,13 +149,12 @@ new_test_set = np.concatenate([test_data,new_test_label],axis = 1)
 new_test_set = sc_df.inverse_transform(new_test_set)
 new_test_label = new_test_set[:,new_test_set.shape[1]-1]
 
-test_set = sc_df.inverse_transform(test_set)
-test_label = test_set[:,0]
+test_label = df.Close[split_no:]
 
 testScore = sqrt(mean_squared_error(test_label, new_test_label))
 print('Test RMSE: %.4f' % (testScore))
 
-mape = sum(np.abs((test_label - new_test_label)/test_label))/n*100
+mape = np.mean(np.abs((test_label - new_test_label)/test_label) )*100
 print('Test MAPE: %.4f' % (mape))
 
 flg ,ax = plt.subplots(1,1)
