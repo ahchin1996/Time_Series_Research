@@ -37,8 +37,8 @@ model.add(layers.Dense(1, activation="sigmoid"))
 
 model.summary()
 print(X_train.shape,y_train.shape,X_test.shape,y_test.shape)
-model.compile(optimizer='rmsprop', loss='mean_squared_error', metrics=['mae'])
-model.fit(X_train, y_train, epochs=100, batch_size=128, verbose=2, shuffle=False, callbacks=[early_stopping])
+model.compile(optimizer='rmsprop', loss='mean_squared_error', metrics=['accuracy'])
+history = model.fit(X_train, y_train,validation_split=0.2, epochs=100, batch_size=128, verbose=2, shuffle=False, callbacks=[early_stopping])
 testPredict = model.predict(X_test)
 
 y_test = y_test.reshape(y_test.shape[0],1)
@@ -46,6 +46,14 @@ y_test = y_test.reshape(y_test.shape[0],1)
 rmse = sqrt(mean_squared_error(y_test, testPredict))
 print('Test RMSE: %.4f' % (rmse))
 
-mape = sum(np.abs((y_test - testPredict) / y_test)) / 164 * 100
+mape = np.mean(np.abs((y_test - testPredict) / y_test))  * 100
 print('Test MAPE: %.4f' % (mape))
+
+loss, accuracy = model.evaluate(X_test, y_test)
+
+import matplotlib.pyplot as plt
+plt.plot(history.history['loss'], label='train')
+plt.plot(history.history['val_loss'], label='test')
+plt.legend()
+plt.show()
 
