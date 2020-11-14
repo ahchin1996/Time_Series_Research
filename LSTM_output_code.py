@@ -15,7 +15,6 @@ from sklearn.metrics import mean_squared_error
 import tensorflow as tf
 from keras.layers import LSTM,Dropout,Dense
 
-
 # 控制顯卡內核
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 config = tf.compat.v1.ConfigProto(allow_soft_placement=True)

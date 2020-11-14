@@ -4,14 +4,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime 
 
-dir_path = 'D:/Data/DJI/'
-# 輸出資料夾
-output_dor_path ='D:/task/01.liver-disorders/03.Kmeans_cluster_result/2/eva_part2_new_label_upade'
-
 test_dir = 'D:/Time_Series_Research/new_data/^DJI.csv'
 data = pd.read_csv(test_dir,sep=",",header=0)
 close = data['Close']
 day = len(close)
+data['Date'] = pd.to_datetime(data['Date'] )
 
 #Ma5
 
@@ -20,48 +17,76 @@ def gettMA(priceData, period):
     return ma
 
 data['MA_5'] = gettMA(data.Close, 5)
-
+data["MA_20"] = gettMA(data.Close,20)
+data["B_up"] = data.MA_20 + data.Close.rolling(20).std().fillna(0) * 2
+data["B_down"] = data.MA_20 - data.Close.rolling(20).std().fillna(0) * 2
 #布林通道Ma20
 # data['MA_20'] = gettMA(close,20)
 
-ma20 = []
-BBands_up = []
-BBands_down = []
-for i in range(19):
-    ma20.append(None)
-    BBands_up.append(None)
-    BBands_down.append(None)
+# ma20 = []
+# BBands_up = []
+# BBands_down = []
+# for i in range(19):
+#     ma20.append(None)
+#     BBands_up.append(None)
+#     BBands_down.append(None)
+#
+# for i in range(day-19):
+#     BBands = []
+#     price = 0
+#     bu = 0
+#     bd = 0
+#     for j in range(20):
+#         price = price + close[i+j]
+#         BBands.append(close[i+j])
+#
+#     BBands = pd.DataFrame(BBands)
+#     sd = BBands.std()
+#     price = BBands.mean()
+#     bu = price[0] + 2*sd[0]
+#     bd = price[0] - 2*sd[0]
+#     ma20.append(price[0])
+#     BBands_up.append(bu)
+#     BBands_down.append(bd)
+#
+# ma20 = pd.DataFrame(ma20)
+# data = pd.concat([data,ma20],axis = 1)
+# data = data.rename(columns = {0:'MA_20'})
+#
+# BBands_up = pd.DataFrame(BBands_up)
+# data = pd.concat([data,BBands_up],axis = 1)
+# data = data.rename(columns = {0:'BBands_up'})
+#
+# BBands_down = pd.DataFrame(BBands_down)
+# data = pd.concat([data,BBands_down],axis = 1)
+# data = data.rename(columns = {0:'BBands_down'})
 
-for i in range(day-19):
-    BBands = []
-    price = 0
-    bu = 0
-    bd = 0
-    for j in range(20):
-        price = price + close[i+j]
-        BBands.append(close[i+j])
-        
-    BBands = pd.DataFrame(BBands)
-    sd = BBands.std()
-    price = BBands.mean()
-    bu = price[0] + 2*sd[0]
-    bd = price[0] - 2*sd[0]
-    ma20.append(price[0])
-    BBands_up.append(bu)
-    BBands_down.append(bd)
-    
-ma20 = pd.DataFrame(ma20)
-data = pd.concat([data,ma20],axis = 1)
-data = data.rename(columns = {0:'MA_20'})
+d1 = datetime(2000, 1, 1, 0, 0)
+d2 = datetime(2000, 12, 31, 0, 0)
+df = data[(data['Date'] > d1) & (data['Date'] < d2)]
 
-BBands_up = pd.DataFrame(BBands_up)
-data = pd.concat([data,BBands_up],axis = 1)
-data = data.rename(columns = {0:'BBands_up'})
+flg ,ax = plt.subplots(1,1)
+plt.plot(df["Date"], df['B_up'],label = 'B_up')
+plt.plot(df["Date"], df['MA_20'],color = 'red', label = 'MA_20')
+plt.plot(df["Date"], df['B_down'],label = 'B_down')
+plt.title('Stock Price Prediction')
+plt.xlabel('Time')
+plt.xticks(rotation = 30)
+plt.ylabel('Stock Price')
+plt.legend(loc = 'best')
+plt.show()
 
-BBands_down = pd.DataFrame(BBands_down)
-data = pd.concat([data,BBands_down],axis = 1)
-data = data.rename(columns = {0:'BBands_down'})
-    
+flg ,ax = plt.subplots(1,1)
+plt.plot(df["Date"], df['BBands_up'],label = 'B_up')
+plt.plot(df["Date"], df['MA_20'],color = 'red', label = 'MA_20')
+plt.plot(df["Date"], df['BBands_down'],label = 'B_down')
+plt.title('Stock Price Prediction')
+plt.xlabel('Time')
+plt.xticks(rotation = 30)
+plt.ylabel('Stock Price')
+plt.legend(loc = 'best')
+plt.show()
+
 #RSI
 rsi = []
 for i in range(6):
@@ -235,7 +260,7 @@ ax[0].set(**prop0)
 # ax[0].set_xticklabels(['2011.1','2011.4','2011.7','2011.10','2011.12'],rotation = 20,fontsize = 'small')
 ax[0].legend(loc = 'upper left')
 
-data['EMA_12'].plot(ax=ax[1])
+data['BB'].plot(ax=ax[1])
 data['EMA_26'].plot(ax=ax[1])
 data['Close'].plot(ax=ax[1])
 ax[1].set_xlabel('Time')
@@ -286,3 +311,6 @@ a = int(a.strip(f'^{fd}_.csv'))
 # df.isnull().sum()
 # df.describe()
 # df.info()
+
+
+

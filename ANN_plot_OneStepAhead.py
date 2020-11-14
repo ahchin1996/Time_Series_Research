@@ -149,8 +149,6 @@ print('Test RMSE: %.4f' % (testScore))
 mape = sum(np.abs((test_label - new_test_label)/test_label))/n*100
 print('Test MAPE: %.4f' % (mape))
 
-
-
 flg ,ax = plt.subplots(1,1 ,)
 plt.plot(date_array[split_no:], test_label, color ='red', label ='Real Stock Price')
 plt.plot(date_array[split_no:], new_test_label, color ='blue', label ='Predicted Stock Price')

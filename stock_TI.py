@@ -23,43 +23,9 @@ for fd in os.listdir(dir_path):
         data['MA_5'] = gettMA(close, 5)
 
         # Bollinger Bands (Ma20)
-        ma20 = []
-        BBands_up = []
-        BBands_down = []
-        for i in range(19):
-            ma20.append(0)
-            BBands_up.append(0)
-            BBands_down.append(0)
-
-        for i in range(day - 19):
-            BBands = []
-            price = 0
-            bu = 0
-            bd = 0
-            for j in range(20):
-                price = price + close[i + j]
-                BBands.append(close[i + j])
-                
-            BBands = pd.DataFrame(BBands)
-            sd = BBands.std()
-            price = BBands.mean()
-            bu = price[0] + 2 * sd[0]
-            bd = price[0] - 2 * sd[0]
-            ma20.append(price[0])
-            BBands_up.append(bu)
-            BBands_down.append(bd)
-
-        ma20 = pd.DataFrame(ma20)
-        data = pd.concat([data, ma20], axis=1)
-        data = data.rename(columns={0: 'MA_20'})
-
-        BBands_up = pd.DataFrame(BBands_up)
-        data = pd.concat([data, BBands_up], axis=1)
-        data = data.rename(columns={0: 'BBands_up'})
-
-        BBands_down = pd.DataFrame(BBands_down)
-        data = pd.concat([data, BBands_down], axis=1)
-        data = data.rename(columns={0: 'BBands_down'})
+        data["MA_20"] = gettMA(data.Close, 20)
+        data["BBands_up"] = data.MA_20 + data.Close.rolling(20).std().fillna(0) * 2
+        data["BBands_down"] = data.MA_20 - data.Close.rolling(20).std().fillna(0) * 2
 
         # RSI Relative Strength Index
         rsi = []
