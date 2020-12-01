@@ -16,7 +16,8 @@ import matplotlib.pyplot as plt
 from tensorflow.keras.callbacks import EarlyStopping
 from keras.layers import LSTM, Dropout, Dense
 import tensorflow as tf
-from sklearn.preprocessing import StandardScaler
+from feature_list import chose_list
+
 
 # 控制顯卡內核
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
@@ -28,17 +29,20 @@ sess0 = tf.compat.v1.InteractiveSession(config=config)
 
 fd_path =  'D:/Time_Series_Research/new_data/TWII/TWII_2008.csv'
 df = pd.read_csv(fd_path, sep=',', header=0)
+fd_2 = "TWII_2008.csv"
 
 str_in = input("Which feature do you want to choose？")
-year = eval(input("Input your year?"))
+year = eval(input("Enter year？"))
+fd_2 = fd_2.strip(f'{".csv"}')
+
 
 if str_in.lower() == "all":
     new_df = df
 else:
-    choose_feature = [int(n) for n in str_in.split()]
+    feature_list = chose_list(fd_2)
     new_df = df[['Date', 'Close']]
-    for i in range(0,len(choose_feature)):
-        new_df = pd.concat([new_df, df.iloc[:, choose_feature[i]]], axis=1)
+    for i in range(0, len(feature_list)):
+        new_df = pd.concat([new_df, df.iloc[:, feature_list[i]]], axis=1)
 
 new_df.columns
 
@@ -53,21 +57,6 @@ print(split_no)
 new_df.drop(['Date'], axis=1, inplace=True)
 new_df.head(5)
 
-# train_set = new_df.iloc[:split_no, :]
-# test_set = new_df.iloc[split_no:, :]
-#
-# train_data = train_set.iloc[:,1:]
-# train_label = train_set.iloc[:,0]
-# test_data = test_set.iloc[:,1:]
-# test_label = test_set.iloc[:,0]
-#
-# train_label = np.array(train_label)
-# test_label = np.array(test_label)
-#
-# s_scaler = StandardScaler()
-# train_data = s_scaler.fit_transform(train_data.astype(np.float))
-# test_data = s_scaler.fit_transform(test_data.astype(np.float))
-#
 sc_df = MinMaxScaler(feature_range = (0, 1))
 new_df = sc_df.fit_transform(new_df)
 

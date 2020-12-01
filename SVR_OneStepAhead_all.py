@@ -1,20 +1,14 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jul 22 22:19:16 2020
-
-@author: cooke
-"""
 from datetime import datetime
 import os
 from math import sqrt
 import pandas as pd
 import numpy as np
-from keras.models import Sequential
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
 import tensorflow as tf
-from keras.layers import LSTM,Dropout,Dense
-from tensorflow.keras.callbacks import EarlyStopping
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVR
 from feature_list import chose_list
 
 # 控制顯卡內核
@@ -30,27 +24,24 @@ def get_result(path,fd,fd_2):
     date_array = pd.to_datetime(df_all['Date'] )
     print("Number of rows and columns:", df_all.shape)
 
-    feature_list = chose_list(fd_2)
-    df = df_all[['Date', 'Close']]
-    for i in range(0, len(feature_list)):
-        df = pd.concat([df, df_all.iloc[:, feature_list[i]]], axis=1)
+    new_df = df_all
 
     year = fd_2.strip(f'{fd}')
     year = int(year.strip('_.csv'))
 
     split_no = 0
     while date_array.iloc[split_no] < datetime(year, 11, 1, 0, 0):
-        split_no +=1
+        split_no += 1
     print(split_no)
 
-    df.drop(['Date'] ,axis=1 ,inplace=True)
-    df.head(5)
+    new_df.drop(['Date'], axis=1, inplace=True)
+    new_df.head(5)
 
     sc_df = MinMaxScaler(feature_range=(0, 1))
-    df = sc_df.fit_transform(df)
+    new_df = sc_df.fit_transform(new_df)
 
-    train_set = df[:split_no, :]
-    test_set = df[split_no:, :]
+    train_set = new_df[:split_no, :]
+    test_set = new_df[split_no:, :]
 
     train_data = train_set[:, 1:]
     train_label = train_set[:, 0]
@@ -61,67 +52,38 @@ def get_result(path,fd,fd_2):
           f"Train_label shape :{train_label.shape}\n"
           f"Test_data shape :{test_data.shape}\n"
           f"Test_label shape :{test_label.shape}")
-    
 
-    custom_early_stopping = EarlyStopping(
-        monitor='loss',
-        patience=30,
-        min_delta=0.01,
-        mode='auto'
-    )
-
-    model = Sequential()
-    model.add(LSTM(units=50, return_sequences=True, input_shape=(train_data.shape[1], 1)))
-    model.add(Dropout(0.2))
-    model.add(LSTM(units=50, return_sequences=True))
-    model.add(Dropout(0.2))
-    model.add(LSTM(units=50, return_sequences=True))
-    model.add(Dropout(0.2))
-    model.add(LSTM(units=50))
-    model.add(Dropout(0.2))
-    model.add(Dense(units=1))
-
-
-    model.compile(optimizer='adam', loss='mean_squared_error', metrics=['accuracy'])
-
-    model.summary()
+    # Build the SVR model
+    regressor = SVR(kernel='linear', gamma='auto', epsilon=0.01, C=6, verbose=3)
 
     new_test_label = []
-    all_length = len(df)
+    all_length = len(new_df)
 
     for i in range(0, all_length - split_no):
         print()
-        print(f"No. {i} Model training!  Total number of Training times {all_length - split_no}!\n")
-        print(fd_2 + '\n')
+        print(f"No. {i + 1} Model training! Total number of times {all_length - split_no}!\n")
+        print(path + "\n")
         # training model
         a = train_data
         b = train_label
-        a = a.reshape((a.shape[0], a.shape[1], 1))
-        b = b.reshape(b.shape[0], 1)
-        print(a.shape, b.shape , '\n')
-        model.fit(a,
-                  b,
-                  epochs=100,
-                  batch_size=64,
-                  verbose=2, shuffle=False,
-                  callbacks=[custom_early_stopping])
+        print(a.shape, b.shape)
+        regressor.fit(a, b)
 
+        # fit network
         # predicting
         x = test_data[i, :]
-        x = x.reshape(1, x.shape[0], 1)
-        testPredict = model.predict(x)
+        x = x.reshape(1, x.shape[0])
+        testPredict = regressor.predict(x)
         # new_test_label = np.concatenate([new_test_label,testPredict],axis = 0)
         new_test_label.append(testPredict)
 
         # add next data
-        y = test_data[i, :]
-        y = y.reshape(1, y.shape[0])
-        train_data = np.concatenate([train_data, y], axis=0)
-        z = test_label[i].reshape(1, )
-        train_label = np.concatenate([train_label, z], axis=0)
+        y = test_label[i]
+        # one_y = one_y.reshape(1, one_y.shape[0])
+        train_data = np.concatenate([train_data, x], axis=0)
+        train_label = np.append(train_label, y)
 
     new_test_label = np.array(new_test_label)
-    new_test_label = new_test_label.reshape(new_test_label.shape[0], 1)
     new_test_set = np.concatenate([test_data, new_test_label], axis=1)
     new_test_set = sc_df.inverse_transform(new_test_set)
     new_test_label = new_test_set[:, new_test_set.shape[1] - 1]
@@ -134,8 +96,6 @@ def get_result(path,fd,fd_2):
 
     mape = np.mean(np.abs((test_label - new_test_label) / test_label)) * 100
     print('Test MAPE: %.4f' % (mape))
-
-
 
     return  rmse,mape
 
@@ -178,4 +138,5 @@ output = find_fd(path)
 finish_time = time.time()
 print('Total times : {:.3f}'.format(finish_time-start_time))
 
-output.to_csv(os.path.join(path, 'LSTM_result.csv'), index=0, header=1)
+output.to_csv(os.path.join(path, 'SVR_result_all_LIN.csv'), index=0, header=1)
+

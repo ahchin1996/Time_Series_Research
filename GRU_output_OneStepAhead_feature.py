@@ -130,7 +130,7 @@ def get_result(path,fd,fd_2):
     rmse = sqrt(mean_squared_error(test_label, new_test_label))
     print('Test RMSE: %.4f' % (rmse))
 
-    mape = sum(np.abs((test_label - new_test_label) / test_label)) / n * 100
+    mape = np.mean(np.abs((test_label - new_test_label) / test_label)) * 100
     print('Test MAPE: %.4f' % (mape))
 
 

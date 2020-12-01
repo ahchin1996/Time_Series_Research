@@ -15,6 +15,7 @@ from sklearn.metrics import mean_squared_error
 import tensorflow as tf
 from keras.layers import LSTM,Dropout,Dense
 from tensorflow.keras.callbacks import EarlyStopping
+from neupy import algorithms
 from feature_list import chose_list
 
 # 控制顯卡內核
@@ -26,31 +27,32 @@ sess0 = tf.compat.v1.InteractiveSession(config=config)
 
 def get_result(path,fd,fd_2):
     # fd_path = 'D:/Data/Stock/new_data/^DJI/^DJI_2000.csv'
-    df_all = pd.read_csv(path,sep=',',header=0)
-    date_array = pd.to_datetime(df_all['Date'] )
-    print("Number of rows and columns:", df_all.shape)
-
-    feature_list = chose_list(fd_2)
-    df = df_all[['Date', 'Close']]
-    for i in range(0, len(feature_list)):
-        df = pd.concat([df, df_all.iloc[:, feature_list[i]]], axis=1)
-
+    df = pd.read_csv(path,sep=',',header=0)
+    date_array = pd.to_datetime(df['Date'] )
+    print("Number of rows and columns:", df.shape)
     year = fd_2.strip(f'{fd}')
     year = int(year.strip('_.csv'))
+
+    #get feature list
+    feature_list = chose_list(fd_2)
+
+    new_df = df[['Date', 'Close']]
+    for i in range(0, len(feature_list)):
+        new_df = pd.concat([new_df, df.iloc[:, feature_list[i]]], axis=1)
 
     split_no = 0
     while date_array.iloc[split_no] < datetime(year, 11, 1, 0, 0):
         split_no +=1
     print(split_no)
 
-    df.drop(['Date'] ,axis=1 ,inplace=True)
-    df.head(5)
+    new_df.drop(['Date'] ,axis=1 ,inplace=True)
+    new_df.head(5)
 
     sc_df = MinMaxScaler(feature_range=(0, 1))
-    df = sc_df.fit_transform(df)
+    new_df = sc_df.fit_transform(new_df)
 
-    train_set = df[:split_no, :]
-    test_set = df[split_no:, :]
+    train_set = new_df[:split_no, :]
+    test_set = new_df[split_no:, :]
 
     train_data = train_set[:, 1:]
     train_label = train_set[:, 0]
@@ -61,33 +63,13 @@ def get_result(path,fd,fd_2):
           f"Train_label shape :{train_label.shape}\n"
           f"Test_data shape :{test_data.shape}\n"
           f"Test_label shape :{test_label.shape}")
-    
 
-    custom_early_stopping = EarlyStopping(
-        monitor='loss',
-        patience=30,
-        min_delta=0.01,
-        mode='auto'
-    )
+    model = algorithms.GRNN(std=0.4, verbose=True)
 
-    model = Sequential()
-    model.add(LSTM(units=50, return_sequences=True, input_shape=(train_data.shape[1], 1)))
-    model.add(Dropout(0.2))
-    model.add(LSTM(units=50, return_sequences=True))
-    model.add(Dropout(0.2))
-    model.add(LSTM(units=50, return_sequences=True))
-    model.add(Dropout(0.2))
-    model.add(LSTM(units=50))
-    model.add(Dropout(0.2))
-    model.add(Dense(units=1))
-
-
-    model.compile(optimizer='adam', loss='mean_squared_error', metrics=['accuracy'])
-
-    model.summary()
 
     new_test_label = []
-    all_length = len(df)
+    all_length = len(new_df)
+    n = split_no
 
     for i in range(0, all_length - split_no):
         print()
@@ -96,19 +78,15 @@ def get_result(path,fd,fd_2):
         # training model
         a = train_data
         b = train_label
-        a = a.reshape((a.shape[0], a.shape[1], 1))
+        a = a.reshape((a.shape[0], a.shape[1]))
         b = b.reshape(b.shape[0], 1)
         print(a.shape, b.shape , '\n')
-        model.fit(a,
-                  b,
-                  epochs=100,
-                  batch_size=64,
-                  verbose=2, shuffle=False,
-                  callbacks=[custom_early_stopping])
+
+        model.train(a, b)
 
         # predicting
         x = test_data[i, :]
-        x = x.reshape(1, x.shape[0], 1)
+        x = x.reshape(1, x.shape[0])
         testPredict = model.predict(x)
         # new_test_label = np.concatenate([new_test_label,testPredict],axis = 0)
         new_test_label.append(testPredict)
@@ -178,4 +156,5 @@ output = find_fd(path)
 finish_time = time.time()
 print('Total times : {:.3f}'.format(finish_time-start_time))
 
-output.to_csv(os.path.join(path, 'LSTM_result.csv'), index=0, header=1)
+output.to_csv(os.path.join(path, 'GRNN_result.csv'), index=0, header=1)
+

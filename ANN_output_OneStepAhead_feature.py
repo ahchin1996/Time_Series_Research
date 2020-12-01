@@ -137,7 +137,7 @@ def get_result(path,fd,fd_2):
     rmse = sqrt(mean_squared_error(test_label, new_test_label))
     print('Test RMSE: %.4f' % (rmse))
 
-    mape = sum(np.abs((test_label - new_test_label) / test_label)) / n * 100
+    mape = np.mean(np.abs((test_label - new_test_label) / test_label)) * 100
     print('Test MAPE: %.4f' % (mape))
 
 
@@ -183,5 +183,5 @@ output = find_fd(path)
 finish_time = time.time()
 print('Total times : {:.3f}'.format(finish_time-start_time))
 
-output.to_csv(os.path.join(path, 'output_result.csv'), index=0, header=1)
+output.to_csv(os.path.join(path, 'ANN_result.csv'), index=0, header=1)
 

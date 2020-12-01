@@ -31,5 +31,6 @@ y_pred = regressor.predict(X_test)
 rmse = sqrt(mean_squared_error(y_test, y_pred))
 print('Test RMSE: %.4f' % (rmse))
 
-mape = sum(np.abs((y_test - y_pred) / y_test)) / 164 * 100
+mape = np.mean(np.abs((y_test - y_pred)/y_test) )*100
 print('Test MAPE: %.4f' % (mape))
+
