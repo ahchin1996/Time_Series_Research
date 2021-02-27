@@ -1,0 +1,129 @@
+Starting analysis at  9-Jan-2021 14:45:46
+DTREG version 10.10.0  (Enterprise Version)
+http://www.dtreg.com
+
+  ============  Project Parameters  ============
+
+Project title: selectt feature
+Project file: D:\Time_Series_Research\select_feature\select_feature.dtr
+Target variable: Close
+Number of predictor variables: 23
+Type of model: Gene Expression Programming (GEP)
+Type of analysis: Regression
+Validation method: None
+
+  ============  Input Data  ============
+
+Input data file: D:\Time_Series_Research\no_date_data\TWII\TWII_2018.csv
+Number of variables (data columns): 24
+Data subsetting: Use all data rows
+Number of data rows: 245
+Total weight for all rows: 245
+Rows with missing target or weight values: 0
+Rows with missing predictor values: 0
+
+  ---  Statistics for target variable: Close  ---
+Mean value = 10622.921
+Standard deviation = 489.45875
+Minimum value = 9478.9902
+Maximum value = 11253.11
+
+  ============  Summary of Variables  ============
+
+Number   Variable      Class       Type      Missing rows  Categories
+------  -----------  ---------  -----------  ------------  ----------
+    1   Close        Target     Continuous           0     
+    2   Volume       Predictor  Continuous           0         243
+    3   MA_5         Predictor  Continuous           0         245
+    4   MA_20        Predictor  Continuous           0         245
+    5   BBands_up    Predictor  Continuous           0         245
+    6   BBands_down  Predictor  Continuous           0         245
+    7   RSI          Predictor  Continuous           0         237
+    8   EMA_12       Predictor  Continuous           0         245
+    9   EMA_26       Predictor  Continuous           0         245
+   10   DIF          Predictor  Continuous           0         245
+   11   DEM          Predictor  Continuous           0         245
+   12   OSC          Predictor  Continuous           0         245
+   13   RDP          Predictor  Continuous           0         245
+   14   BIAS_6       Predictor  Continuous           0         245
+   15   BIAS_12      Predictor  Continuous           0         245
+   16   BIAS_24      Predictor  Continuous           0         245
+   17   PSY_12       Predictor  Continuous           0           8
+   18   PSY_24       Predictor  Continuous           0          11
+   19   W%R          Predictor  Continuous           0         172
+   20   %K           Predictor  Continuous           0         153
+   21   %D           Predictor  Continuous           0         204
+   22   PROC         Predictor  Continuous           0         245
+   23   MO           Predictor  Continuous           0         245
+   24   LAG          Predictor  Continuous           0         244
+
+
+
+  ============  Gene Expression Programming Parameters  ============
+
+  Generations required to train model = 28
+  Complexity of model before simplification = 11
+  Complexity of model after simplification  = 7
+  Generations required for simplification = 1
+  Number of evaluations of the fitness function = 11,500
+  Number of execution threads used = 12
+  Nonlinear regression did not improve the model.
+
+ ---  Generated Expression  ---
+
+Close = MO+LAG
+
+
+  ============  Analysis of Variance  ============
+
+ ---  Training Data  ---
+
+Mean target value for input data = 10622.921
+Mean target value for predicted values = 10622.921
+
+Variance in input data = 239569.87
+Residual (unexplained) variance after model fit = 0
+Proportion of variance explained by model (R^2) = 1.00000  (100.000%)
+
+Coefficient of variation (CV) = 0.000000
+Normalized mean square error (NMSE) = 0.000000
+Correlation between actual and predicted = 1.000000
+
+Maximum error = 0
+RMSE (Root Mean Squared Error) = 0
+MSE (Mean Squared Error) = 0
+MAE (Mean Absolute Error) = 0
+MAPE (Mean Absolute Percentage Error) = 0
+
+
+  ============  Lift and Gain  ============
+
+  ---  Lift and Gain for training data  ---
+
+ Bin     Cutoff       Mean        Mean        Cum %     Cum %   Cum       % of      % of
+Index    Target     Predicted    Actual    Population  Target   Gain   Population  Target   Lift
+-----  ----------  ----------  ----------  ----------  ------  ------  ----------  ------  ------
+   1    11075.780   11145.066   11145.066     10.20     10.71    1.05     10.20     10.71    1.05
+   2    10995.130   11026.469   11026.469     20.41     21.30    1.04     10.20     10.59    1.04
+   3    10941.070   10966.315   10966.315     30.61     31.83    1.04     10.20     10.53    1.03
+   4    10864.820   10902.250   10902.250     40.82     42.30    1.04     10.20     10.47    1.03
+   5    10817.450   10839.020   10839.020     51.02     52.72    1.03     10.20     10.41    1.02
+   6    10722.570   10772.430   10772.430     61.22     63.06    1.03     10.20     10.35    1.01
+   7    10579.500   10676.062   10676.062     71.43     73.32    1.03     10.20     10.26    1.01
+   8     9906.590   10244.561   10244.561     81.63     83.16    1.02     10.20      9.84    0.96
+   9     9760.880    9820.316    9820.316     91.84     92.59    1.01     10.20      9.43    0.92
+  10     9478.990    9640.169    9640.169    100.00    100.00    1.00      8.16      7.41    0.91
+
+   Average gain = 1.029
+   Mean value of target variable = 10622.921
+
+
+  ============  Overall Importance of Variables  ============
+
+Variable    Importance
+--------    ----------
+LAG            100.000
+MO               4.577
+
+Finished the analysis at  9-Jan-2021 14:45:46
+Analysis run time:  00:00.44

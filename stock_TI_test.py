@@ -1,8 +1,11 @@
 import pandas as pd
 import numpy as np
 # import os
+# import matplotlib
 import matplotlib.pyplot as plt
-from datetime import datetime 
+from datetime import datetime
+# %matplotlib inline
+
 
 test_dir = 'D:/Time_Series_Research/new_data/^DJI.csv'
 data = pd.read_csv(test_dir,sep=",",header=0)
@@ -313,5 +316,12 @@ a = int(a.strip(f'^{fd}_.csv'))
 # df.describe()
 # df.info()
 
-
-
+import pandas as pd
+fd_path = 'D:/Time_Series_Research/new_data/GSPC/GSPC_2019.csv'
+data = pd.read_csv(fd_path, sep=',', header=0)
+date_array = pd.to_datetime(data['Date'])
+print("Number of rows and columns:", data.shape)
+id = pd.DataFrame(range(0,len(data)))
+data.insert(0,"index",id)
+output_path ='D:/Time_Series_Research/new_data/GSPC_2019.csv'
+data.to_csv(output_path, index=0, header=1)

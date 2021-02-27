@@ -25,3 +25,18 @@ for i in range(0, len(feature_list)):
     new_df = pd.concat([new_df, df.iloc[:, feature_list[i]]], axis=1)
 
 new_df.columns
+
+
+
+start = datetime.datetime(2020, 1, 2)
+end = datetime.datetime(2020, 12, 31)
+
+df = web.DataReader("^TWII", 'yahoo', start, end)
+df.head()
+df.info()
+df.insert(0,"Date",df.index)
+
+df.reset_index()
+
+output_path ='D:/Time_Series_Research/new_data/TWII_2020.csv'
+df.to_csv(output_path, index=1, header=1)

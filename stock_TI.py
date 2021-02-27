@@ -156,14 +156,21 @@ for fd in os.listdir(dir_path):
 
         data['MO'] = getMomentum(close, 1)
 
-        def getLAG(priceData, period):
-            l = np.zeros((len(priceData),))
-            l[:period] *= np.nan
-            for i in range(period, len(priceData)):
-                l[i] = priceData[i - period]
-            return l
+        # def getLAG(priceData, period):
+        #     l = np.zeros((len(priceData),))
+        #     l[:period] *= np.nan
+        #     for i in range(period, len(priceData)):
+        #         l[i] = priceData[i - period]
+        #     return l
+        #
+        # data['LAG'] = getLAG(close,1)
 
-        data['LAG'] = getLAG(close,1)
+        def getLAG(close , period):
+            l = close.shift(period)
+            return
+
+        data["LAG"] = getLAG(close,1)
+
 
         data = data.drop([ "Open", 'High', 'Low', 'Adj Close'], axis=1)
 
