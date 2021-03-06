@@ -1,38 +1,125 @@
-ARDL(5,5,5) regression
+
+. import delimited "D:\Time_Series_Research\index_data\DJI\DJI_2019.csv", clear
+(26 vars, 251 obs)
+
+. tsset index
+        time variable:  index, 1 to 251
+                delta:  1 unit
+
+. ardl close ma_5 ma_20 bbands_up bbands_down ema_12 ema_26 dif osc rdp bias_6 bias_12 bias_24 mo lag, lags(5)
+note: L.ma_5 omitted because of collinearity
+note: bbands_down omitted because of collinearity
+note: L.bbands_down omitted because of collinearity
+note: L2.bbands_down omitted because of collinearity
+note: L3.bbands_down omitted because of collinearity
+note: L4.bbands_down omitted because of collinearity
+note: L5.bbands_down omitted because of collinearity
+note: L.ema_12 omitted because of collinearity
+note: L2.ema_12 omitted because of collinearity
+note: L3.ema_12 omitted because of collinearity
+note: L4.ema_12 omitted because of collinearity
+note: L5.ema_12 omitted because of collinearity
+note: L.ema_26 omitted because of collinearity
+note: L2.ema_26 omitted because of collinearity
+note: L3.ema_26 omitted because of collinearity
+note: L4.ema_26 omitted because of collinearity
+note: L5.ema_26 omitted because of collinearity
+note: dif omitted because of collinearity
+note: L.dif omitted because of collinearity
+note: L2.dif omitted because of collinearity
+note: L3.dif omitted because of collinearity
+note: L4.dif omitted because of collinearity
+note: L5.dif omitted because of collinearity
+note: L.osc omitted because of collinearity
+note: L2.osc omitted because of collinearity
+note: L3.osc omitted because of collinearity
+note: L4.osc omitted because of collinearity
+note: L5.osc omitted because of collinearity
+note: mo omitted because of collinearity
+note: L.mo omitted because of collinearity
+note: L2.mo omitted because of collinearity
+note: L3.mo omitted because of collinearity
+note: L4.mo omitted because of collinearity
+note: L5.mo omitted because of collinearity
+note: lag omitted because of collinearity
+note: L.lag omitted because of collinearity
+note: L2.lag omitted because of collinearity
+note: L3.lag omitted because of collinearity
+note: L4.lag omitted because of collinearity
+note: L5.lag omitted because of collinearity
+Collinear variables detected.
+r(9);
+
+. ardl close ma_20 bbands_up rdp bias_6 bias_12 bias_24, lags(5)
+
+ARDL(5,5,5,5,5,5,5) regression
 
 Sample:        6 -      251                     Number of obs     =        246
-                                                F(  17,    228)   =     717.04
+                                                F(  41,    204)   =  184043.59
                                                 Prob > F          =     0.0000
-                                                R-squared         =     0.9816
-                                                Adj R-squared     =     0.9803
-Log likelihood = -1554.0503                     Root MSE          =   139.2585
+                                                R-squared         =     1.0000
+                                                Adj R-squared     =     1.0000
+Log likelihood = -751.98235                     Root MSE          =     5.6492
 
 ------------------------------------------------------------------------------
        close |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
        close |
-         L1. |   .7537167   .0664944    11.34   0.000     .6226946    .8847388
-         L2. |   .0219083   .0831966     0.26   0.793    -.1420242    .1858407
-         L3. |   .0112666   .0829564     0.14   0.892    -.1521927    .1747258
-         L4. |   .0269732   .0726932     0.37   0.711    -.1162633    .1702096
-         L5. |  -.0649506   .0507858    -1.28   0.202      -.16502    .0351189
+         L1. |   1.007144   .0723511    13.92   0.000     .8644917    1.149796
+         L2. |  -.0572398   .1031746    -0.55   0.580    -.2606651    .1461855
+         L3. |   -.063204   .0932523    -0.68   0.499     -.247066    .1206579
+         L4. |   .0422777   .0636908     0.66   0.508    -.0832991    .1678544
+         L5. |   .0405828   .0466458     0.87   0.385    -.0513869    .1325525
              |
        ma_20 |
-         --. |   11.68681   .8639845    13.53   0.000     9.984392    13.38922
-         L1. |   -19.7358   1.884054   -10.48   0.000    -23.44819   -16.02342
-         L2. |   7.772983   2.331295     3.33   0.001     3.179345    12.36662
-         L3. |   .8813484   2.325865     0.38   0.705     -3.70159    5.464286
-         L4. |  -1.098911   2.120045    -0.52   0.605    -5.276296    3.078474
-         L5. |   .7565684   .9574538     0.79   0.430    -1.130021    2.643157
+         --. |   .0136992   .0550728     0.25   0.804    -.0948857     .122284
+         L1. |  -.0316937   .0810412    -0.39   0.696    -.1914794    .1280921
+         L2. |  -.0018506   .0818686    -0.02   0.982    -.1632677    .1595665
+         L3. |   .1012517    .081296     1.25   0.214    -.0590364    .2615398
+         L4. |  -.1685672   .1394686    -1.21   0.228    -.4435519    .1064176
+         L5. |   .1219748   .1210052     1.01   0.315    -.1166064     .360556
              |
- bbands_down |
-         --. |  -.7685283   .2286918    -3.36   0.001    -1.219148   -.3179087
-         L1. |   1.378785   .4309093     3.20   0.002     .5297111    2.227858
-         L2. |  -.2961329    .451532    -0.66   0.513    -1.185842    .5935762
-         L3. |  -.4819107   .4409009    -1.09   0.276    -1.350672    .3868506
-         L4. |   .1216817   .4155962     0.29   0.770    -.6972188    .9405822
-         L5. |   .0277199   .2167109     0.13   0.898    -.3992922     .454732
+   bbands_up |
+         --. |  -.0073956   .0126992    -0.58   0.561    -.0324341    .0176429
+         L1. |   .0297962   .0244823     1.22   0.225    -.0184746    .0780669
+         L2. |   -.049347    .023604    -2.09   0.038    -.0958861   -.0028079
+         L3. |   .0305315   .0213486     1.43   0.154    -.0115608    .0726238
+         L4. |   .0138057   .0201421     0.69   0.494    -.0259076     .053519
+         L5. |  -.0199254   .0105317    -1.89   0.060    -.0406903    .0008396
              |
-       _cons |   172.7026   334.8702     0.52   0.607    -487.1334    832.5386
+         rdp |
+         --. |   133.5967   88.45923     1.51   0.133    -40.81495    308.0083
+         L1. |  -118.8348   73.84689    -1.61   0.109    -264.4359    26.76619
+         L2. |  -88.55682   59.89401    -1.48   0.141    -206.6475    29.53386
+         L3. |  -56.55623   44.77808    -1.26   0.208    -144.8434    31.73095
+         L4. |  -4.751776   31.11112    -0.15   0.879    -66.09236    56.58881
+         L5. |  -.8881681   17.47982    -0.05   0.960    -35.35244    33.57611
+             |
+      bias_6 |
+         --. |   198.6597   112.4624     1.77   0.079    -23.07808    420.3974
+         L1. |   -3.57378    105.188    -0.03   0.973    -210.9688    203.8213
+         L2. |   3.707102   6.664186     0.56   0.579    -9.432413    16.84662
+         L3. |   .2983284   6.600505     0.05   0.964    -12.71563    13.31229
+         L4. |  -.5675347   6.297079    -0.09   0.928    -12.98324    11.84817
+         L5. |   9.767934   6.218535     1.57   0.118    -2.492908    22.02878
+             |
+     bias_12 |
+         --. |   -31.3648   12.31922    -2.55   0.012    -55.65413   -7.075478
+         L1. |   13.46197   12.17904     1.11   0.270    -10.55097    37.47491
+         L2. |   1.885309   11.99875     0.16   0.875    -21.77215    25.54277
+         L3. |   7.880245   11.49645     0.69   0.494    -14.78685    30.54734
+         L4. |  -5.176585    11.1238    -0.47   0.642    -27.10895    16.75578
+         L5. |  -2.313778   7.729926    -0.30   0.765    -17.55457    12.92701
+             |
+     bias_24 |
+         --. |  -9.128978   35.60073    -0.26   0.798    -79.32155     61.0636
+         L1. |   11.39491   34.19728     0.33   0.739    -56.03053    78.82036
+         L2. |   10.72411   19.77397     0.54   0.588    -28.26344    49.71167
+         L3. |   8.054789   19.96211     0.40   0.687    -31.30373    47.41331
+         L4. |  -23.47711   18.98569    -1.24   0.218    -60.91045    13.95624
+         L5. |   11.68321   8.967586     1.30   0.194    -5.997827    29.36425
+             |
+       _cons |   -46.6011   19.25518    -2.42   0.016    -84.56578   -8.636426
 ------------------------------------------------------------------------------
 
+. 

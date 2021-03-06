@@ -4,6 +4,7 @@ Created on Wed Jul 22 22:19:16 2020
 
 @author: cooke
 """
+
 from datetime import datetime
 import os
 import pandas as pd
@@ -15,10 +16,22 @@ from keras.layers import LSTM, Dropout, Dense, Flatten
 from feature_list import chose_list
 import talos as ta
 import time
+import tensorflow as tf
 from keras import optimizers
 
 # hide INFO and WARNING message
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+# control the kernal inside of GPU
+# assgin which one GPU
+# os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+# # automatic selection running device
+# config = tf.compat.v1.ConfigProto(allow_soft_placement = True)
+# # 指定GPU顯示卡記憶體用量上限
+# gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction = 0.9)
+# config=tf.ConfigProto(gpu_options=gpu_options)
+# # 自動增長GPU記憶體用量
+# # config.gpu_options.allow_growth = True
+# sess0 = tf.compat.v1.InteractiveSession(config=config)
 
 stime = time.time()
 
@@ -52,6 +65,14 @@ while date_array.iloc[split_no] < datetime(year, 11, 1, 0, 0):
     split_no +=1
 print(split_no)
 
+def getLAG(price, period):
+    lag = price.shift(period)
+    return lag
+
+new_df["MA_20_1"] = getLAG(new_df.MA_20,1)
+new_df["MA_20_2"] = getLAG(new_df.MA_20,2)
+new_df.fillna(new_df.MA_20[0],inplace=True)
+
 new_df.drop(['Date'], axis=1, inplace=True)
 new_df.head(5)
 
@@ -72,6 +93,7 @@ print(f"Train_data shape : {train_data.shape}\n"
 f"Train_label shape :{train_label.shape}\n"
 f"Test_data shape :{test_data.shape}\n"
 f"Test_label shape :{test_label.shape}")
+
 x_train = train_data[:-10,:]
 x_val = train_data[-10:,:]
 
@@ -106,8 +128,6 @@ search_params = {
 # a = a.reshape(a.shape[0],1, a.shape[1])
 # b = b.reshape(b.shape[0], )
 # print(a.shape, b.shape)
-
-
 
 def create_model_talos(train_data, train_label, x_test_ts, y_test_ts, params):
     BATCH_SIZE = params["batch_size"]
@@ -156,13 +176,13 @@ print()
 print_time("program completed in", stime)
 
 
-from talos.utils.recover_best_model import recover_best_model
-
-results, models = recover_best_model(x_train=x_train,
-                                     y_train=y_train,
-                                     x_val=x_val,
-                                     y_val=y_val,
-                                     experiment_log='LSTM code/LSTM_parameter_result/022721155046_val.csv',
-                                     input_model=create_model_talos,
-                                     n_models=5,
-                                     task='multi_label')
+# from talos.utils.recover_best_model import recover_best_model
+#
+# results, models = recover_best_model(x_train=x_train,
+#                                      y_train=y_train,
+#                                      x_val=x_val,
+#                                      y_val=y_val,
+#                                      experiment_log='LSTM code/LSTM_parameter_result/022721155046_val.csv',
+#                                      input_model=create_model_talos,
+#                                      n_models=5,
+#                                      task='multi_label')

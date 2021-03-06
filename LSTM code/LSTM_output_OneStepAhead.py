@@ -165,7 +165,7 @@ def find_fd(path):
 
 import time
 start_time = time.time()
-path = 'D:/chin/new_data'
+path = 'D:/Time_Series_Research/new_data'
 output = find_fd(path)
 finish_time = time.time()
 print('Total times : {:.3f}'.format(finish_time-start_time))

@@ -166,8 +166,8 @@ for fd in os.listdir(dir_path):
         # data['LAG'] = getLAG(close,1)
 
         def getLAG(close , period):
-            l = close.shift(period)
-            return
+            lag = close.shift(period)
+            return lag
 
         data["LAG"] = getLAG(close,1)
 

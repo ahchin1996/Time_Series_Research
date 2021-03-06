@@ -11,11 +11,10 @@ from math import sqrt
 import pandas as pd
 import numpy as np
 from keras.models import Sequential
-from keras import optimizers
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 from keras.optimizers import Adam
-from keras.layers import LSTM, Dropout, Dense, Flatten
+from keras.layers import LSTM, Dense
 import tensorflow as tf
 from feature_list import chose_list
 from keras.callbacks import EarlyStopping
@@ -28,9 +27,10 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 # assgin which one GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 # automatic selection running device
-config = tf.compat.v1.ConfigProto(allow_soft_placement=True)
+config = tf.compat.v1.ConfigProto(allow_soft_placement = True)
 # 指定GPU顯示卡記憶體用量上限
-gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=0.9)
+gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction = 0.9)
+config=tf.ConfigProto(gpu_options=gpu_options)
 # 自動增長GPU記憶體用量
 config.gpu_options.allow_growth = True
 sess0 = tf.compat.v1.InteractiveSession(config=config)
@@ -45,8 +45,8 @@ def print_time(text, stime):
 
 #每次需更改項目
 year = 2019
-fd = 'DJI_2019'
-path =  'D:/Time_Series_Research/new_data/DJI/DJI_2019.csv'
+fd = 'GSPC_2019'
+path =  'D:/Time_Series_Research/new_data/GSPC/GSPC_2019.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 
@@ -69,6 +69,19 @@ while date_array.iloc[split_no] < datetime(year, 11, 1, 0, 0):
     split_no +=1
 print(split_no)
 
+def getLAG(price, period):
+    lag = price.shift(period)
+    return lag
+#
+# new_df["BBands_down_L1"] = getLAG(new_df.BBands_down,1)
+# new_df["BBands_down_L2"] = getLAG(new_df.BBands_down,2)
+# new_df.fillna(new_df.BBands_down[0],inplace=True)
+#
+# new_df["BIAS_6_L1"] = getLAG(new_df.BIAS_6,1)
+# new_df.fillna(new_df.BIAS_6[0],inplace=True)
+# new_df["BIAS_24_L1"] = getLAG(new_df.BIAS_24,1)
+# new_df.fillna(new_df.BIAS_24[0],inplace=True)
+
 new_df.drop(['Date'], axis=1, inplace=True)
 new_df.head(5)
 
@@ -90,6 +103,24 @@ print(f"Train_data shape : {train_data.shape}\n"
       f"Test_data shape :{test_data.shape}\n"
       f"Test_label shape :{test_label.shape}")
 
+# x_train = train_data[:-10,:]
+# x_val = train_data[-10:,:]
+#
+# y_train = train_label[:-10]
+# y_val = train_label[-10:]
+#
+# ######################################
+# x_train = x_train.reshape(x_train.shape[0],1,x_train.shape[1])
+# x_val = np.reshape(x_val,(x_val.shape[0],1,x_val.shape[1]))
+#
+# y_train = np.reshape(y_train,(y_train.shape[0],1))
+# y_val = np.reshape(y_val,(y_val.shape[0],1))
+#
+# print(f"x_train shape : {x_train.shape}\n"
+# f"x_val shape :{x_val.shape}\n"
+# f"y_train shape :{y_train.shape}\n"
+# f"y_val shape :{y_val.shape}")
+
 custom_early_stopping = EarlyStopping(
     monitor='loss',
     patience=100,
@@ -99,19 +130,19 @@ custom_early_stopping = EarlyStopping(
 
 # Built Model
 model = Sequential()
-model.add(LSTM(units = 50, input_shape=(1,train_data.shape[1]), return_sequences=True, activation="tanh") )
+model.add(LSTM(units = 30, input_shape=(1,train_data.shape[1]), return_sequences=True, activation="tanh") )
 model.add(LSTM(units=50, return_sequences = True))
-model.add(LSTM(units = 30))
+model.add(LSTM(units = 50))
 model.add(Dense(units = 1))
-model.compile(optimizer=Adam(lr=0.001), loss='mean_squared_error', metrics=['accuracy'])
+model.compile(optimizer=Adam(lr=0.1), loss='mean_squared_error', metrics=['accuracy'])
 # model.save('Model_LSTM.h5')
 
 model.summary()
-
-a = train_data
-b = train_label
-a = a.reshape(a.shape[0],1, a.shape[1])
-b = b.reshape(b.shape[0], )
+#
+# a = train_data
+# b = train_label
+# a = a.reshape(a.shape[0],1, a.shape[1])
+# b = b.reshape(b.shape[0], )
 
 new_test_label = []
 all_length = len(new_df)
@@ -129,6 +160,7 @@ for i in range(0, all_length - split_no):
               epochs=80,
               batch_size=128,
               verbose=2, shuffle=False,
+              validation_data= (),
               callbacks=[custom_early_stopping])
 
     # fit network

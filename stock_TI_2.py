@@ -159,12 +159,10 @@ for name in stock_list:
 
     data['MO'] = getMomentum(close, 1)
 
-    def getLAG(priceData, period):
-        l = np.zeros((len(priceData),))
-        l[:period] *= np.nan
-        for i in range(period, len(priceData)):
-            l[i] = priceData[i - period]
-        return l
+
+    def getLAG(price, period):
+        lag = price.shift(period)
+        return lag
 
     data['LAG'] = getLAG(close, 1)
 
