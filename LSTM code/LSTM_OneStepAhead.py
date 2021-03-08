@@ -138,11 +138,11 @@ model.compile(optimizer=Adam(lr=0.1), loss='mean_squared_error', metrics=['accur
 # model.save('Model_LSTM.h5')
 
 model.summary()
-#
-# a = train_data
-# b = train_label
-# a = a.reshape(a.shape[0],1, a.shape[1])
-# b = b.reshape(b.shape[0], )
+
+a = train_data
+b = train_label
+a = a.reshape(a.shape[0],1, a.shape[1])
+b = b.reshape(b.shape[0], )
 
 new_test_label = []
 all_length = len(new_df)
