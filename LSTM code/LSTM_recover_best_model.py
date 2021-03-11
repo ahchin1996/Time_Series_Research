@@ -12,16 +12,22 @@ import numpy as np
 from keras.models import Sequential
 from sklearn.preprocessing import MinMaxScaler
 from keras.optimizers import Adam
-from keras.layers import LSTM, Dropout, Dense, Flatten
+from keras.layers import LSTM, Dense
 from feature_list import chose_list
 import talos as ta
 import time
 import tensorflow as tf
-from keras import optimizers
 
 # hide INFO and WARNING message
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
+# control the kernal inside of GPU
+# assgin which one GPU
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+# automatic selection running device
+config = tf.compat.v1.ConfigProto(allow_soft_placement = True)
+# 指定GPU顯示卡記憶體用量上限
+gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction = 0.9)
+config=tf.compat.v1.ConfigProto(gpu_options=gpu_options)
 
 stime = time.time()
 
@@ -152,28 +158,39 @@ def create_model_talos(train_data, train_label, x_test_ts, y_test_ts, params):
     print()
     return history, lstm_model
 
-
 print("Starting Talos scanning...")
 
-# t = ta.Scan(x= x_train,
-#             y= y_train,
-#             x_val = x_val,
-#             y_val = y_val,
-#             model=create_model_talos,
-#             params=search_params,
-#             experiment_name = "LSTM_parameter_result")
+t = ta.Scan(x= x_train,
+            y= y_train,
+            x_val = x_val,
+            y_val = y_val,
+            model=create_model_talos,
+            params=search_params,
+            experiment_name = "LSTM_parameter_result")
 
-
-from talos.utils.recover_best_model import recover_best_model
-
-results, models = recover_best_model(x_train=x_train,
-                                     y_train=y_train,
-                                     x_val=x_val,
-                                     y_val=y_val,
-                                     experiment_log='LSTM code/LSTM_parameter_result/HSI_2019_LSTM.csv',
-                                     input_model=create_model_talos,
-                                     n_models=1,
-                                     task='multi_label')
+# from talos.utils.recover_best_model import recover_best_model
+#
+# results, models = recover_best_model(x_train=x_train,
+#                                      y_train=y_train,
+#                                      x_val=x_val,
+#                                      y_val=y_val,
+#                                      experiment_log='LSTM code/LSTM_parameter_result/HSI_2019_LSTM.csv',
+#                                      input_model=create_model_talos,
+#                                      n_models=0,
+#                                      task='multi_label')
 
 print()
 print_time("program completed in", stime)
+
+r = ta.Reporting('LSTM code/LSTM_parameter_result/HSI_2019_LSTM.csv')
+p_list = r.data
+low_val_loss =  r.low('val_loss')
+fliter = p_list.val_loss == low_val_loss
+best_p = p_list[fliter]
+
+p = ta.Predict('t')
+r.best_params(metric="val_acc")
+
+# from numba import cuda
+# device = cuda.get_current_device()
+# device.reset()

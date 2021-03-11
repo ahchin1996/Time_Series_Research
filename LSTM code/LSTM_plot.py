@@ -19,7 +19,6 @@ from feature_list import chose_list
 from keras.callbacks import EarlyStopping
 import matplotlib.pyplot as plt
 
-
 # hide INFO and WARNING message
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 # control the kernal inside of GPU

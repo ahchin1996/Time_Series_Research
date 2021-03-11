@@ -30,7 +30,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 config = tf.compat.v1.ConfigProto(allow_soft_placement = True)
 # 指定GPU顯示卡記憶體用量上限
 gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction = 0.9)
-config=tf.ConfigProto(gpu_options=gpu_options)
+config=tf.compat.v1.ConfigProto(gpu_options=gpu_options)
 # 自動增長GPU記憶體用量
 config.gpu_options.allow_growth = True
 sess0 = tf.compat.v1.InteractiveSession(config=config)
@@ -131,8 +131,8 @@ custom_early_stopping = EarlyStopping(
 # Built Model
 model = Sequential()
 model.add(LSTM(units = 30, input_shape=(1,train_data.shape[1]), return_sequences=True, activation="tanh") )
-model.add(LSTM(units=50, return_sequences = True))
-model.add(LSTM(units = 50))
+# model.add(LSTM(units=50, return_sequences = True))
+model.add(LSTM(units = 30))
 model.add(Dense(units = 1))
 model.compile(optimizer=Adam(lr=0.1), loss='mean_squared_error', metrics=['accuracy'])
 # model.save('Model_LSTM.h5')
@@ -157,8 +157,8 @@ for i in range(0, all_length - split_no):
     print(a.shape, b.shape)
     model.fit(a,
               b,
-              epochs=80,
-              batch_size=128,
+              epochs=20,
+              batch_size=64,
               verbose=2, shuffle=False,
               validation_data= (),
               callbacks=[custom_early_stopping])
