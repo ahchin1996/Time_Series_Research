@@ -41,9 +41,9 @@ def print_time(text, stime):
     print(text +" "+ str(seconds // 60 // 60)+" hours : " + str(seconds // 60 % 60)  + " minutes : " + str(np.round(seconds % 60)) + " seconds")
 
 #每次需更改項目
-year = 2019
-fd = 'DJI_2019'
-path =  'D:/Time_Series_Research/new_data/DJI/DJI_2019.csv'
+year = 2018
+fd = 'DJI_2018'
+path =  'D:/Time_Series_Research/new_data/HSI/HSI_2018.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 
@@ -175,6 +175,9 @@ t = ta.Scan(x= x_train,
 print()
 print_time("program completed in", stime)
 
+from numba import cuda 
+device = cuda.get_current_device()
+device.reset()
 
 # from talos.utils.recover_best_model import recover_best_model
 #
