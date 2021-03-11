@@ -26,7 +26,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 # automatic selection running device
 config = tf.compat.v1.ConfigProto(allow_soft_placement = True)
 # 指定GPU顯示卡記憶體用量上限
-gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction = 0.9)
+gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction = 0.95)
 config=tf.compat.v1.ConfigProto(gpu_options=gpu_options)
 
 stime = time.time()
@@ -188,8 +188,9 @@ low_val_loss =  r.low('val_loss')
 fliter = p_list.val_loss == low_val_loss
 best_p = p_list[fliter]
 
-p = ta.Predict('t')
-r.best_params(metric="val_acc")
+r.best_params('val_loss', ['acc', 'loss', 'val_acc'])
+r.correlate('val_loss', ['acc', 'loss', 'val_acc'])
+
 
 # from numba import cuda
 # device = cuda.get_current_device()
