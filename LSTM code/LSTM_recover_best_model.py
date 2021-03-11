@@ -191,7 +191,23 @@ best_p = p_list[fliter]
 r.best_params('val_loss', ['acc', 'loss', 'val_acc'])
 r.correlate('val_loss', ['acc', 'loss', 'val_acc'])
 
+from numba import cuda 
+device = cuda.get_current_device()
+device.reset()
 
-# from numba import cuda
-# device = cuda.get_current_device()
-# device.reset()
+t.save_model
+
+r = ta.Reporting('LSTM_parameter_result/031121120125.csv')
+p_list = r.data
+low_val_loss =  r.low('val_loss')
+fliter = p_list.val_loss == low_val_loss
+best_p = p_list[fliter]
+
+p = ta.Predict(t)
+
+t.best_model(metric = "val_loss",asc = False)
+t.params
+t.saved_models
+
+ta.Deploy(t, "HSI_2019", metric="val_acc")
+mm = ta.Restore("D:/chin/HSI_2019.zip")
