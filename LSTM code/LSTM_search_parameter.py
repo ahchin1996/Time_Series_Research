@@ -12,12 +12,11 @@ import numpy as np
 from keras.models import Sequential
 from sklearn.preprocessing import MinMaxScaler
 from keras.optimizers import Adam
-from keras.layers import LSTM, Dropout, Dense, Flatten
+from keras.layers import LSTM, Dense
 from feature_list import chose_list
 import talos as ta
 import time
 import tensorflow as tf
-from keras import optimizers
 
 # hide INFO and WARNING message
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
