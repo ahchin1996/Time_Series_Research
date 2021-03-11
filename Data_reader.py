@@ -26,8 +26,6 @@ for i in range(0, len(feature_list)):
 
 new_df.columns
 
-
-
 start = datetime.datetime(2020, 1, 2)
 end = datetime.datetime(2020, 12, 31)
 
