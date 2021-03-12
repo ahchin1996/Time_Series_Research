@@ -182,6 +182,10 @@ t = ta.Scan(x= x_train,
 print()
 print_time("program completed in", stime)
 
+from numba import cuda 
+device = cuda.get_current_device()
+device.reset()
+
 r = ta.Reporting('LSTM code/LSTM_parameter_result/HSI_2019_LSTM.csv')
 p_list = r.data
 low_val_loss =  r.low('val_loss')
@@ -191,17 +195,8 @@ best_p = p_list[fliter]
 r.best_params('val_loss', ['acc', 'loss', 'val_acc'])
 r.correlate('val_loss', ['acc', 'loss', 'val_acc'])
 
-from numba import cuda 
-device = cuda.get_current_device()
-device.reset()
 
 t.save_model
-
-r = ta.Reporting('LSTM_parameter_result/031121120125.csv')
-p_list = r.data
-low_val_loss =  r.low('val_loss')
-fliter = p_list.val_loss == low_val_loss
-best_p = p_list[fliter]
 
 p = ta.Predict(t)
 

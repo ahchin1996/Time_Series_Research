@@ -42,7 +42,7 @@ def print_time(text, stime):
 
 #每次需更改項目
 year = 2018
-fd = 'DJI_2018'
+fd = 'HSI_2018'
 path =  'D:/Time_Series_Research/new_data/HSI/HSI_2018.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
