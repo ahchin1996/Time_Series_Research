@@ -178,14 +178,3 @@ print_time("program completed in", stime)
 from numba import cuda 
 device = cuda.get_current_device()
 device.reset()
-
-# from talos.utils.recover_best_model import recover_best_model
-#
-# results, models = recover_best_model(x_train=x_train,
-#                                      y_train=y_train,
-#                                      x_val=x_val,
-#                                      y_val=y_val,
-#                                      experiment_log='LSTM code/LSTM_parameter_result/022721155046_val.csv',
-#                                      input_model=create_model_talos,
-#                                      n_models=5,
-#                                      task='multi_label')

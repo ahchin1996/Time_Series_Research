@@ -191,8 +191,8 @@ results, models = recover_best_model(x_train=x_train,
                                       y_cross=None,
                                       experiment_log='LSTM_parameter_result/TWII_2018_LSTM.csv',
                                       input_model=create_model_talos,
-                                      n_models= 1,
-                                      task='continuous')
+                                      n_models= 5,
+                                      task='multi_label')
 
 a = train_data
 b = train_label
@@ -250,15 +250,8 @@ print('Test MAPE: %.4f' % (mape))
 
 print_time("program completed in", stime)
 
-print()
-print_time("program completed in", stime)
 
-from numba import cuda 
-device = cuda.get_current_device()
-
-device.reset()
-
-r = ta.Reporting('LSTM_parameter_result/HSI_2018_LSTM.csv')
+r = ta.Reporting('LSTM_parameter_result/TWII_2018_LSTM.csv')
 p_list = r.data
 low_val_loss =  r.low('val_loss')
 fliter = p_list.val_loss == low_val_loss
@@ -266,3 +259,6 @@ best_p = p_list[fliter]
 best_p
 
 best = r.best_params('val_loss', ['acc', 'loss', 'val_acc'],n=1,ascending =False)
+
+zzz = ta.Analyze('LSTM_parameter_result/TWII_2018_LSTM.csv')
+best_zzz = zzz.best_params('val_loss', ['acc', 'loss', 'val_acc'],n=1,ascending =False)
