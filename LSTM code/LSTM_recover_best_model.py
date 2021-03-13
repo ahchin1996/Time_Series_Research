@@ -17,6 +17,8 @@ from feature_list import chose_list
 import talos as ta
 import time
 import tensorflow as tf
+from sklearn.metrics import mean_squared_error
+from math import sqrt
 
 # hide INFO and WARNING message
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -37,9 +39,9 @@ def print_time(text, stime):
     print(text +" "+ str(seconds // 60 // 60)+" hours : " + str(seconds // 60 % 60)  + " minutes : " + str(np.round(seconds % 60)) + " seconds")
 
 #每次需更改項目
-year = 2019
-fd = 'HSI_2019'
-path =  'D:/Time_Series_Research/new_data/HSI/HSI_2019.csv'
+year = 2018
+fd = 'TWII_2018'
+path =  'D:/Time_Series_Research/new_data/TWII/TWII_2018.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 
@@ -90,14 +92,14 @@ f"Train_label shape :{train_label.shape}\n"
 f"Test_data shape :{test_data.shape}\n"
 f"Test_label shape :{test_label.shape}")
 
-x_train = train_data[:-10,:]
+x_train = train_data[:-10]
 x_val = train_data[-10:,:]
 
 y_train = train_label[:-10]
 y_val = train_label[-10:]
 
 ######################################
-x_train = x_train.reshape(x_train.shape[0],1,x_train.shape[1])
+x_train = np.reshape(x_train,(x_train.shape[0],1,x_train.shape[1]))
 x_val = np.reshape(x_val,(x_val.shape[0],1,x_val.shape[1]))
 
 y_train = np.reshape(y_train,(y_train.shape[0],1))
@@ -108,14 +110,25 @@ f"x_val shape :{x_val.shape}\n"
 f"y_train shape :{y_train.shape}\n"
 f"y_val shape :{y_val.shape}")
 
+# search_params = {
+# "lstm_layers": [1,2],
+# "lstm1_nodes" : [30, 50 , 70],
+# "lstm2_nodes" : [30, 50 , 70],
+# "lstm3_nodes" : [30, 50, 70],
+# "batch_size": [64,128],
+# "lr": [0.1, 0.01, 0.001],
+# "epochs": [30,50,80],        
+# "optimizer": ['Adam']
+# }
+
 search_params = {
-"lstm_layers": [1,2],
+# "lstm_layers": [1,2],
 "lstm1_nodes" : [30, 50 , 70],
-"lstm2_nodes" : [30, 50 , 70],
+# "lstm2_nodes" : [30, 50 , 70],
 "lstm3_nodes" : [30, 50, 70],
-"batch_size": [64,128],
-"lr": [0.1, 0.01, 0.001],
-"epochs": [20,50,80],
+"batch_size": [64],
+"lr": [ 0.01, 0.001],
+"epochs": [30,50],        
 "optimizer": ['Adam']
 }
 
@@ -132,11 +145,11 @@ def create_model_talos(train_data, train_label, x_test_ts, y_test_ts, params):
     # (batch_size, timesteps, data_dim)
     lstm_model.add(LSTM(params["lstm1_nodes"], input_shape=(1 ,train_data.shape[2]), return_sequences=True))
 
-    if params["lstm_layers"] == 2:
-        lstm_model.add(LSTM(params["lstm2_nodes"], return_sequences = True))
-        lstm_model.add(LSTM(params["lstm3_nodes"]))
-    else:
-        lstm_model.add(LSTM(params["lstm3_nodes"]))
+    # if params["lstm_layers"] == 2:
+    #     lstm_model.add(LSTM(params["lstm2_nodes"], return_sequences = True))
+    #     lstm_model.add(LSTM(params["lstm3_nodes"]))
+    # else:
+    lstm_model.add(LSTM(params["lstm3_nodes"]))
 
     lstm_model.add(Dense(1, activation='sigmoid'))
 
@@ -168,41 +181,84 @@ t = ta.Scan(x= x_train,
             params=search_params,
             experiment_name = "LSTM_parameter_result")
 
-# from talos.utils.recover_best_model import recover_best_model
-#
-# results, models = recover_best_model(x_train=x_train,
-#                                      y_train=y_train,
-#                                      x_val=x_val,
-#                                      y_val=y_val,
-#                                      experiment_log='LSTM code/LSTM_parameter_result/HSI_2019_LSTM.csv',
-#                                      input_model=create_model_talos,
-#                                      n_models=0,
-#                                      task='multi_label')
+from talos.utils.recover_best_model import recover_best_model
 
-print()
+results, models = recover_best_model(x_train=x_train,
+                                      y_train=y_train,
+                                      x_val=x_val,
+                                      y_val=y_val,           
+                                      x_cross=None,
+                                      y_cross=None,
+                                      experiment_log='LSTM_parameter_result/TWII_2018_LSTM.csv',
+                                      input_model=create_model_talos,
+                                      n_models= 5,
+                                      task='multi_label')
+
+a = train_data
+b = train_label
+a = a.reshape(a.shape[0],1, a.shape[1])
+b = b.reshape(b.shape[0], )
+
+new_test_label = []
+all_length = len(new_df)
+n = split_no
+
+for i in range(0, all_length - split_no):
+    print()
+    print(f"No. {i + 1} Model training! Total number of times {all_length - split_no}!\n")
+    print(path + "\n")
+    #training model
+
+    print(a.shape, b.shape)
+    models[0].fit(a,
+              b,
+              epochs=80,
+              batch_size=128,
+              verbose=2, shuffle=False,
+              validation_data= (),
+              )
+
+    # fit network
+    #predicting
+    x = test_data[i, :]
+    x = x.reshape(1,1,x.shape[0])
+    testPredict = models[0].predict(x)
+    # new_test_label = np.concatenate([new_test_label,testPredict],axis = 0)
+    new_test_label.append(testPredict)
+
+    #add next data
+    y = test_data[i, :]
+    y = y.reshape(1, 1, y.shape[0])
+    train_data = np.concatenate([a, y], axis=0)
+    z = test_label[i].reshape(1, )
+    train_label = np.concatenate([b, z], axis=0)
+
+new_test_label = np.array(new_test_label)
+new_test_label = new_test_label.reshape(new_test_label.shape[0], 1)
+new_test_set = np.concatenate([test_data, new_test_label], axis=1)
+new_test_set = sc_df.inverse_transform(new_test_set)
+new_test_label = new_test_set[:, new_test_set.shape[1] - 1]
+
+test_set = np.array(new_df_orign.iloc[split_no:, :])
+test_label = test_set[:, 0]
+
+testScore = sqrt(mean_squared_error(test_label, new_test_label))
+print('Test RMSE: %.4f' % (testScore))
+
+mape = np.mean(np.abs((test_label - new_test_label)/test_label) )*100
+print('Test MAPE: %.4f' % (mape))
+
 print_time("program completed in", stime)
 
-from numba import cuda 
-device = cuda.get_current_device()
-device.reset()
 
-r = ta.Reporting('LSTM code/LSTM_parameter_result/HSI_2019_LSTM.csv')
+r = ta.Reporting('LSTM_parameter_result/TWII_2018_LSTM.csv')
 p_list = r.data
 low_val_loss =  r.low('val_loss')
 fliter = p_list.val_loss == low_val_loss
 best_p = p_list[fliter]
+best_p
 
-r.best_params('val_loss', ['acc', 'loss', 'val_acc'])
-r.correlate('val_loss', ['acc', 'loss', 'val_acc'])
+best = r.best_params('val_loss', ['acc', 'loss', 'val_acc'],n=1,ascending =False)
 
-
-t.save_model
-
-p = ta.Predict(t)
-
-t.best_model(metric = "val_loss",asc = False)
-t.params
-t.saved_models
-
-ta.Deploy(t, "HSI_2019", metric="val_acc")
-mm = ta.Restore("D:/chin/HSI_2019.zip")
+zzz = ta.Analyze('LSTM_parameter_result/TWII_2018_LSTM.csv')
+best_zzz = zzz.best_params('val_loss', ['acc', 'loss', 'val_acc'],n=1,ascending =False)
