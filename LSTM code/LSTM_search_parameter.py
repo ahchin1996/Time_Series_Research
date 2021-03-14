@@ -20,18 +20,17 @@ import tensorflow as tf
 
 # hide INFO and WARNING message
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-# control the kernal inside of GPU
 # assgin which one GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-# automatic selection running device
-config = tf.compat.v1.ConfigProto(allow_soft_placement = True)
+# control the kernal inside of GPU
+config = tf.compat.v1.ConfigProto()
 # 指定GPU顯示卡記憶體用量上限
-gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction = 0.9)
-config=tf.compat.v1.ConfigProto(gpu_options=gpu_options)
+config.gpu_options.per_process_gpu_memory_fraction = .75
+# automatic selection running device
+config.allow_soft_placement = True
 # 自動增長GPU記憶體用量
 config.gpu_options.allow_growth = True
-sess0 = tf.compat.v1.InteractiveSession(config=config)
-
+sess = tf.compat.v1.InteractiveSession(config=config)
 
 stime = time.time()
 
@@ -41,9 +40,9 @@ def print_time(text, stime):
     print(text +" "+ str(seconds // 60 // 60)+" hours : " + str(seconds // 60 % 60)  + " minutes : " + str(np.round(seconds % 60)) + " seconds")
 
 #每次需更改項目
-year = 2018
-fd = 'HSI_2018'
-path =  'D:/Time_Series_Research/new_data/HSI/HSI_2018.csv'
+year = 2019
+fd = 'GSPC_2019'
+path =  'D:/Time_Series_Research/new_data/GSPC/GSPC_2019.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 
@@ -178,3 +177,11 @@ print_time("program completed in", stime)
 from numba import cuda 
 device = cuda.get_current_device()
 device.reset()
+
+import gc
+gc.collect()
+
+# from talos import Deploy
+
+# Deploy(t, 'DJI_2019_LSTM',metric= "val_loss",asc = True)
+
