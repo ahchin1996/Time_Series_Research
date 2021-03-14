@@ -171,15 +171,7 @@ def create_model_talos(train_data, train_label, x_test_ts, y_test_ts, params):
     print()
     return history, lstm_model
 
-print("Starting Talos scanning...")
 
-t = ta.Scan(x= x_train,
-            y= y_train,
-            x_val = x_val,
-            y_val = y_val,
-            model=create_model_talos,
-            params=search_params,
-            experiment_name = "LSTM_parameter_result")
 
 from talos.utils.recover_best_model import recover_best_model
 

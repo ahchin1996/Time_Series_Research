@@ -155,6 +155,7 @@ for i in range(0, all_length - split_no):
     #training model
 
     print(a.shape, b.shape)
+    model.fit_generator
     model.fit(a,
               b,
               epochs=80,
