@@ -112,25 +112,14 @@ f"x_val shape :{x_val.shape}\n"
 f"y_train shape :{y_train.shape}\n"
 f"y_val shape :{y_val.shape}")
 
-# search_params = {
-# "lstm_layers": [1,2],
-# "lstm1_nodes" : [30, 50 , 70],
-# "lstm2_nodes" : [30, 50 , 70],
-# "lstm3_nodes" : [30, 50, 70],
-# "batch_size": [64,128],
-# "lr": [0.1, 0.01, 0.001],
-# "epochs": [30,50,80],        
-# "optimizer": ['Adam']
-# }
-
 search_params = {
-# "lstm_layers": [1,2],
+"lstm_layers": [1,2],
 "lstm1_nodes" : [30, 50 , 70],
-# "lstm2_nodes" : [30, 50 , 70],
+"lstm2_nodes" : [30, 50 , 70],
 "lstm3_nodes" : [30, 50, 70],
-"batch_size": [64],
-"lr": [ 0.01, 0.001],
-"epochs": [30,50],        
+"batch_size": [64,128],
+"lr": [0.1, 0.01, 0.001],
+"epochs": [30,50,80],
 "optimizer": ['Adam']
 }
 
@@ -173,17 +162,13 @@ def create_model_talos(train_data, train_label, x_test_ts, y_test_ts, params):
     print()
     return history, lstm_model
 
-
-
 from talos.utils.recover_best_model import recover_best_model
 
 results, models = recover_best_model(x_train=x_train,
                                       y_train=y_train,
                                       x_val=x_val,
-                                      y_val=y_val,           
-                                      x_cross=None,
-                                      y_cross=None,
-                                      experiment_log='LSTM_parameter_result/TWII_2018_LSTM.csv',
+                                      y_val=y_val,
+                                      experiment_log='LSTM code/LSTM_parameter_result/TWII_2018_LSTM.csv',
                                       input_model=create_model_talos,
                                       n_models= 5,
                                       task='multi_label')
@@ -245,14 +230,18 @@ print('Test MAPE: %.4f' % (mape))
 print_time("program completed in", stime)
 
 
-r = ta.Reporting('LSTM_parameter_result/TWII_2018_LSTM.csv')
+r = ta.Reporting('LSTM code/LSTM_parameter_result/TWII_2018_LSTM.csv')
 p_list = r.data
 low_val_loss =  r.low('val_loss')
 fliter = p_list.val_loss == low_val_loss
 best_p = p_list[fliter]
 best_p
 
-best = r.best_params('val_loss', ['acc', 'loss', 'val_acc'],n=1,ascending =False)
+best = r.best_params('val_loss', ['acc', 'loss', 'val_acc'],n=1,ascending =True)
 
-zzz = ta.Analyze('LSTM_parameter_result/TWII_2018_LSTM.csv')
+zzz = ta.Analyze('LSTM code/LSTM_parameter_result/TWII_2018_LSTM.csv')
 best_zzz = zzz.best_params('val_loss', ['acc', 'loss', 'val_acc'],n=1,ascending =False)
+
+from talos.utils import best_model
+
+best_model(r,metric = "val_loss",)
