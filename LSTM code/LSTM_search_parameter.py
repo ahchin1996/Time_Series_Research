@@ -40,9 +40,9 @@ def print_time(text, stime):
     print(text +" "+ str(seconds // 60 // 60)+" hours : " + str(seconds // 60 % 60)  + " minutes : " + str(np.round(seconds % 60)) + " seconds")
 
 #每次需更改項目
-year = 2018
-fd = 'N225_2018'
-path =  'D:/Time_Series_Research/new_data/N225/N225_2018.csv'
+year = 2019
+fd = 'N225_2019'
+path =  'D:/Time_Series_Research/new_data/N225/N225_2019.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 
@@ -68,9 +68,9 @@ def getLAG(price, period):
     lag = price.shift(period)
     return lag
 
-new_df["MA_20_1"] = getLAG(new_df.MA_20,1)
-new_df["MA_20_2"] = getLAG(new_df.MA_20,2)
-new_df.fillna(new_df.MA_20[0],inplace=True)
+# new_df["MA_20_1"] = getLAG(new_df.MA_20,1)
+# new_df["MA_20_2"] = getLAG(new_df.MA_20,2)
+# new_df.fillna(new_df.MA_20[0],inplace=True)
 
 new_df.drop(['Date'], axis=1, inplace=True)
 new_df.head(5)
@@ -93,11 +93,11 @@ f"Train_label shape :{train_label.shape}\n"
 f"Test_data shape :{test_data.shape}\n"
 f"Test_label shape :{test_label.shape}")
 
-x_train = train_data[:-10,:]
-x_val = train_data[-10:,:]
+x_train = train_data[:-5,:]
+x_val = train_data[-5:,:]
 
-y_train = train_label[:-10]
-y_val = train_label[-10:]
+y_train = train_label[:-5]
+y_val = train_label[-5:]
 
 ######################################
 x_train = x_train.reshape(x_train.shape[0],1,x_train.shape[1])
@@ -162,8 +162,8 @@ def create_model_talos(train_data, train_label, x_test_ts, y_test_ts, params):
 print("Starting Talos scanning...")
 t = ta.Scan(x= x_train,
             y= y_train,
-            x_val = x_val,
-            y_val = y_val,
+            x_val= x_val,
+            y_val= y_val,
             model=create_model_talos,
             params=search_params,
             experiment_name = "LSTM_parameter_result")
