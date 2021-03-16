@@ -27,11 +27,11 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 # control the kernal inside of GPU
 config = tf.compat.v1.ConfigProto()
 # 指定GPU顯示卡記憶體用量上限
-config.gpu_options.per_process_gpu_memory_fraction = .75
+config.gpu_options.per_process_gpu_memory_fraction = .85
 # automatic selection running device
 config.allow_soft_placement = True
 # 自動增長GPU記憶體用量
-config.gpu_options.allow_growth = True
+# config.gpu_options.allow_growth = True
 sess = tf.compat.v1.InteractiveSession(config=config)
 stime = time.time()
 
@@ -43,8 +43,8 @@ def print_time(text, stime):
 
 #每次需更改項目
 year = 2018
-fd = 'TWII_2018'
-path =  'D:/Time_Series_Research/new_data/TWII/TWII_2018.csv'
+fd = 'GSPC_2018'
+path =  'D:/Time_Series_Research/new_data/GSPC/GSPC_2018.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 
@@ -128,8 +128,8 @@ custom_early_stopping = EarlyStopping(
 
 # Built Model
 model = Sequential()
-model.add(LSTM(units = 30, input_shape=(1,train_data.shape[1]), return_sequences=True, activation="tanh") )
-model.add(LSTM(units=50, return_sequences = True))
+model.add(LSTM(units = 70, input_shape=(1,train_data.shape[1]), return_sequences=True, activation="tanh") )
+# model.add(LSTM(units=50, return_sequences = True))
 model.add(LSTM(units = 70))
 model.add(Dense(units = 1))
 model.compile(optimizer=Adam(lr=0.1), loss='mean_squared_error', metrics=['accuracy'])
@@ -153,13 +153,11 @@ for i in range(0, all_length - split_no):
     #training model
 
     print(a.shape, b.shape)
-    model.fit_generator
     model.fit(a,
               b,
               epochs=80,
-              batch_size=128,
+              batch_size=64,
               verbose=2, shuffle=False,
-              validation_data= (),
               callbacks=[custom_early_stopping])
 
     # fit network

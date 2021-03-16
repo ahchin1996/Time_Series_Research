@@ -41,9 +41,9 @@ def print_time(text, stime):
     print(text +" "+ str(seconds // 60 // 60)+" hours : " + str(seconds // 60 % 60)  + " minutes : " + str(np.round(seconds % 60)) + " seconds")
 
 #每次需更改項目
-year = 2018
-fd = 'TWII_2018'
-path =  'D:/Time_Series_Research/new_data/TWII/TWII_2018.csv'
+year = 2019
+fd = 'GSPC_2019'
+path =  'D:/Time_Series_Research/new_data/GSPC/GSPC_2019.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 
@@ -112,66 +112,36 @@ f"x_val shape :{x_val.shape}\n"
 f"y_train shape :{y_train.shape}\n"
 f"y_val shape :{y_val.shape}")
 
-search_params = {
-"lstm_layers": [1,2],
-"lstm1_nodes" : [30, 50 , 70],
-"lstm2_nodes" : [30, 50 , 70],
-"lstm3_nodes" : [30, 50, 70],
-"batch_size": [64,128],
-"lr": [0.1, 0.01, 0.001],
-"epochs": [30,50,80],
-"optimizer": ['Adam']
-}
-
-#a = train_data
-# b = train_label
-# a = a.reshape(a.shape[0],1, a.shape[1])
-# b = b.reshape(b.shape[0], )
-# print(a.shape, b.shape)
-
 def create_model_talos(train_data, train_label, x_test_ts, y_test_ts, params):
-    BATCH_SIZE = params["batch_size"]
-    # TIME_STEPS = params["time_steps"]
     lstm_model = Sequential()
     # (batch_size, timesteps, data_dim)
-    lstm_model.add(LSTM(params["lstm1_nodes"], input_shape=(1 ,train_data.shape[2]), return_sequences=True))
+    lstm_model.add(LSTM(params["lstm1_nodes"][0], input_shape=(1 ,train_data.shape[2]), return_sequences=True))
 
-    # if params["lstm_layers"] == 2:
-    #     lstm_model.add(LSTM(params["lstm2_nodes"], return_sequences = True))
-    #     lstm_model.add(LSTM(params["lstm3_nodes"]))
-    # else:
-    lstm_model.add(LSTM(params["lstm3_nodes"]))
+    if params["lstm_layers"][0] == 2:
+        lstm_model.add(LSTM(params["lstm2_nodes"][0], return_sequences = True))
+        lstm_model.add(LSTM(params["lstm3_nodes"][0]))
+    else:
+        lstm_model.add(LSTM(params["lstm3_nodes"][0]))
 
     lstm_model.add(Dense(1, activation='sigmoid'))
 
-    if params["optimizer"] == 'Adam':
+    if params["optimizer"][0] == 'Adam':
         optimizer = Adam(lr=params["lr"])
 
     lstm_model.compile(loss='mean_squared_error', optimizer=optimizer, metrics = ['acc'])  # binary_crossentropy
-    history = lstm_model.fit(train_data,
-                             train_label,
-                             epochs=params["epochs"],
-                             verbose=2,
-                             batch_size=BATCH_SIZE,
-                             validation_data=[x_test_ts,y_test_ts])
+
     # for key in history.history.keys():
     #     print(key, "--",history.history[key])
+    return lstm_model
 
+r = ta.Reporting('LSTM code/LSTM_parameter_result/GSPC_2019_LSTM.csv')
+p_list = r.data
+low_val_loss =  r.low('val_loss')
+fliter = p_list.val_loss == low_val_loss
+best_p = p_list[fliter]
 
-    print_time("program running in", stime)
-    print()
-    return history, lstm_model
-
-from talos.utils.recover_best_model import recover_best_model
-
-results, models = recover_best_model(x_train=x_train,
-                                      y_train=y_train,
-                                      x_val=x_val,
-                                      y_val=y_val,
-                                      experiment_log='LSTM code/LSTM_parameter_result/TWII_2018_LSTM.csv',
-                                      input_model=create_model_talos,
-                                      n_models= 5,
-                                      task='multi_label')
+best_p = best_p.to_dict(orient = "list")
+lstm_model = create_model_talos(x_train,y_train,x_val,y_val,best_p)
 
 a = train_data
 b = train_label
@@ -189,19 +159,18 @@ for i in range(0, all_length - split_no):
     #training model
 
     print(a.shape, b.shape)
-    models[0].fit(a,
-              b,
-              epochs=80,
-              batch_size=128,
-              verbose=2, shuffle=False,
-              validation_data= (),
-              )
+    lstm_model.fit(a,
+                  b,
+                  epochs=best_p["epochs"][0],
+                  batch_size=best_p["batch_size"][0],
+                  verbose=2, shuffle=False,
+                  )
 
     # fit network
     #predicting
     x = test_data[i, :]
     x = x.reshape(1,1,x.shape[0])
-    testPredict = models[0].predict(x)
+    testPredict = lstm_model.predict(x)
     # new_test_label = np.concatenate([new_test_label,testPredict],axis = 0)
     new_test_label.append(testPredict)
 
@@ -228,20 +197,3 @@ mape = np.mean(np.abs((test_label - new_test_label)/test_label) )*100
 print('Test MAPE: %.4f' % (mape))
 
 print_time("program completed in", stime)
-
-
-r = ta.Reporting('LSTM code/LSTM_parameter_result/TWII_2018_LSTM.csv')
-p_list = r.data
-low_val_loss =  r.low('val_loss')
-fliter = p_list.val_loss == low_val_loss
-best_p = p_list[fliter]
-best_p
-
-best = r.best_params('val_loss', ['acc', 'loss', 'val_acc'],n=1,ascending =True)
-
-zzz = ta.Analyze('LSTM code/LSTM_parameter_result/TWII_2018_LSTM.csv')
-best_zzz = zzz.best_params('val_loss', ['acc', 'loss', 'val_acc'],n=1,ascending =False)
-
-from talos.utils import best_model
-
-best_model(r,metric = "val_loss",)

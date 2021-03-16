@@ -130,7 +130,6 @@ search_params = {
 
 def create_model_talos(train_data, train_label, x_test_ts, y_test_ts, params):
     BATCH_SIZE = params["batch_size"]
-    # TIME_STEPS = params["time_steps"]
     lstm_model = Sequential()
     # (batch_size, timesteps, data_dim)
     lstm_model.add(LSTM(params["lstm1_nodes"], input_shape=(1 ,train_data.shape[2]), return_sequences=True))
@@ -155,8 +154,6 @@ def create_model_talos(train_data, train_label, x_test_ts, y_test_ts, params):
                              validation_data=[x_test_ts,y_test_ts])
     # for key in history.history.keys():
     #     print(key, "--",history.history[key])
-
-
     print_time("program running in", stime)
     print()
     return history, lstm_model
@@ -180,22 +177,3 @@ device.reset()
 
 import gc
 gc.collect()
-
-x = test_data[0, :]
-x = x.reshape(1,1,x.shape[0])
-
-from talos import Predict
-
-p = Predict(t)
-p.predict(x,metric="val_loss",asc=True)
-
-from talos import Evaluate
-
-e = Evaluate(t)
-
-e.evaluate(x_train, y_train , task= "continuous", metric = "val_loss",asc=True)
-
-from talos import Deploy
-
-Deploy(t, 'DJI_2019_LSTM',metric= "val_loss",asc = True)
-
