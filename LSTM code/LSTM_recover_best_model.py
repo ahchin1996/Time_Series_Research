@@ -42,8 +42,9 @@ def print_time(text, stime):
 
 #每次需更改項目
 year = 2019
-fd = 'GSPC_2019'
-path =  'D:/Time_Series_Research/new_data/GSPC/GSPC_2019.csv'
+fd = 'N225_2019'
+path =  'D:/Time_Series_Research/new_data/N225/N225_2019.csv'
+repot_path = 'D:/Time_Series_Research/LSTM code/LSTM_parameter_result/N225_2019_LSTM.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 
@@ -69,9 +70,9 @@ def getLAG(price, period):
     lag = price.shift(period)
     return lag
 
-new_df["MA_20_1"] = getLAG(new_df.MA_20,1)
-new_df["MA_20_2"] = getLAG(new_df.MA_20,2)
-new_df.fillna(new_df.MA_20[0],inplace=True)
+# new_df["MA_20_1"] = getLAG(new_df.MA_20,1)
+# new_df["MA_20_2"] = getLAG(new_df.MA_20,2)
+# new_df.fillna(new_df.MA_20[0],inplace=True)
 
 new_df.drop(['Date'], axis=1, inplace=True)
 new_df.head(5)
@@ -134,7 +135,7 @@ def create_model_talos(train_data, train_label, x_test_ts, y_test_ts, params):
     #     print(key, "--",history.history[key])
     return lstm_model
 
-r = ta.Reporting('LSTM code/LSTM_parameter_result/GSPC_2019_LSTM.csv')
+r = ta.Reporting(repot_path)
 p_list = r.data
 low_val_loss =  r.low('val_loss')
 fliter = p_list.val_loss == low_val_loss

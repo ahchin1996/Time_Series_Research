@@ -42,9 +42,9 @@ def print_time(text, stime):
 
 
 #每次需更改項目
-year = 2018
-fd = 'GSPC_2018'
-path =  'D:/Time_Series_Research/new_data/GSPC/GSPC_2018.csv'
+year = 2019
+fd = 'HSI_2019'
+path =  'D:/Time_Series_Research/new_data/HSI/HSI_2019.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 

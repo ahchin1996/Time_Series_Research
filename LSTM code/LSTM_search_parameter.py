@@ -68,9 +68,9 @@ def getLAG(price, period):
     lag = price.shift(period)
     return lag
 
-new_df["MA_20_1"] = getLAG(new_df.MA_20,1)
-new_df["MA_20_2"] = getLAG(new_df.MA_20,2)
-new_df.fillna(new_df.MA_20[0],inplace=True)
+# new_df["MA_20_1"] = getLAG(new_df.MA_20,1)
+# new_df["MA_20_2"] = getLAG(new_df.MA_20,2)
+# new_df.fillna(new_df.MA_20[0],inplace=True)
 
 new_df.drop(['Date'], axis=1, inplace=True)
 new_df.head(5)
