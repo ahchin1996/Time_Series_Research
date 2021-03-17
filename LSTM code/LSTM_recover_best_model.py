@@ -19,6 +19,7 @@ import time
 import tensorflow as tf
 from sklearn.metrics import mean_squared_error
 from math import sqrt
+from keras.callbacks import EarlyStopping
 
 # hide INFO and WARNING message
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -42,9 +43,9 @@ def print_time(text, stime):
 
 #每次需更改項目
 year = 2019
-fd = 'N225_2019'
-path =  'D:/Time_Series_Research/new_data/N225/N225_2019.csv'
-repot_path = 'D:/Time_Series_Research/LSTM code/LSTM_parameter_result/N225_2019_LSTM.csv'
+fd = 'DJI_2019'
+path =  'D:/Time_Series_Research/new_data/DJI/DJI_2019.csv'
+repot_path = 'D:/Time_Series_Research/LSTM code/LSTM_parameter_result/DJI_2019_LSTM.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 
@@ -113,20 +114,27 @@ f"x_val shape :{x_val.shape}\n"
 f"y_train shape :{y_train.shape}\n"
 f"y_val shape :{y_val.shape}")
 
-def create_model_talos(train_data, train_label, x_test_ts, y_test_ts, params):
+custom_early_stopping = EarlyStopping(
+    monitor='loss',
+    patience=100,
+    min_delta=0.01,
+    mode='auto'
+)
+
+def create_model_talos(train_data, params):
     lstm_model = Sequential()
     # (batch_size, timesteps, data_dim)
-    lstm_model.add(LSTM(params["lstm1_nodes"][0], input_shape=(1 ,train_data.shape[2]), return_sequences=True))
+    lstm_model.add(LSTM(params["lstm1_nodes"], input_shape=(1 ,train_data.shape[2]), return_sequences=True))
 
-    if params["lstm_layers"][0] == 2:
-        lstm_model.add(LSTM(params["lstm2_nodes"][0], return_sequences = True))
-        lstm_model.add(LSTM(params["lstm3_nodes"][0]))
+    if params["lstm_layers"] == 2:
+        lstm_model.add(LSTM(params["lstm2_nodes"], return_sequences = True))
+        lstm_model.add(LSTM(params["lstm3_nodes"]))
     else:
-        lstm_model.add(LSTM(params["lstm3_nodes"][0]))
+        lstm_model.add(LSTM(params["lstm3_nodes"]))
 
-    lstm_model.add(Dense(1, activation='sigmoid'))
+    lstm_model.add(Dense(1))
 
-    if params["optimizer"][0] == 'Adam':
+    if params["optimizer"]== 'Adam':
         optimizer = Adam(lr=params["lr"])
 
     lstm_model.compile(loss='mean_squared_error', optimizer=optimizer, metrics = ['acc'])  # binary_crossentropy
@@ -142,7 +150,11 @@ fliter = p_list.val_loss == low_val_loss
 best_p = p_list[fliter]
 
 best_p = best_p.to_dict(orient = "list")
-lstm_model = create_model_talos(x_train,y_train,x_val,y_val,best_p)
+
+newDict= {k: v[0] for k, v in best_p.items()}
+
+lstm_model = create_model_talos(x_train,newDict)
+lstm_model.summary()
 
 a = train_data
 b = train_label
@@ -165,6 +177,7 @@ for i in range(0, all_length - split_no):
                   epochs=best_p["epochs"][0],
                   batch_size=best_p["batch_size"][0],
                   verbose=2, shuffle=False,
+                   callbacks= [custom_early_stopping]
                   )
 
     # fit network

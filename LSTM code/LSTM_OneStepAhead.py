@@ -46,7 +46,6 @@ year = 2018
 fd = 'DJI_2018'
 path =  'D:/Time_Series_Research/new_data/DJI/DJI_2018.csv'
 
-
 INPUT_PATH = os.path.join(path, "inputs")
 
 df_all = pd.read_csv(path,sep=',',header=0)
@@ -130,8 +129,8 @@ custom_early_stopping = EarlyStopping(
 # Built Model
 model = Sequential()
 model.add(LSTM(units = 30, input_shape=(1,train_data.shape[1]), return_sequences=True, activation="tanh") )
-model.add(LSTM(units=50, return_sequences = True))
-model.add(LSTM(units = 30))
+model.add(LSTM(units = 30, return_sequences = True))
+model.add(LSTM(units = 70))
 model.add(Dense(units = 1))
 model.compile(optimizer=Adam(lr=0.001), loss='mean_squared_error', metrics=['accuracy'])
 # model.save('Model_LSTM.h5')
