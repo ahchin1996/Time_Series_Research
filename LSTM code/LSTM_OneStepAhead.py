@@ -43,8 +43,8 @@ def print_time(text, stime):
 
 #每次需更改項目
 year = 2019
-fd = 'HSI_2019'
-path =  'D:/Time_Series_Research/new_data/HSI/HSI_2019.csv'
+fd = 'DJI_2019'
+path =  'D:/Time_Series_Research/new_data/DJI/DJI_2019.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 
@@ -128,11 +128,11 @@ custom_early_stopping = EarlyStopping(
 
 # Built Model
 model = Sequential()
-model.add(LSTM(units = 70, input_shape=(1,train_data.shape[1]), return_sequences=True, activation="tanh") )
-# model.add(LSTM(units=50, return_sequences = True))
+model.add(LSTM(units = 30, input_shape=(1,train_data.shape[1]), return_sequences=True, activation="tanh") )
+# model.add(LSTM(units=30 , return_sequences = True))
 model.add(LSTM(units = 70))
 model.add(Dense(units = 1))
-model.compile(optimizer=Adam(lr=0.1), loss='mean_squared_error', metrics=['accuracy'])
+model.compile(optimizer=Adam(lr=0.001), loss='mean_squared_error', metrics=['accuracy'])
 # model.save('Model_LSTM.h5')
 
 model.summary()
