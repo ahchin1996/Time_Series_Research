@@ -42,14 +42,10 @@ def print_time(text, stime):
 
 
 #每次需更改項目
-year = 2019
-<<<<<<< HEAD
-fd = 'DJI_2019'
-path =  'D:/Time_Series_Research/new_data/DJI/DJI_2019.csv'
-=======
-fd = 'HSI_2019'
-path =  'D:/Time_Series_Research/new_data/HSI/HSI_2019.csv'
->>>>>>> c1ce9642a49c679811d05ba5b21ba80bdae14b13
+year = 2018
+fd = 'DJI_2018'
+path =  'D:/Time_Series_Research/new_data/DJI/DJI_2018.csv'
+
 
 INPUT_PATH = os.path.join(path, "inputs")
 
