@@ -40,16 +40,13 @@ def print_time(text, stime):
     print(text +" "+ str(seconds // 60 // 60)+" hours : " + str(seconds // 60 % 60)  + " minutes : " + str(np.round(seconds % 60)) + " seconds")
 
 #每次需更改項目
-year = 2019
-fd = 'N225_2019'
-path =  'D:/Time_Series_Research/new_data/N225/N225_2019.csv'
-
-INPUT_PATH = os.path.join(path, "inputs")
+year = 2018
+fd = 'HSI_2018'
+path =  'D:/Time_Series_Research/new_data/HSI/HSI_2018.csv'
 
 df_all = pd.read_csv(path,sep=',',header=0)
 date_array = pd.to_datetime(df_all['Date'] )
 print("Number of rows and columns:", df_all.shape)
-
 
 feature_list = chose_list(fd)
 new_df = df_all[['Date', 'Close']]
@@ -166,7 +163,9 @@ t = ta.Scan(x= x_train,
             y_val= y_val,
             model=create_model_talos,
             params=search_params,
-            experiment_name = "LSTM_parameter_result")
+            experiment_name = "LSTM_parameter_result",
+            print_params = True,
+            clear_session= True)
 
 print()
 print_time("program completed in", stime)
