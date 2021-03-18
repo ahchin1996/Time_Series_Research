@@ -173,10 +173,10 @@ for i in range(0, all_length - split_no):
 
     print(a.shape, b.shape)
     lstm_model.fit(a,
-                  b,
-                  epochs=best_p["epochs"][0],
-                  batch_size=best_p["batch_size"][0],
-                  verbose=2,
+                   b,
+                   epochs=newDict["epochs"],
+                   batch_size=newDict["batch_size"],
+                   verbose=2,
                    shuffle=False,
                    callbacks= [custom_early_stopping]
                   )
