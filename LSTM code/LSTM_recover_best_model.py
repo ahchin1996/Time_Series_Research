@@ -176,7 +176,8 @@ for i in range(0, all_length - split_no):
                   b,
                   epochs=best_p["epochs"][0],
                   batch_size=best_p["batch_size"][0],
-                  verbose=2, shuffle=False,
+                  verbose=2,
+                   shuffle=False,
                    callbacks= [custom_early_stopping]
                   )
 

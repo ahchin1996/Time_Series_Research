@@ -41,15 +41,12 @@ def print_time(text, stime):
 
 #每次需更改項目
 year = 2018
-fd = 'N225_2018'
-path =  'D:/Time_Series_Research/new_data/N225/N225_2018.csv'
-
-INPUT_PATH = os.path.join(path, "inputs")
+fd = 'HSI_2018'
+path =  'D:/Time_Series_Research/new_data/HSI/HSI_2018.csv'
 
 df_all = pd.read_csv(path,sep=',',header=0)
 date_array = pd.to_datetime(df_all['Date'] )
 print("Number of rows and columns:", df_all.shape)
-
 
 feature_list = chose_list(fd)
 new_df = df_all[['Date', 'Close']]
@@ -93,11 +90,11 @@ f"Train_label shape :{train_label.shape}\n"
 f"Test_data shape :{test_data.shape}\n"
 f"Test_label shape :{test_label.shape}")
 
-x_train = train_data[:-10,:]
-x_val = train_data[-10:,:]
+x_train = train_data[:-5,:]
+x_val = train_data[-5:,:]
 
-y_train = train_label[:-10]
-y_val = train_label[-10:]
+y_train = train_label[:-5]
+y_val = train_label[-5:]
 
 ######################################
 x_train = x_train.reshape(x_train.shape[0],1,x_train.shape[1])
@@ -162,11 +159,13 @@ def create_model_talos(train_data, train_label, x_test_ts, y_test_ts, params):
 print("Starting Talos scanning...")
 t = ta.Scan(x= x_train,
             y= y_train,
-            x_val = x_val,
-            y_val = y_val,
+            x_val= x_val,
+            y_val= y_val,
             model=create_model_talos,
             params=search_params,
-            experiment_name = "LSTM_parameter_result")
+            experiment_name = "LSTM_parameter_result",
+            print_params = True,
+            clear_session= True)
 
 print()
 print_time("program completed in", stime)
