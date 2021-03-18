@@ -85,6 +85,9 @@ train_label = train_set[:,0]
 test_data = test_set[:,1:]
 test_label = test_set[:,0]
 
+x_train = train_data.reshape(train_data.shape[0],1,train_data.shape[1])
+y_train = np.reshape(train_label,(train_label.shape[0],1))
+
 print(f"Train_data shape : {train_data.shape}\n"
 f"Train_label shape :{train_label.shape}\n"
 f"Test_data shape :{test_data.shape}\n"
@@ -159,8 +162,8 @@ def create_model_talos(train_data, train_label, x_test_ts, y_test_ts, params):
 print("Starting Talos scanning...")
 t = ta.Scan(x= x_train,
             y= y_train,
-            x_val= x_val,
-            y_val= y_val,
+            # x_val= x_val,
+            # y_val= y_val,
             model=create_model_talos,
             params=search_params,
             experiment_name = "LSTM_parameter_result",
