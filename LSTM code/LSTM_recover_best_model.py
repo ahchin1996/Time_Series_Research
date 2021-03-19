@@ -27,7 +27,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 # control the kernal inside of GPU
 config = tf.compat.v1.ConfigProto()
-# 指定GPU顯示卡記憶體用量上限
+# 指定GPU顯示卡記憶體用量上限 
 config.gpu_options.per_process_gpu_memory_fraction = .75
 # automatic selection running device
 config.allow_soft_placement = True
@@ -42,17 +42,16 @@ def print_time(text, stime):
     print(text +" "+ str(seconds // 60 // 60)+" hours : " + str(seconds // 60 % 60)  + " minutes : " + str(np.round(seconds % 60)) + " seconds")
 
 #每次需更改項目
-year = 2019
-fd = 'DJI_2019'
-path =  'D:/Time_Series_Research/new_data/DJI/DJI_2019.csv'
-repot_path = 'D:/Time_Series_Research/LSTM code/LSTM_parameter_result/DJI_2019_LSTM.csv'
+year = 2018
+fd = 'HSI_2018'
+path =  'D:/Time_Series_Research/new_data/HSI/HSI_2018.csv'
+repot_path = 'D:/Time_Series_Research/LSTM code/LSTM_parameter_result/HSI_2018_LSTM_NoVal.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 
 df_all = pd.read_csv(path,sep=',',header=0)
 date_array = pd.to_datetime(df_all['Date'] )
 print("Number of rows and columns:", df_all.shape)
-
 
 feature_list = chose_list(fd)
 new_df = df_all[['Date', 'Close']]
@@ -148,6 +147,8 @@ p_list = r.data
 low_val_loss =  r.low('val_loss')
 fliter = p_list.val_loss == low_val_loss
 best_p = p_list[fliter]
+
+par_id = best_p.index
 
 best_p = best_p.to_dict(orient = "list")
 
