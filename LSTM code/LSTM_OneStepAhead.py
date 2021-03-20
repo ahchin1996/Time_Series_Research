@@ -33,6 +33,7 @@ config.allow_soft_placement = True
 # 自動增長GPU記憶體用量
 # config.gpu_options.allow_growth = True
 sess = tf.compat.v1.InteractiveSession(config=config)
+
 stime = time.time()
 
 def print_time(text, stime):
@@ -40,18 +41,14 @@ def print_time(text, stime):
     print()
     print(text + " " + str(seconds // 60) + " minutes : " + str(np.round(seconds % 60)) + " seconds")
 
-
 #每次需更改項目
-year = 2018
-fd = 'DJI_2018'
-path =  'D:/Time_Series_Research/new_data/DJI/DJI_2018.csv'
-
-INPUT_PATH = os.path.join(path, "inputs")
+year = 2019
+fd = 'TWII_2019'
+path =  'D:/Time_Series_Research/new_data/TWII/TWII_2019.csv'
 
 df_all = pd.read_csv(path,sep=',',header=0)
 date_array = pd.to_datetime(df_all['Date'] )
 print("Number of rows and columns:", df_all.shape)
-
 
 feature_list = chose_list(fd)
 new_df = df_all[['Date', 'Close']]
@@ -128,11 +125,11 @@ custom_early_stopping = EarlyStopping(
 
 # Built Model
 model = Sequential()
-model.add(LSTM(units = 30, input_shape=(1,train_data.shape[1]), return_sequences=True, activation="tanh") )
-model.add(LSTM(units = 30, return_sequences = True))
+model.add(LSTM(units = 30, input_shape=(1,train_data.shape[1]), return_sequences=True) )
+# model.add(LSTM(units = 30, return_sequences = True))
 model.add(LSTM(units = 70))
 model.add(Dense(units = 1))
-model.compile(optimizer=Adam(lr=0.001), loss='mean_squared_error', metrics=['accuracy'])
+model.compile(optimizer=Adam(lr=0.1), loss='mean_squared_error', metrics=['accuracy'])
 # model.save('Model_LSTM.h5')
 
 model.summary()
@@ -155,9 +152,10 @@ for i in range(0, all_length - split_no):
     print(a.shape, b.shape)
     model.fit(a,
               b,
-              epochs=80,
-              batch_size=64,
-              verbose=2, shuffle=False,
+              epochs=50,
+              batch_size=128,
+              verbose=2,
+              shuffle=False,
               callbacks=[custom_early_stopping])
 
     # fit network
@@ -181,8 +179,7 @@ new_test_set = np.concatenate([test_data, new_test_label], axis=1)
 new_test_set = sc_df.inverse_transform(new_test_set)
 new_test_label = new_test_set[:, new_test_set.shape[1] - 1]
 
-test_set = np.array(new_df_orign.iloc[split_no:, :])
-test_label = test_set[:, 0]
+test_label = np.array(new_df_orign.iloc[split_no:,0])
 
 testScore = sqrt(mean_squared_error(test_label, new_test_label))
 print('Test RMSE: %.4f' % (testScore))

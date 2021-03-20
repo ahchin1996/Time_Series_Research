@@ -137,7 +137,7 @@ def create_model_talos(train_data, train_label, x_test_ts, y_test_ts, params):
     else:
         lstm_model.add(LSTM(params["lstm3_nodes"]))
 
-    lstm_model.add(Dense(1, activation='sigmoid'))
+    lstm_model.add(Dense(1))
 
     if params["optimizer"] == 'Adam':
         optimizer = Adam(lr=params["lr"])

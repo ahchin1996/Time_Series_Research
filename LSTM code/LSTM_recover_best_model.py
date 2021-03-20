@@ -42,10 +42,10 @@ def print_time(text, stime):
     print(text +" "+ str(seconds // 60 // 60)+" hours : " + str(seconds // 60 % 60)  + " minutes : " + str(np.round(seconds % 60)) + " seconds")
 
 #每次需更改項目
-year = 2018
-fd = 'HSI_2018'
-path =  'D:/Time_Series_Research/new_data/HSI/HSI_2018.csv'
-repot_path = 'D:/Time_Series_Research/LSTM code/LSTM_parameter_result/HSI_2018_LSTM_NoVal.csv'
+year = 2019
+fd = 'TWII_2019'
+path =  'D:/Time_Series_Research/new_data/TWII/TWII_2019.csv'
+repot_path = 'D:/Time_Series_Research/LSTM code/LSTM_parameter_result/TWII_2019_LSTM.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 
@@ -133,7 +133,7 @@ def create_model_talos(train_data, params):
 
     lstm_model.add(Dense(1))
 
-    if params["optimizer"]== 'Adam':
+    if params["optimizer"] == 'Adam':
         optimizer = Adam(lr=params["lr"])
 
     lstm_model.compile(loss='mean_squared_error', optimizer=optimizer, metrics = ['acc'])  # binary_crossentropy
@@ -203,8 +203,7 @@ new_test_set = np.concatenate([test_data, new_test_label], axis=1)
 new_test_set = sc_df.inverse_transform(new_test_set)
 new_test_label = new_test_set[:, new_test_set.shape[1] - 1]
 
-test_set = np.array(new_df_orign.iloc[split_no:, :])
-test_label = test_set[:, 0]
+test_label = np.array(new_df_orign.iloc[split_no:,0])
 
 testScore = sqrt(mean_squared_error(test_label, new_test_label))
 print('Test RMSE: %.4f' % (testScore))
