@@ -119,14 +119,9 @@ search_params = {
 "optimizer": ['Adam']
 }
 
-#a = train_data
-# b = train_label
-# a = a.reshape(a.shape[0],1, a.shape[1])
-# b = b.reshape(b.shape[0], )
-# print(a.shape, b.shape)
-
-def create_model_talos(train_data, train_label, x_test_ts, y_test_ts, params):
+def create_model_talos(train_data, train_label, x_val, y_val, params):
     BATCH_SIZE = params["batch_size"]
+    EPOCHS = params["epochs"]
     lstm_model = Sequential()
     # (batch_size, timesteps, data_dim)
     lstm_model.add(LSTM(params["lstm1_nodes"], input_shape=(1 ,train_data.shape[2]), return_sequences=True))
@@ -145,10 +140,11 @@ def create_model_talos(train_data, train_label, x_test_ts, y_test_ts, params):
     lstm_model.compile(loss='mean_squared_error', optimizer=optimizer, metrics = ['acc'])  # binary_crossentropy
     history = lstm_model.fit(train_data,
                              train_label,
-                             epochs=params["epochs"],
+                             epochs = EPOCHS,
                              verbose=2,
                              batch_size=BATCH_SIZE,
-                             validation_data=[x_test_ts,y_test_ts])
+                             validation_data=[x_val,y_val]
+                             )
     # for key in history.history.keys():
     #     print(key, "--",history.history[key])
     print_time("program running in", stime)

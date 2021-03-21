@@ -90,28 +90,14 @@ train_label = train_set[:,0]
 test_data = test_set[:,1:]
 test_label = test_set[:,0]
 
+x_train = np.reshape(train_data,(train_data.shape[0],1,train_data.shape[1]))
+y_train = np.reshape(train_label,(train_label.shape[0],1))
+
+
 print(f"Train_data shape : {train_data.shape}\n"
 f"Train_label shape :{train_label.shape}\n"
 f"Test_data shape :{test_data.shape}\n"
 f"Test_label shape :{test_label.shape}")
-
-x_train = train_data[:-10]
-x_val = train_data[-10:,:]
-
-y_train = train_label[:-10]
-y_val = train_label[-10:]
-
-######################################
-x_train = np.reshape(x_train,(x_train.shape[0],1,x_train.shape[1]))
-x_val = np.reshape(x_val,(x_val.shape[0],1,x_val.shape[1]))
-
-y_train = np.reshape(y_train,(y_train.shape[0],1))
-y_val = np.reshape(y_val,(y_val.shape[0],1))
-
-print(f"x_train shape : {x_train.shape}\n"
-f"x_val shape :{x_val.shape}\n"
-f"y_train shape :{y_train.shape}\n"
-f"y_val shape :{y_val.shape}")
 
 custom_early_stopping = EarlyStopping(
     monitor='loss',
