@@ -12,7 +12,7 @@ import numpy as np
 from keras.models import Sequential
 from sklearn.preprocessing import MinMaxScaler
 from keras.optimizers import Adam
-from keras.layers import LSTM, Dense
+from keras.layers import LSTM, Dense, Flatten
 from feature_list import chose_list
 import talos as ta
 import time
@@ -42,10 +42,10 @@ def print_time(text, stime):
     print(text +" "+ str(seconds // 60 // 60)+" hours : " + str(seconds // 60 % 60)  + " minutes : " + str(np.round(seconds % 60)) + " seconds")
 
 #每次需更改項目
-year = 2019
-fd = 'TWII_2019'
-path =  'D:/Time_Series_Research/new_data/TWII/TWII_2019.csv'
-repot_path = 'D:/Time_Series_Research/LSTM code/LSTM_parameter_result/TWII_2019_LSTM.csv'
+year = 2018
+fd = 'GSPC_2018'
+path =  'D:/Time_Series_Research/new_data/GSPC/GSPC_2018.csv'
+repot_path = 'D:/Time_Series_Research/LSTM code/LSTM_parameter_result/032221163157.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 
@@ -112,11 +112,10 @@ def create_model_talos(train_data, params):
     lstm_model.add(LSTM(params["lstm1_nodes"], input_shape=(1 ,train_data.shape[2]), return_sequences=True))
 
     if params["lstm_layers"] == 2:
-        lstm_model.add(LSTM(params["lstm2_nodes"], return_sequences = True))
-        lstm_model.add(LSTM(params["lstm3_nodes"]))
+        lstm_model.add(LSTM(params["lstm2_nodes"], return_sequences=True))
+        lstm_model.add(Flatten())
     else:
-        lstm_model.add(LSTM(params["lstm3_nodes"]))
-
+        lstm_model.add(Flatten())
     lstm_model.add(Dense(1))
 
     if params["optimizer"] == 'Adam':

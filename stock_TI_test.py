@@ -325,3 +325,32 @@ id = pd.DataFrame(range(0,len(data)))
 data.insert(0,"index",id)
 output_path ='D:/Time_Series_Research/new_data/GSPC_2019.csv'
 data.to_csv(output_path, index=0, header=1)
+
+
+def getRSI(Close, period=12):
+    # 整理資料
+    import pandas as pd
+    Chg = Close - Close.shift(1)
+    Chg_pos = pd.Series(index=Chg.index, data=Chg[Chg > 0])
+    Chg_pos = Chg_pos.fillna(0)
+    Chg_neg = pd.Series(index=Chg.index, data=-Chg[Chg < 0])
+    Chg_neg = Chg_neg.fillna(0)
+
+    # 計算12日平均漲跌幅度
+    import numpy as np
+    up_mean = []
+    down_mean = []
+    for i in range(period + 1, len(Chg_pos) + 1):
+        up_mean.append(np.mean(Chg_pos.values[i - period:i]))
+        down_mean.append(np.mean(Chg_neg.values[i - period:i]))
+
+    # 計算 RSI
+    rsi = []
+    for i in range(len(up_mean)):
+        rsi.append(100 * up_mean[i] / (up_mean[i] + down_mean[i]))
+    rsi_series = pd.Series(index=Close.index[period:], data=rsi)
+    return rsi_series
+
+
+# 稍微對照一下剛剛算出來的數字，會是一樣的
+data["RSI"] = getRSI(close, 6)

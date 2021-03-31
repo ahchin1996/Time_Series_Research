@@ -73,7 +73,6 @@ regressor = SVR(kernel = 'linear',gamma='scale',epsilon = 0.0001,C= 8,verbose=3)
 
 new_test_label = []
 all_length = len(new_df)
-
 for i in range(0, all_length - split_no):
     print()
     print(f"No. {i + 1} Model training! Total number of times {all_length - split_no}!\n")

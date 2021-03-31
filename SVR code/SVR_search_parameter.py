@@ -27,8 +27,8 @@ sess0 = tf.compat.v1.InteractiveSession(config=config)
 
 #每次需更改項目
 year = 2019
-fd = 'DJI_2019'
-path =  'D:/Time_Series_Research/new_data/DJI/DJI_2019.csv'
+fd = 'TWII_2019'
+path =  'D:/Time_Series_Research/new_data/TWII/TWII_2019.csv'
 
 df_all = pd.read_csv(path,sep=',',header=0)
 date_array = pd.to_datetime(df_all['Date'] )
@@ -91,47 +91,51 @@ best_estimator = grids.best_estimator_
 print(best_estimator)   #estimator which gave highest score (or smallest loss if specified) on the left out data.
 print(grids.best_params_)   #Parameter setting that gave the best results on the hold out data.
 
-# new_test_label = []
-# all_length = len(new_df)
-#
-# for i in range(0, all_length - split_no):
-#     print()
-#     print(f"No. {i + 1} Model training! Total number of times {all_length - split_no}!\n")
-#     print(path + "\n")
-#     #training model
-#     a = train_data
-#     b = train_label
-#     print(a.shape, b.shape)
-#     regressor.fit(a,b)
-#
-#     # fit network
-#     # predicting
-#     x = test_data[i, :]
-#     x = x.reshape(1,x.shape[0])
-#     testPredict = regressor.predict(x)
-#     # new_test_label = np.concatenate([new_test_label,testPredict],axis = 0)
-#     new_test_label.append(testPredict)
-#
-#     #add next data
-#     y =  test_label[i]
-#     # one_y = one_y.reshape(1, one_y.shape[0])
-#     train_data = np.concatenate([train_data, x], axis=0)
-#     train_label = np.append(train_label,y)
-#
-# new_test_label = np.array(new_test_label)
-# new_test_set = np.concatenate([test_data, new_test_label], axis=1)
-# new_test_set = sc_df.inverse_transform(new_test_set)
-# new_test_label = new_test_set[:, new_test_set.shape[1] - 1]
-#
-# test_set = sc_df.inverse_transform(test_set)
-# test_label = test_set[:, 0]
-#
-# rmse = sqrt(mean_squared_error(test_label, new_test_label))
-# print('Test RMSE: %.4f' % (rmse))
-#
-# mape = np.mean(np.abs((test_label - new_test_label) / test_label)) * 100
-# print('Test MAPE: %.4f' % (mape))
-#
+parameter = grids.best_params_
+regressor = SVR(kernel=parameter["kernel"], gamma=parameter["gamma"], epsilon=parameter["epsilon"], C=parameter["C"], verbose=3)
+
+new_test_label = []
+all_length = len(new_df)
+
+for i in range(0, all_length - split_no):
+    print()
+    print(f"No. {i + 1} Model training! Total number of times {all_length - split_no}!\n")
+    print(path + "\n")
+    #training model
+    a = train_data
+    b = train_label
+    print(a.shape, b.shape)
+    regressor.fit(a,b)
+
+    # fit network
+    # predicting
+    x = test_data[i, :]
+    x = x.reshape(1,x.shape[0])
+    testPredict = regressor.predict(x)
+    # new_test_label = np.concatenate([new_test_label,testPredict],axis = 0)
+    new_test_label.append(testPredict)
+
+    #add next data
+    y =  test_label[i]
+    # one_y = one_y.reshape(1, one_y.shape[0])
+    train_data = np.concatenate([train_data, x], axis=0)
+    train_label = np.append(train_label,y)
+
+new_test_label = np.array(new_test_label)
+new_test_set = np.concatenate([test_data, new_test_label], axis=1)
+new_test_set = sc_df.inverse_transform(new_test_set)
+new_test_label = new_test_set[:, new_test_set.shape[1] - 1]
+
+test_set = sc_df.inverse_transform(test_set)
+test_label = test_set[:, 0]
+
+rmse = sqrt(mean_squared_error(test_label, new_test_label))
+print('Test RMSE: %.4f' % (rmse))
+
+mape = np.mean(np.abs((test_label - new_test_label) / test_label)) * 100
+print('Test MAPE: %.4f' % (mape))
+
+print(grids.best_params_)
 # flg ,ax = plt.subplots(1,1)
 # plt.plot(date_array[split_no:], test_label, color ='red', label ='Real Stock Price')
 # plt.plot(date_array[split_no:], new_test_label, color ='blue', label ='Predicted Stock Price')

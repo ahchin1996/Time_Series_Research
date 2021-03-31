@@ -12,7 +12,7 @@ import numpy as np
 from keras.models import Sequential
 from sklearn.preprocessing import MinMaxScaler
 from keras.optimizers import Adam
-from keras.layers import LSTM, Dense
+from keras.layers import LSTM, Dense, Flatten
 from feature_list import chose_list
 import talos as ta
 import time
@@ -41,8 +41,8 @@ def print_time(text, stime):
 
 #每次需更改項目
 year = 2018
-fd = 'HSI_2018'
-path =  'D:/Time_Series_Research/new_data/HSI/HSI_2018.csv'
+fd = 'GSPC_2018'
+path =  'D:/Time_Series_Research/new_data/GSPC/GSPC_2018.csv'
 
 df_all = pd.read_csv(path,sep=',',header=0)
 date_array = pd.to_datetime(df_all['Date'] )
@@ -110,12 +110,11 @@ f"y_val shape :{y_val.shape}")
 
 search_params = {
 "lstm_layers": [1,2],
-"lstm1_nodes" : [30, 50 , 70],
-"lstm2_nodes" : [30, 50 , 70],
-"lstm3_nodes" : [30, 50, 70],
+"lstm1_nodes" : [30, 50],
+"lstm2_nodes" : [30, 50],
 "batch_size": [64,128],
 "lr": [0.1, 0.01, 0.001],
-"epochs": [20,50,80],
+"epochs": [50,80],
 "optimizer": ['Adam']
 }
 
@@ -128,10 +127,9 @@ def create_model_talos(train_data, train_label, x_val, y_val, params):
 
     if params["lstm_layers"] == 2:
         lstm_model.add(LSTM(params["lstm2_nodes"], return_sequences = True))
-        lstm_model.add(LSTM(params["lstm3_nodes"]))
+        lstm_model.add(Flatten())
     else:
-        lstm_model.add(LSTM(params["lstm3_nodes"]))
-
+        lstm_model.add(Flatten())
     lstm_model.add(Dense(1))
 
     if params["optimizer"] == 'Adam':

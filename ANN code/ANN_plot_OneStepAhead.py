@@ -18,14 +18,21 @@ import tensorflow as tf
 from keras import layers
 
 
-# 控制顯卡內核
+# hide INFO and WARNING message
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+# assgin which one GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-config = tf.compat.v1.ConfigProto(allow_soft_placement=True)
-gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=0.9)
+# control the kernal inside of GPU
+config = tf.compat.v1.ConfigProto()
+# 指定GPU顯示卡記憶體用量上限
+config.gpu_options.per_process_gpu_memory_fraction = .75
+# automatic selection running device
+config.allow_soft_placement = True
+# 自動增長GPU記憶體用量
 config.gpu_options.allow_growth = True
-sess0 = tf.compat.v1.InteractiveSession(config=config)
+sess = tf.compat.v1.InteractiveSession(config=config)
 
-fd_path =  'D:/Time_Series_Research/new_data/TWII/TWII_2008.csv'
+fd_path =  'D:/Time_Series_Research/new_data/TWII/TWII_2019.csv'
 
 df = pd.read_csv(fd_path, sep=',', header=0)
 

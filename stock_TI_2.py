@@ -31,32 +31,60 @@ for name in stock_list:
     data["BBands_down"] = data.MA_20 - data.Close.rolling(20).std().fillna(0) * 2
 
     # RSI Relative Strength Index
-    rsi = []
-    for i in range(6):
-        rsi.append(0)
+    # rsi = []
+    # for i in range(6):
+    #     rsi.append(0)
+    #
+    # for i in range(day - 6):
+    #     negative = 0
+    #     postive = 0
+    #     r = 0
+    #     price = []
+    #
+    #     for j in range(7):
+    #         price.append(close[i + j])
+    #
+    #     for k in range(1, len(price)):
+    #         n = 0
+    #         n = price[k] - price[k - 1]
+    #         if n > 0:
+    #             postive = postive + n
+    #         else:
+    #             negative = negative + abs(n)
+    #     r = ((postive / 6) / ((postive / 6) + (negative / 6))) * 100
+    #     rsi.append(r)
+    #
+    # rsi = pd.DataFrame(rsi)
+    # data = pd.concat([data, rsi], axis=1)
+    # data = data.rename(columns={0: 'RSI'})
+    # RSI函數
+    def getRSI(Close, period=6):
+        # 整理資料
+        import pandas as pd
+        Chg = Close - Close.shift(1)
+        Chg_pos = pd.Series(index=Chg.index, data=Chg[Chg > 0])
+        Chg_pos = Chg_pos.fillna(0)
+        Chg_neg = pd.Series(index=Chg.index, data=-Chg[Chg < 0])
+        Chg_neg = Chg_neg.fillna(0)
 
-    for i in range(day - 6):
-        negative = 0
-        postive = 0
-        r = 0
-        price = []
+        # 計算12日平均漲跌幅度
+        import numpy as np
+        up_mean = []
+        down_mean = []
+        for i in range(period + 1, len(Chg_pos) + 1):
+            up_mean.append(np.mean(Chg_pos.values[i - period:i]))
+            down_mean.append(np.mean(Chg_neg.values[i - period:i]))
 
-        for j in range(7):
-            price.append(close[i + j])
+        # 計算 RSI
+        rsi = []
+        for i in range(len(up_mean)):
+            rsi.append(100 * up_mean[i] / (up_mean[i] + down_mean[i]))
+        rsi_series = pd.Series(index=Close.index[period:], data=rsi)
+        return rsi_series
 
-        for k in range(1, len(price)):
-            n = 0
-            n = price[k] - price[k - 1]
-            if n > 0:
-                postive = postive + n
-            else:
-                negative = negative + abs(n)
-        r = ((postive / 6) / ((postive / 6) + (negative / 6))) * 100
-        rsi.append(r)
 
-    rsi = pd.DataFrame(rsi)
-    data = pd.concat([data, rsi], axis=1)
-    data = data.rename(columns={0: 'RSI'})
+    # 稍微對照一下剛剛算出來的數字，會是一樣的
+    data["RSI"] = getRSI(close,6)
 
     # Eeponential Moving Average EMA
     data['EMA_12'] = data['Close'].ewm(span=12).mean()
