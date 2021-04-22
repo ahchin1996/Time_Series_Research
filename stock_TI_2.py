@@ -203,7 +203,7 @@ for name in stock_list:
     for j in range(1, 10):
         d1 = datetime(2010 + j, 1, 1, 0, 0)
         d2 = datetime(2010 + j, 12, 31, 0, 0)
-        df = data.loc[(data['Date'] > d1) & (data['Date'] < d2)]
+        df = data.loc[(data['Date'] >= d1) & (data['Date'] <= d2)]
         df.reset_index(drop=True,inplace =True)
         df = df.drop(["Date"],axis=1)
         # id = pd.DataFrame(range(1, len(df)+1))

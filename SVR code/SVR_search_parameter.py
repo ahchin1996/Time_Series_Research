@@ -26,9 +26,9 @@ config.gpu_options.allow_growth = True
 sess0 = tf.compat.v1.InteractiveSession(config=config)
 
 #每次需更改項目
-year = 2019
-fd = 'TWII_2019'
-path =  'D:/Time_Series_Research/new_data/TWII/TWII_2019.csv'
+year = 2011
+fd = 'DJI_2011'
+path =  'D:/Time_Series_Research/new_data/DJI/DJI_2011.csv'
 
 df_all = pd.read_csv(path,sep=',',header=0)
 date_array = pd.to_datetime(df_all['Date'] )

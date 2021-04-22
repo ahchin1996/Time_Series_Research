@@ -34,6 +34,7 @@ config.allow_soft_placement = True
 # 自動增長GPU記憶體用量
 config.gpu_options.allow_growth = True
 sess = tf.compat.v1.InteractiveSession(config=config)
+
 stime = time.time()
 
 def print_time(text, stime):
@@ -42,10 +43,10 @@ def print_time(text, stime):
     print(text +" "+ str(seconds // 60 // 60)+" hours : " + str(seconds // 60 % 60)  + " minutes : " + str(np.round(seconds % 60)) + " seconds")
 
 #每次需更改項目
-year = 2018
-fd = 'GSPC_2018'
-path =  'D:/Time_Series_Research/new_data/GSPC/GSPC_2018.csv'
-repot_path = 'D:/Time_Series_Research/LSTM code/LSTM_parameter_result/032221163157.csv'
+year = 2019
+fd = 'DJI_2019'
+path =  'D:/Time_Series_Research/new_data/DJI/DJI_2019.csv'
+repot_path = 'D:/Time_Series_Research/LSTM code/LSTM_parameter_result/042121224845.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 
@@ -65,14 +66,6 @@ split_no = 0
 while date_array.iloc[split_no] < datetime(year, 11, 1, 0, 0):
     split_no +=1
 print(split_no)
-
-def getLAG(price, period):
-    lag = price.shift(period)
-    return lag
-
-# new_df["MA_20_1"] = getLAG(new_df.MA_20,1)
-# new_df["MA_20_2"] = getLAG(new_df.MA_20,2)
-# new_df.fillna(new_df.MA_20[0],inplace=True)
 
 new_df.drop(['Date'], axis=1, inplace=True)
 new_df.head(5)
@@ -109,20 +102,24 @@ custom_early_stopping = EarlyStopping(
 def create_model_talos(train_data, params):
     lstm_model = Sequential()
     # (batch_size, timesteps, data_dim)
-    lstm_model.add(LSTM(params["lstm1_nodes"], input_shape=(1 ,train_data.shape[2]), return_sequences=True))
+    lstm_model.add(LSTM(params["lstm_1_nodes"], input_shape=(1 ,train_data.shape[2]), return_sequences=True))
 
     if params["lstm_layers"] == 2:
-        lstm_model.add(LSTM(params["lstm2_nodes"], return_sequences=True))
+        lstm_model.add(LSTM(params["lstm_2_nodes"], return_sequences = True))
+        lstm_model.add(Flatten())
+    elif params["lstm_layers"] == 3:
+        lstm_model.add(LSTM(params["lstm_2_nodes"], return_sequences = True))
+        lstm_model.add(LSTM(params["lstm_3_nodes"], return_sequences=True))
         lstm_model.add(Flatten())
     else:
         lstm_model.add(Flatten())
+
     lstm_model.add(Dense(1))
 
     if params["optimizer"] == 'Adam':
         optimizer = Adam(lr=params["lr"])
 
-    lstm_model.compile(loss='mean_squared_error', optimizer=optimizer, metrics = ['acc'])  # binary_crossentropy
-
+    lstm_model.compile(loss='mean_squared_error', optimizer=optimizer, metrics = ['acc'])
     # for key in history.history.keys():
     #     print(key, "--",history.history[key])
     return lstm_model

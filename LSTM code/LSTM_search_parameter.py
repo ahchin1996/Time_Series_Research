@@ -40,9 +40,9 @@ def print_time(text, stime):
     print(text +" "+ str(seconds // 60 // 60)+" hours : " + str(seconds // 60 % 60)  + " minutes : " + str(np.round(seconds % 60)) + " seconds")
 
 #每次需更改項目
-year = 2018
-fd = 'GSPC_2018'
-path =  'D:/Time_Series_Research/new_data/GSPC/GSPC_2018.csv'
+year = 2019
+fd = 'DJI_2019'
+path =  'D:/Time_Series_Research/new_data/DJI/DJI_2019.csv'
 
 df_all = pd.read_csv(path,sep=',',header=0)
 date_array = pd.to_datetime(df_all['Date'] )
@@ -60,14 +60,6 @@ split_no = 0
 while date_array.iloc[split_no] < datetime(year, 11, 1, 0, 0):
     split_no +=1
 print(split_no)
-
-def getLAG(price, period):
-    lag = price.shift(period)
-    return lag
-
-# new_df["MA_20_1"] = getLAG(new_df.MA_20,1)
-# new_df["MA_20_2"] = getLAG(new_df.MA_20,2)
-# new_df.fillna(new_df.MA_20[0],inplace=True)
 
 new_df.drop(['Date'], axis=1, inplace=True)
 new_df.head(5)
@@ -109,9 +101,10 @@ f"y_train shape :{y_train.shape}\n"
 f"y_val shape :{y_val.shape}")
 
 search_params = {
-"lstm_layers": [1,2],
-"lstm1_nodes" : [30, 50],
-"lstm2_nodes" : [30, 50],
+"lstm_layers": [1,2,3],
+"lstm_1_nodes" : [30, 50,70],
+"lstm_2_nodes" : [30, 50,70],
+"lstm_3_nodes" : [30, 50,70],
 "batch_size": [64,128],
 "lr": [0.1, 0.01, 0.001],
 "epochs": [50,80],
@@ -123,13 +116,18 @@ def create_model_talos(train_data, train_label, x_val, y_val, params):
     EPOCHS = params["epochs"]
     lstm_model = Sequential()
     # (batch_size, timesteps, data_dim)
-    lstm_model.add(LSTM(params["lstm1_nodes"], input_shape=(1 ,train_data.shape[2]), return_sequences=True))
+    lstm_model.add(LSTM(params["lstm_1_nodes"], input_shape=(1 ,train_data.shape[2]), return_sequences=True))
 
     if params["lstm_layers"] == 2:
-        lstm_model.add(LSTM(params["lstm2_nodes"], return_sequences = True))
+        lstm_model.add(LSTM(params["lstm_2_nodes"], return_sequences = True))
+        lstm_model.add(Flatten())
+    elif params["lstm_layers"] == 3:
+        lstm_model.add(LSTM(params["lstm_2_nodes"], return_sequences = True))
+        lstm_model.add(LSTM(params["lstm_3_nodes"], return_sequences=True))
         lstm_model.add(Flatten())
     else:
         lstm_model.add(Flatten())
+
     lstm_model.add(Dense(1))
 
     if params["optimizer"] == 'Adam':
