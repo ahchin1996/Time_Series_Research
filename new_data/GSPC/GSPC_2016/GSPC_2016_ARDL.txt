@@ -1,0 +1,105 @@
+. import delimited "D:\Time_Series_Research\index_data\GSPC\GSPC_2016.csv"
+(26 vars, 252 obs)
+
+. tsset index
+        time variable:  index, 1 to 252
+                delta:  1 unit
+
+. ardl close ma_5 ma_20 bbands_up bbands_down ema_26 dif bias_6 bias_12 bias_24 lag ema_12, lags(5)
+note: L.ma_5 omitted because of collinearity
+note: bbands_down omitted because of collinearity
+note: L.bbands_down omitted because of collinearity
+note: L2.bbands_down omitted because of collinearity
+note: L3.bbands_down omitted because of collinearity
+note: L4.bbands_down omitted because of collinearity
+note: L5.bbands_down omitted because of collinearity
+note: L.ema_26 omitted because of collinearity
+note: L2.ema_26 omitted because of collinearity
+note: L3.ema_26 omitted because of collinearity
+note: L4.ema_26 omitted because of collinearity
+note: L5.ema_26 omitted because of collinearity
+note: L.dif omitted because of collinearity
+note: L2.dif omitted because of collinearity
+note: L3.dif omitted because of collinearity
+note: L4.dif omitted because of collinearity
+note: L5.dif omitted because of collinearity
+note: lag omitted because of collinearity
+note: L.lag omitted because of collinearity
+note: L2.lag omitted because of collinearity
+note: L3.lag omitted because of collinearity
+note: L4.lag omitted because of collinearity
+note: L5.lag omitted because of collinearity
+note: ema_12 omitted because of collinearity
+note: L.ema_12 omitted because of collinearity
+note: L2.ema_12 omitted because of collinearity
+note: L3.ema_12 omitted because of collinearity
+note: L4.ema_12 omitted because of collinearity
+note: L5.ema_12 omitted because of collinearity
+Collinear variables detected.
+r(9);
+
+. ardl close ma_20 bbands_up bias_6 bias_12 bias_24 , lags(5)
+
+ARDL(5,5,5,5,5,5) regression
+
+Sample:        6 -      252                     Number of obs     =        247
+                                                F(  35,    211)   =  130965.22
+                                                Prob > F          =     0.0000
+                                                R-squared         =     1.0000
+                                                Adj R-squared     =     0.9999
+Log likelihood = -256.36009                     Root MSE          =     0.7391
+
+------------------------------------------------------------------------------
+       close |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       close |
+         L1. |   .8987106   .0608722    14.76   0.000      .778715    1.018706
+         L2. |   .0655831   .0766848     0.86   0.393    -.0855834    .2167496
+         L3. |   .0539144   .0766382     0.70   0.483    -.0971602    .2049891
+         L4. |  -.0934124   .0780925    -1.20   0.233    -.2473539    .0605291
+         L5. |  -.1124358   .0566797    -1.98   0.049    -.2241668   -.0007047
+             |
+       ma_20 |
+         --. |   .1229472   .0843638     1.46   0.147    -.0433568    .2892511
+         L1. |  -.0847178   .1283515    -0.66   0.510    -.3377334    .1682978
+         L2. |   .0017989   .1311434     0.01   0.989    -.2567203     .260318
+         L3. |  -.0258807   .1321149    -0.20   0.845    -.2863149    .2345536
+         L4. |   1.209277   .1705976     7.09   0.000     .8729825    1.545571
+         L5. |  -1.040805    .114521    -9.09   0.000    -1.266557   -.8150536
+             |
+   bbands_up |
+         --. |  -.0139921   .0186303    -0.75   0.453    -.0507174    .0227333
+         L1. |   .0668755   .0345501     1.94   0.054    -.0012321    .1349831
+         L2. |  -.0610325   .0352764    -1.73   0.085    -.1305719    .0085068
+         L3. |  -.0314722   .0352597    -0.89   0.373    -.1009786    .0380343
+         L4. |   .0646826   .0334235     1.94   0.054    -.0012041    .1305693
+         L5. |  -.0175328   .0173775    -1.01   0.314    -.0517886     .016723
+             |
+      bias_6 |
+         --. |  -8.578433   2.569504    -3.34   0.001    -13.64362   -3.513246
+         L1. |  -.5930573   .8635029    -0.69   0.493    -2.295255    1.109141
+         L2. |   1.649772   .8483373     1.94   0.053    -.0225301    3.322075
+         L3. |   -.772654   .8366791    -0.92   0.357    -2.421975    .8766671
+         L4. |   .2761038    .813909     0.34   0.735    -1.328331    1.880539
+         L5. |  -.8280224   .7865777    -1.05   0.294     -2.37858    .7225352
+             |
+     bias_12 |
+         --. |   1.200022    1.59888     0.75   0.454    -1.951803    4.351846
+         L1. |   .9794092   1.523271     0.64   0.521     -2.02337    3.982188
+         L2. |  -.6078149   1.436073    -0.42   0.673    -3.438703    2.223074
+         L3. |  -.9134233   1.421281    -0.64   0.521    -3.715153    1.888306
+         L4. |   .6548902   1.380841     0.47   0.636    -2.067121    3.376901
+         L5. |   .3324095   .9217353     0.36   0.719     -1.48458    2.149399
+             |
+     bias_24 |
+         --. |   27.57917   2.235801    12.34   0.000      23.1718    31.98654
+         L1. |  -19.85239   2.136036    -9.29   0.000     -24.0631   -15.64169
+         L2. |  -3.380269   1.979668    -1.71   0.089     -7.28273    .5221915
+         L3. |  -.7615597   1.993538    -0.38   0.703    -4.691362    3.168242
+         L4. |  -1.344674   1.913468    -0.70   0.483    -5.116637    2.427289
+         L5. |   1.588924   1.027158     1.55   0.123    -.4358822    3.613729
+             |
+       _cons |  -5.583025   1.868455    -2.99   0.003    -9.266255   -1.899795
+------------------------------------------------------------------------------
+
+. 

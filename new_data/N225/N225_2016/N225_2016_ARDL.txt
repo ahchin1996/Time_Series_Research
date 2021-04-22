@@ -1,0 +1,92 @@
+. import delimited "D:\Time_Series_Research\index_data\N225\N225_2016.csv"
+(26 vars, 245 obs)
+
+. tsset index
+        time variable:  index, 1 to 245
+                delta:  1 unit
+
+
+. ardl close ma_5 ma_20 ema_12 ema_26 dif bias_6 bias_12 bias_24 mo ,lags(5)
+note: L.ma_5 omitted because of collinearity
+note: L.ema_12 omitted because of collinearity
+note: L2.ema_12 omitted because of collinearity
+note: L3.ema_12 omitted because of collinearity
+note: L4.ema_12 omitted because of collinearity
+note: L5.ema_12 omitted because of collinearity
+note: L.ema_26 omitted because of collinearity
+note: L2.ema_26 omitted because of collinearity
+note: L3.ema_26 omitted because of collinearity
+note: L4.ema_26 omitted because of collinearity
+note: L5.ema_26 omitted because of collinearity
+note: dif omitted because of collinearity
+note: L.dif omitted because of collinearity
+note: L2.dif omitted because of collinearity
+note: L3.dif omitted because of collinearity
+note: L4.dif omitted because of collinearity
+note: L5.dif omitted because of collinearity
+note: mo omitted because of collinearity
+note: L.mo omitted because of collinearity
+note: L2.mo omitted because of collinearity
+note: L3.mo omitted because of collinearity
+note: L4.mo omitted because of collinearity
+note: L5.mo omitted because of collinearity
+Collinear variables detected.
+r(9);
+
+. ardl close ma_20 bias_6 bias_12 bias_24 ,lags(5)
+
+ARDL(5,5,5,5,5) regression
+
+Sample:        6 -      245                     Number of obs     =        240
+                                                F(  29,    210)   =   64136.22
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9999
+                                                Adj R-squared     =     0.9999
+Log likelihood = -884.94181                     Root MSE          =    10.3303
+
+------------------------------------------------------------------------------
+       close |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       close |
+         L1. |   .8178005   .0587219    13.93   0.000     .7020406    .9335605
+         L2. |   .1664288   .0717677     2.32   0.021     .0249514    .3079063
+         L3. |  -.0867944   .0719422    -1.21   0.229    -.2286159     .055027
+         L4. |   .0529408   .0713505     0.74   0.459    -.0877142    .1935957
+         L5. |  -.0228854   .0520585    -0.44   0.661    -.1255096    .0797387
+             |
+       ma_20 |
+         --. |   .0744907    .071207     1.05   0.297    -.0658815    .2148629
+         L1. |  -.0243242   .1062724    -0.23   0.819    -.2338217    .1851733
+         L2. |  -.0564487    .108891    -0.52   0.605    -.2711082    .1582107
+         L3. |   .0316563   .1082236     0.29   0.770    -.1816876    .2450002
+         L4. |   .7940135   .1310612     6.06   0.000     .5356494    1.052378
+         L5. |   -.745685   .0874205    -8.53   0.000    -.9180191   -.5733509
+             |
+      bias_6 |
+         --. |   45.73935   14.67968     3.12   0.002     16.80094    74.67776
+         L1. |   .0799044   5.459675     0.01   0.988    -10.68289     10.8427
+         L2. |  -5.451644   5.426209    -1.00   0.316    -16.14847    5.245177
+         L3. |   4.567328   5.433771     0.84   0.402      -6.1444    15.27906
+         L4. |    .216042   5.417899     0.04   0.968     -10.4644    10.89648
+         L5. |    2.72109   5.110672     0.53   0.595    -7.353705    12.79589
+             |
+     bias_12 |
+         --. |   .8569368   10.23399     0.08   0.933    -19.31758    21.03146
+         L1. |  -16.34379   9.909202    -1.65   0.101    -35.87804    3.190469
+         L2. |   7.846389   9.747257     0.80   0.422    -11.36862     27.0614
+         L3. |   3.293498   9.781659     0.34   0.737    -15.98933    22.57633
+         L4. |   -7.79821     9.4778    -0.82   0.412    -26.48203    10.88561
+         L5. |   9.686777   6.441982     1.50   0.134    -3.012461    22.38602
+             |
+     bias_24 |
+         --. |   134.3962   12.80005    10.50   0.000     109.1632    159.6293
+         L1. |  -115.3111   13.14092    -8.77   0.000    -141.2161   -89.40602
+         L2. |  -24.36549   12.78166    -1.91   0.058    -49.56228    .8313042
+         L3. |   14.68674   12.66542     1.16   0.248    -10.28092     39.6544
+         L4. |  -.7678038   12.47189    -0.06   0.951    -25.35396    23.81835
+         L5. |  -1.748541   6.755485    -0.26   0.796     -15.0658    11.56871
+             |
+       _cons |  -19.58575   16.70825    -1.17   0.242    -52.52313    13.35164
+------------------------------------------------------------------------------
+
+. 

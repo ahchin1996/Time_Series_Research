@@ -1,0 +1,83 @@
+. import delimited "D:\Time_Series_Research\index_data\HSI\HSI_2011.csv"
+(26 vars, 245 obs)
+
+. tsset index
+        time variable:  index, 1 to 245
+                delta:  1 unit
+
+. ardl close ma_5 ma_20 ema_12 ema_26 dif osc bias_6 bias_24 lag,lags(5)
+note: L.ma_5 omitted because of collinearity
+note: L.ema_12 omitted because of collinearity
+note: L2.ema_12 omitted because of collinearity
+note: L3.ema_12 omitted because of collinearity
+note: L4.ema_12 omitted because of collinearity
+note: L5.ema_12 omitted because of collinearity
+note: L.ema_26 omitted because of collinearity
+note: L2.ema_26 omitted because of collinearity
+note: L3.ema_26 omitted because of collinearity
+note: L4.ema_26 omitted because of collinearity
+note: L5.ema_26 omitted because of collinearity
+note: dif omitted because of collinearity
+note: L.osc omitted because of collinearity
+note: L2.osc omitted because of collinearity
+note: L3.osc omitted because of collinearity
+note: L4.osc omitted because of collinearity
+note: L5.osc omitted because of collinearity
+note: lag omitted because of collinearity
+note: L.lag omitted because of collinearity
+note: L2.lag omitted because of collinearity
+note: L3.lag omitted because of collinearity
+note: L4.lag omitted because of collinearity
+note: L5.lag omitted because of collinearity
+Collinear variables detected.
+r(9);
+
+. ardl close ma_20 bias_6 bias_24 ,lags(5)
+
+ARDL(5,5,5,5) regression
+
+Sample:        6 -      245                     Number of obs     =        240
+                                                F(  23,    216)   =   52665.30
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9998
+                                                Adj R-squared     =     0.9998
+Log likelihood = -1150.6537                     Root MSE          =    30.8190
+
+------------------------------------------------------------------------------
+       close |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       close |
+         L1. |   .9993653   .0652617    15.31   0.000      .870734    1.127996
+         L2. |   .0289791   .0946843     0.31   0.760    -.1576445    .2156026
+         L3. |  -.0478079   .0921092    -0.52   0.604    -.2293559    .1337401
+         L4. |  -.0904306   .0922302    -0.98   0.328    -.2722169    .0913557
+         L5. |  -.0080424   .0633256    -0.13   0.899    -.1328577    .1167729
+             |
+       ma_20 |
+         --. |    .039073    .154145     0.25   0.800     -.264748     .342894
+         L1. |   .0283741   .3072911     0.09   0.927     -.577299    .6340472
+         L2. |  -.3334878   .3323931    -1.00   0.317    -.9886371    .3216616
+         L3. |   .4607395   .3317133     1.39   0.166    -.1930699    1.114549
+         L4. |   .8301105   .3433225     2.42   0.016     .1534192    1.506802
+         L5. |  -.9073984   .1990474    -4.56   0.000    -1.299722   -.5150745
+             |
+      bias_6 |
+         --. |  -13.06564   24.00854    -0.54   0.587    -60.38665    34.25536
+         L1. |  -10.03844   17.64683    -0.57   0.570    -44.82047     24.7436
+         L2. |   17.94512    17.6562     1.02   0.311    -16.85538    52.74562
+         L3. |  -13.61864   17.82801    -0.76   0.446    -48.75778     21.5205
+         L4. |  -12.14416   16.75102    -0.72   0.469    -45.16054    20.87222
+         L5. |   14.76517   8.584033     1.72   0.087    -2.154024    31.68436
+             |
+     bias_24 |
+         --. |   223.2222   21.33376    10.46   0.000     181.1732    265.2712
+         L1. |  -195.2875   21.37614    -9.14   0.000      -237.42    -153.155
+         L2. |  -23.66751   25.06366    -0.94   0.346    -73.06818    25.73315
+         L3. |   19.48661    24.1692     0.81   0.421    -28.15107    67.12429
+         L4. |   17.48022   23.70771     0.74   0.462    -29.24786    64.20829
+         L5. |  -17.06949   12.86918    -1.33   0.186    -42.43473    8.295757
+             |
+       _cons |   10.36472   22.23248     0.47   0.642    -33.45567     54.1851
+------------------------------------------------------------------------------
+
+. 

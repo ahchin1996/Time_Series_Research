@@ -1,0 +1,81 @@
+
+. import delimited "D:\Time_Series_Research\index_data\TWII\TWII_2013.csv", clear 
+(26 vars, 243 obs)
+
+. tsset index
+        time variable:  index, 1 to 243
+                delta:  1 unit
+
+. ardl close ma_5 ma_20 ema_12 ema_26 dem bias_24 mo lag,lags(5)
+note: L.ma_5 omitted because of collinearity
+note: L.ema_12 omitted because of collinearity
+note: L2.ema_12 omitted because of collinearity
+note: L3.ema_12 omitted because of collinearity
+note: L4.ema_12 omitted because of collinearity
+note: L5.ema_12 omitted because of collinearity
+note: L.ema_26 omitted because of collinearity
+note: L2.ema_26 omitted because of collinearity
+note: L3.ema_26 omitted because of collinearity
+note: L4.ema_26 omitted because of collinearity
+note: L5.ema_26 omitted because of collinearity
+note: L.dem omitted because of collinearity
+note: L2.dem omitted because of collinearity
+note: L3.dem omitted because of collinearity
+note: L4.dem omitted because of collinearity
+note: L5.dem omitted because of collinearity
+note: mo omitted because of collinearity
+note: L.mo omitted because of collinearity
+note: L2.mo omitted because of collinearity
+note: L3.mo omitted because of collinearity
+note: L4.mo omitted because of collinearity
+note: L5.mo omitted because of collinearity
+note: lag omitted because of collinearity
+note: L.lag omitted because of collinearity
+note: L2.lag omitted because of collinearity
+note: L3.lag omitted because of collinearity
+note: L4.lag omitted because of collinearity
+note: L5.lag omitted because of collinearity
+Collinear variables detected.
+r(9);
+
+. ardl close ma_20  bias_24,lags(5)
+
+ARDL(5,5,5) regression
+
+Sample:        6 -      243                     Number of obs     =        238
+                                                F(  17,    220)   =  388016.24
+                                                Prob > F          =     0.0000
+                                                R-squared         =     1.0000
+                                                Adj R-squared     =     1.0000
+Log likelihood = -397.53494                     Root MSE          =     1.3374
+
+------------------------------------------------------------------------------
+       close |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       close |
+         L1. |   .9485991   .0475052    19.97   0.000     .8549756    1.042223
+         L2. |   .0420372   .0633971     0.66   0.508    -.0829062    .1669807
+         L3. |  -.0868532   .0620667    -1.40   0.163    -.2091746    .0354683
+         L4. |   .0096757    .059141     0.16   0.870    -.1068797    .1262311
+         L5. |  -.0001041   .0292003    -0.00   0.997    -.0576523     .057444
+             |
+       ma_20 |
+         --. |  -.0031087   .0342584    -0.09   0.928    -.0706254     .064408
+         L1. |   .0150729   .0695245     0.22   0.829    -.1219463    .1520921
+         L2. |  -.0443106   .0753708    -0.59   0.557    -.1928517    .1042305
+         L3. |   .0350384   .0750762     0.47   0.641    -.1129221     .182999
+         L4. |   .8792419   .0739251    11.89   0.000     .7335499    1.024934
+         L5. |  -.7945658   .0513474   -15.47   0.000    -.8957617     -.69337
+             |
+     bias_24 |
+         --. |   84.02853   .1919337   437.80   0.000     83.65027     84.4068
+         L1. |  -76.05432   3.980143   -19.11   0.000    -83.89841   -68.21024
+         L2. |  -3.035875   5.198233    -0.58   0.560    -13.28058    7.208833
+         L3. |   7.491103    5.08589     1.47   0.142    -2.532197     17.5144
+         L4. |  -3.920847   4.835213    -0.81   0.418    -13.45011    5.608419
+         L5. |  -.0240247   2.350232    -0.01   0.992    -4.655875    4.607826
+             |
+       _cons |  -5.856345   3.997912    -1.46   0.144    -13.73545    2.022762
+------------------------------------------------------------------------------
+
+. 

@@ -1,0 +1,68 @@
+
+. import delimited "D:\Time_Series_Research\index_data\N225\N225_2014.csv", clear 
+(26 vars, 244 obs)
+
+. tsset index
+        time variable:  index, 1 to 244
+                delta:  1 unit
+
+. ardl close ma_5 ema_26 ema_12 dif bias_24 lag , lags(5)
+note: L.ma_5 omitted because of collinearity
+note: L.ema_26 omitted because of collinearity
+note: L2.ema_26 omitted because of collinearity
+note: L3.ema_26 omitted because of collinearity
+note: L4.ema_26 omitted because of collinearity
+note: L5.ema_26 omitted because of collinearity
+note: L.ema_12 omitted because of collinearity
+note: L2.ema_12 omitted because of collinearity
+note: L3.ema_12 omitted because of collinearity
+note: L4.ema_12 omitted because of collinearity
+note: L5.ema_12 omitted because of collinearity
+note: dif omitted because of collinearity
+note: L.dif omitted because of collinearity
+note: L2.dif omitted because of collinearity
+note: L3.dif omitted because of collinearity
+note: L4.dif omitted because of collinearity
+note: L5.dif omitted because of collinearity
+note: lag omitted because of collinearity
+note: L.lag omitted because of collinearity
+note: L2.lag omitted because of collinearity
+note: L3.lag omitted because of collinearity
+note: L4.lag omitted because of collinearity
+note: L5.lag omitted because of collinearity
+Collinear variables detected.
+r(9);
+
+. ardl close bias_24 , lags(5)
+
+ARDL(5,5) regression
+
+Sample:        6 -      244                     Number of obs     =        239
+                                                F(  11,    227)   =  126456.54
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9998
+                                                Adj R-squared     =     0.9998
+Log likelihood = -948.98855                     Root MSE          =    13.1639
+
+------------------------------------------------------------------------------
+       close |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       close |
+         L1. |   1.674186   .0668855    25.03   0.000      1.54239    1.805982
+         L2. |  -.6322771   .1298393    -4.87   0.000    -.8881215   -.3764328
+         L3. |  -.0774535   .1364351    -0.57   0.571    -.3462947    .1913877
+         L4. |   .1158951   .1298939     0.89   0.373    -.1400568     .371847
+         L5. |  -.0802709   .0657012    -1.22   0.223    -.2097331    .0491914
+             |
+     bias_24 |
+         --. |   160.9171   .7125677   225.83   0.000      159.513    162.3212
+         L1. |  -262.8478   10.83478   -24.26   0.000    -284.1974   -241.4981
+         L2. |   98.01892   20.55505     4.77   0.000     57.51582     138.522
+         L3. |    12.7041   21.55762     0.59   0.556    -29.77453    55.18273
+         L4. |  -18.76455   20.46109    -0.92   0.360     -59.0825    21.55341
+         L5. |   13.12129   10.11663     1.30   0.196    -6.813219    33.05579
+             |
+       _cons |   -1.13328   19.22109    -0.06   0.953    -39.00786     36.7413
+------------------------------------------------------------------------------
+
+. 

@@ -1,0 +1,80 @@
+
+. import delimited "D:\Time_Series_Research\index_data\TWII\TWII_2015.csv", clear 
+(26 vars, 243 obs)
+
+. tsset index
+        time variable:  index, 1 to 243
+                delta:  1 unit
+
+
+. ardl close ma_5 bbands_down ema_12 dif ema_26 dem lag mo,lags(5)
+note: L.ma_5 omitted because of collinearity
+note: L.ema_12 omitted because of collinearity
+note: L2.ema_12 omitted because of collinearity
+note: L3.ema_12 omitted because of collinearity
+note: L4.ema_12 omitted because of collinearity
+note: L5.ema_12 omitted because of collinearity
+note: L.dif omitted because of collinearity
+note: L2.dif omitted because of collinearity
+note: L3.dif omitted because of collinearity
+note: L4.dif omitted because of collinearity
+note: L5.dif omitted because of collinearity
+note: ema_26 omitted because of collinearity
+note: L.ema_26 omitted because of collinearity
+note: L2.ema_26 omitted because of collinearity
+note: L3.ema_26 omitted because of collinearity
+note: L4.ema_26 omitted because of collinearity
+note: L5.ema_26 omitted because of collinearity
+note: L.dem omitted because of collinearity
+note: L2.dem omitted because of collinearity
+note: L3.dem omitted because of collinearity
+note: L4.dem omitted because of collinearity
+note: L5.dem omitted because of collinearity
+note: lag omitted because of collinearity
+note: L.lag omitted because of collinearity
+note: L2.lag omitted because of collinearity
+note: L3.lag omitted because of collinearity
+note: L4.lag omitted because of collinearity
+note: L5.lag omitted because of collinearity
+note: mo omitted because of collinearity
+note: L.mo omitted because of collinearity
+note: L2.mo omitted because of collinearity
+note: L3.mo omitted because of collinearity
+note: L4.mo omitted because of collinearity
+note: L5.mo omitted because of collinearity
+Collinear variables detected.
+r(9);
+
+. ardl close  bbands_down,lags(5)
+
+ARDL(5,5) regression
+
+Sample:        6 -      243                     Number of obs     =        238
+                                                F(  11,    226)   =    1324.32
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9847
+                                                Adj R-squared     =     0.9840
+Log likelihood = -1366.3622                     Root MSE          =    77.3196
+
+------------------------------------------------------------------------------
+       close |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       close |
+         L1. |   1.018066   .0672472    15.14   0.000     .8855541    1.150578
+         L2. |  -.1183274   .0943835    -1.25   0.211    -.3043116    .0676569
+         L3. |   .0740315    .094611     0.78   0.435     -.112401    .2604639
+         L4. |  -.1497848   .0914494    -1.64   0.103    -.3299874    .0304178
+         L5. |     .07389   .0649048     1.14   0.256    -.0540061     .201786
+             |
+ bbands_down |
+         --. |   1.803461   .2545758     7.08   0.000     1.301815    2.305106
+         L1. |  -2.998474   .5022719    -5.97   0.000    -3.988209   -2.008739
+         L2. |   1.343565   .5665963     2.37   0.019     .2270775    2.460052
+         L3. |  -.1283182   .5708523    -0.22   0.822    -1.253192    .9965555
+         L4. |   .1809361   .5292569     0.34   0.733    -.8619732    1.223845
+         L5. |  -.1135873   .2547457    -0.45   0.656    -.6155677    .3883932
+             |
+       _cons |   151.2128   85.62141     1.77   0.079    -17.50558    319.9312
+------------------------------------------------------------------------------
+
+. 

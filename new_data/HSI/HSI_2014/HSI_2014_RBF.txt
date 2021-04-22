@@ -1,0 +1,196 @@
+Starting analysis at 16-Jan-2021 19:31:48
+DTREG version 10.10.0  (Enterprise Version)
+http://www.dtreg.com
+
+  ============  Project Parameters  ============
+
+Project title: select feature
+Project file: D:\chin_file\new_data\select_f_2.dtr
+Target variable: Close
+Number of predictor variables: 23
+Type of model: Support Vector Machine (SVM)
+Type of SVM model: Epsilon-SVR
+SVM kernel function: Radial Basis Function (RBF)
+Type of analysis: Regression
+Validation method: Cross validation
+Number of cross-validation folds: 10
+
+  ============  Input Data  ============
+
+Input data file: D:\chin_file\new_data\HSI\HSI_2014.csv
+Number of variables (data columns): 25
+Data subsetting: Use all data rows
+Number of data rows: 246
+Total weight for all rows: 246
+Rows with missing target or weight values: 0
+Rows with missing predictor values: 0
+
+  ---  Statistics for target variable: Close  ---
+Mean value = 23228.995
+Standard deviation = 912.31043
+Minimum value = 21182.16
+Maximum value = 25317.949
+
+  ============  Summary of Variables  ============
+
+Number   Variable      Class       Type      Missing rows  Categories
+------  -----------  ---------  -----------  ------------  ----------
+    1   Date         Unused     Categorical          0     
+    2   Close        Target     Continuous           0     
+    3   Volume       Predictor  Continuous           0         246
+    4   MA_5         Predictor  Continuous           0         246
+    5   MA_20        Predictor  Continuous           0         246
+    6   BBands_up    Predictor  Continuous           0         246
+    7   BBands_down  Predictor  Continuous           0         246
+    8   RSI          Predictor  Continuous           0         240
+    9   EMA_12       Predictor  Continuous           0         246
+   10   EMA_26       Predictor  Continuous           0         246
+   11   DIF          Predictor  Continuous           0         246
+   12   DEM          Predictor  Continuous           0         246
+   13   OSC          Predictor  Continuous           0         246
+   14   RDP          Predictor  Continuous           0         246
+   15   BIAS_6       Predictor  Continuous           0         246
+   16   BIAS_12      Predictor  Continuous           0         246
+   17   BIAS_24      Predictor  Continuous           0         246
+   18   PSY_12       Predictor  Continuous           0           9
+   19   PSY_24       Predictor  Continuous           0          13
+   20   W%R          Predictor  Continuous           0         166
+   21   %K           Predictor  Continuous           0         150
+   22   %D           Predictor  Continuous           0         202
+   23   PROC         Predictor  Continuous           0         246
+   24   MO           Predictor  Continuous           0         246
+   25   LAG          Predictor  Continuous           0         246
+
+
+
+  ============  SVM Parameters  ============
+
+Type of SVM model: Epsilon-SVR
+SVM kernel function: Radial Basis Function (RBF)
+
+SVM grid and pattern searches found optimal values for parameters:
+  Search criterion: Minimize total error
+  Number of points evaluated during search = 1150
+  Minimum error found by search = 3.082600
+
+Parameter values:
+  Epsilon = 0.001
+  C = 3705537.65
+  Gamma = 0.00961816
+  P = 0.00006406
+
+Number of support vectors used by the model = 246
+
+
+  ============  Analysis of Variance  ============
+
+ ---  Training Data  ---
+
+Mean target value for input data = 23228.995
+Mean target value for predicted values = 23229.029
+
+Variance in input data = 832310.32
+Residual (unexplained) variance after model fit = 0.6373192
+Proportion of variance explained by model (R^2) = 1.00000  (100.000%)
+
+Coefficient of variation (CV) = 0.000034
+Normalized mean square error (NMSE) = 0.000001
+Correlation between actual and predicted = 1.000000
+
+Maximum error = 2.575264
+RMSE (Root Mean Squared Error) = 0.7983228
+MSE (Mean Squared Error) = 0.6373192
+MAE (Mean Absolute Error) = 0.637546
+MAPE (Mean Absolute Percentage Error) = 0.0027471
+
+ ---  Validation Data  ---
+
+Mean target value for input data = 23228.995
+Mean target value for predicted values = 23229.039
+
+Variance in input data = 832310.32
+Residual (unexplained) variance after model fit = 2.2556694
+Proportion of variance explained by model (R^2) = 1.00000  (100.000%)
+
+Coefficient of variation (CV) = 0.000065
+Normalized mean square error (NMSE) = 0.000003
+Correlation between actual and predicted = 0.999999
+
+Maximum error = 4.8727489
+RMSE (Root Mean Squared Error) = 1.5018886
+MSE (Mean Squared Error) = 2.2556694
+MAE (Mean Absolute Error) = 1.1321931
+MAPE (Mean Absolute Percentage Error) = 0.0048844
+
+
+  ============  Lift and Gain  ============
+
+  ---  Lift and Gain for training data  ---
+
+ Bin     Cutoff       Mean        Mean        Cum %     Cum %   Cum       % of      % of
+Index    Target     Predicted    Actual    Population  Target   Gain   Population  Target   Lift
+-----  ----------  ----------  ----------  ----------  ------  ------  ----------  ------  ------
+   1    24647.530   24935.183   24935.067     10.16     10.91    1.07     10.16     10.91    1.07
+   2    23972.169   24266.925   24267.167     20.33     21.53    1.06     10.16     10.62    1.04
+   3    23541.171   23761.627   23761.769     30.49     31.92    1.05     10.16     10.40    1.02
+   4    23334.497   23443.001   23442.994     40.65     42.18    1.04     10.16     10.26    1.01
+   5    23151.750   23240.441   23240.319     50.81     52.35    1.03     10.16     10.17    1.00
+   6    22962.926   23062.071   23062.257     60.98     62.43    1.02     10.16     10.09    0.99
+   7    22731.427   22846.651   22846.575     71.14     72.43    1.02     10.16     10.00    0.98
+   8    22454.010   22608.508   22608.043     81.30     82.32    1.01     10.16      9.89    0.97
+   9    21964.201   22230.971   22230.841     91.46     92.05    1.01     10.16      9.73    0.96
+  10    21182.116   21640.789   21640.804    100.00    100.00    1.00      8.54      7.95    0.93
+
+   Average gain = 1.031
+   Mean value of target variable = 23228.995
+
+  ---  Lift and Gain for validation data  ---
+
+ Bin     Cutoff       Mean        Mean        Cum %     Cum %   Cum       % of      % of
+Index    Target     Predicted    Actual    Population  Target   Gain   Population  Target   Lift
+-----  ----------  ----------  ----------  ----------  ------  ------  ----------  ------  ------
+   1    24648.099   24934.811   24935.067     10.16     10.91    1.07     10.16     10.91    1.07
+   2    23971.641   24266.863   24267.167     20.33     21.53    1.06     10.16     10.62    1.04
+   3    23542.421   23761.463   23761.769     30.49     31.92    1.05     10.16     10.40    1.02
+   4    23334.561   23443.357   23442.974     40.65     42.18    1.04     10.16     10.26    1.01
+   5    23151.023   23240.446   23240.340     50.81     52.35    1.03     10.16     10.17    1.00
+   6    22962.777   23062.361   23062.257     60.98     62.43    1.02     10.16     10.09    0.99
+   7    22731.631   22846.728   22846.575     71.14     72.43    1.02     10.16     10.00    0.98
+   8    22454.924   22608.065   22608.043     81.30     82.32    1.01     10.16      9.89    0.97
+   9    21964.356   22231.244   22230.841     91.46     92.05    1.01     10.16      9.73    0.96
+  10    21179.226   21640.955   21640.804    100.00    100.00    1.00      8.54      7.95    0.93
+
+   Average gain = 1.031
+   Mean value of target variable = 23228.995
+
+
+  ============  Overall Importance of Variables  ============
+
+ Variable      Importance
+-----------    ----------
+LAG               100.000
+MO                  1.707
+RDP                 1.060
+EMA_26              0.088
+BIAS_24             0.060
+EMA_12              0.058
+BIAS_12             0.026
+OSC                 0.010
+BBands_up           0.008
+W%R                 0.007
+MA_20               0.007
+MA_5                0.005
+BBands_down         0.004
+%D                  0.003
+%K                  0.002
+PROC                0.001
+RSI                 0.001
+DEM                 0.001
+BIAS_6              0.001
+DIF                 0.001
+PSY_12              0.000
+PSY_24              0.000
+Volume              0.000
+
+Finished the analysis at 16-Jan-2021 23:18:54
+Analysis run time:  3:47:05.35

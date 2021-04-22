@@ -1,0 +1,94 @@
+. import delimited "D:\Time_Series_Research\index_data\N225\N225_2013.csv", clear 
+(26 vars, 245 obs)
+
+. tsset index
+        time variable:  index, 1 to 245
+                delta:  1 unit
+
+. ardl close ma_5 ma_20 ema_12 ema_26 dif dem bias_6 bias_24 mo lag,lags(5)
+note: L.ma_5 omitted because of collinearity
+note: L.ema_12 omitted because of collinearity
+note: L2.ema_12 omitted because of collinearity
+note: L3.ema_12 omitted because of collinearity
+note: L4.ema_12 omitted because of collinearity
+note: L5.ema_12 omitted because of collinearity
+note: L.ema_26 omitted because of collinearity
+note: L2.ema_26 omitted because of collinearity
+note: L3.ema_26 omitted because of collinearity
+note: L4.ema_26 omitted because of collinearity
+note: L5.ema_26 omitted because of collinearity
+note: dif omitted because of collinearity
+note: L.dif omitted because of collinearity
+note: L2.dif omitted because of collinearity
+note: L3.dif omitted because of collinearity
+note: L4.dif omitted because of collinearity
+note: L5.dif omitted because of collinearity
+note: L.dem omitted because of collinearity
+note: L2.dem omitted because of collinearity
+note: L3.dem omitted because of collinearity
+note: L4.dem omitted because of collinearity
+note: L5.dem omitted because of collinearity
+note: mo omitted because of collinearity
+note: L.mo omitted because of collinearity
+note: L2.mo omitted because of collinearity
+note: L3.mo omitted because of collinearity
+note: L4.mo omitted because of collinearity
+note: L5.mo omitted because of collinearity
+note: lag omitted because of collinearity
+note: L.lag omitted because of collinearity
+note: L2.lag omitted because of collinearity
+note: L3.lag omitted because of collinearity
+note: L4.lag omitted because of collinearity
+note: L5.lag omitted because of collinearity
+Collinear variables detected.
+r(9);
+
+. ardl close ma_20 bias_6 bias_24,lags(5)
+
+ARDL(5,5,5,5) regression
+
+Sample:        6 -      245                     Number of obs     =        240
+                                                F(  23,    216)   =   45151.04
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9998
+                                                Adj R-squared     =     0.9998
+Log likelihood = -1058.5802                     Root MSE          =    20.9994
+
+------------------------------------------------------------------------------
+       close |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       close |
+         L1. |   .6274905   .0662252     9.48   0.000     .4969601    .7580209
+         L2. |   .0405003   .0779945     0.52   0.604    -.1132274    .1942281
+         L3. |   .1449514   .0795116     1.82   0.070    -.0117667    .3016694
+         L4. |  -.0234976   .0804095    -0.29   0.770    -.1819854    .1349902
+         L5. |   .0573396   .0593082     0.97   0.335    -.0595572    .1742365
+             |
+       ma_20 |
+         --. |   .3637447   .1505719     2.42   0.017     .0669664     .660523
+         L1. |  -.4883774   .2674748    -1.83   0.069    -1.015572    .0388174
+         L2. |  -.0015882   .2746297    -0.01   0.995    -.5428854     .539709
+         L3. |    .090747   .2753606     0.33   0.742    -.4519908    .6334849
+         L4. |   .4055192   .2974314     1.36   0.174    -.1807203    .9917587
+         L5. |   -.207864   .1894259    -1.10   0.274    -.5812238    .1654959
+             |
+      bias_6 |
+         --. |   70.19544   16.83468     4.17   0.000     37.01416    103.3767
+         L1. |  -3.626934   10.33646    -0.35   0.726    -24.00018    16.74631
+         L2. |  -17.29338   10.12631    -1.71   0.089    -37.25243    2.665657
+         L3. |  -.6235368   9.934213    -0.06   0.950    -20.20395    18.95687
+         L4. |   20.87408   9.762557     2.14   0.034     1.632003    40.11615
+         L5. |  -8.287562   5.595396    -1.48   0.140    -19.31613    2.741006
+             |
+     bias_24 |
+         --. |   78.12669   14.54949     5.37   0.000     49.44953    106.8038
+         L1. |  -67.57939   12.96052    -5.21   0.000    -93.12467    -42.0341
+         L2. |    22.7815   13.31692     1.71   0.089    -3.466244    49.02925
+         L3. |  -11.59337    13.2709    -0.87   0.383    -37.75041    14.56366
+         L4. |  -7.270488   13.22544    -0.55   0.583    -33.33792    18.79695
+         L5. |     9.9953   7.925347     1.26   0.209    -5.625619    25.61622
+             |
+       _cons |   -126.368   29.12124    -4.34   0.000    -183.7662   -68.96978
+------------------------------------------------------------------------------
+
+. 

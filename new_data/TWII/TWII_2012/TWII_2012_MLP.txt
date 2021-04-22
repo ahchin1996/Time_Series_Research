@@ -1,0 +1,219 @@
+Starting analysis at  4-Apr-2021 18:54:21
+DTREG version 10.10.0  (Enterprise Version)
+http://www.dtreg.com
+
+  ============  Project Parameters  ============
+
+Project title: stock_feature_selection
+Project file: C:\Users\cooke\OneDrive\орн▒\DJI_2017.dtr
+Target variable: Close
+Number of predictor variables: 23
+Type of model: Multilayer Perceptron Neural Network (MLP)
+Number of layers: 3 (1 hidden)
+Hidden layer 1 neurons: Search from 2 to 20
+Hidden layer activation function: Logistic
+Output layer activation function: Linear
+Type of analysis: Regression
+Validation method: Cross validation
+Number of cross-validation folds: 10
+
+  ============  Input Data  ============
+
+Input data file: D:\Time_Series_Research\new_data\TWII\TWII_2012.csv
+Number of variables (data columns): 25
+Data subsetting: Use all data rows
+Number of data rows: 247
+Total weight for all rows: 247
+Rows with missing target or weight values: 0
+Rows with missing predictor values: 0
+
+  ---  Statistics for target variable: Close  ---
+Mean value = 7477.4876
+Standard deviation = 297.14434
+Minimum value = 6894.6602
+Maximum value = 8144.04
+
+  ============  Summary of Variables  ============
+
+Number   Variable      Class       Type      Missing rows  Categories
+------  -----------  ---------  -----------  ------------  ----------
+    1   Date         Unused     Categorical          0     
+    2   Close        Target     Continuous           0     
+    3   Volume       Predictor  Continuous           0         245
+    4   MA_5         Predictor  Continuous           0         247
+    5   MA_20        Predictor  Continuous           0         247
+    6   BBands_up    Predictor  Continuous           0         247
+    7   BBands_down  Predictor  Continuous           0         247
+    8   RSI          Predictor  Continuous           0         234
+    9   EMA_12       Predictor  Continuous           0         247
+   10   EMA_26       Predictor  Continuous           0         247
+   11   DIF          Predictor  Continuous           0         247
+   12   DEM          Predictor  Continuous           0         247
+   13   OSC          Predictor  Continuous           0         247
+   14   RDP          Predictor  Continuous           0         247
+   15   BIAS_6       Predictor  Continuous           0         247
+   16   BIAS_12      Predictor  Continuous           0         247
+   17   BIAS_24      Predictor  Continuous           0         247
+   18   PSY_12       Predictor  Continuous           0          10
+   19   PSY_24       Predictor  Continuous           0          13
+   20   W%R          Predictor  Continuous           0         157
+   21   %K           Predictor  Continuous           0         143
+   22   %D           Predictor  Continuous           0         194
+   23   PROC         Predictor  Continuous           0         247
+   24   MO           Predictor  Continuous           0         247
+   25   LAG          Predictor  Continuous           0         246
+
+
+
+  ============  Neural Network Parameters  ============
+
+
+  ---  Neural Network Architecture  ---
+
+    Layer   Neurons  Activation  Min. Weight  Max. Weight
+  --------  -------  ----------  -----------  -----------
+     Input     23    Passthru
+  Hidden 1      5    Logistic    -4.541e-001   4.392e-001
+    Output      1    Linear      -4.479e-001   5.303e-001
+
+ ------- Training Statistics -------
+
+        Process             Time       Evaluations      Error
+----------------------  ------------  -------------  -----------
+Conjugate gradient       00:00:00.2         141,855  5.2547e+001
+
+
+  ============  Model Size Summary Report  ============
+
+Network size evaluation was performed using 4-fold cross-validation.
+
+Hidden layer 1 neurons  % Residual variance
+----------------------  -------------------
+           2                  0.08049
+           3                  0.07180
+           4                  0.05157
+           5                  0.04570 <-- Optimal size
+           6                  0.08398
+           7                  0.06160
+           8                  0.08335
+           9                  0.10115
+          10                  0.08266
+          11                  0.06472
+          12                  0.05206
+          13                  0.06092
+
+The network will be built using 5 neurons for hidden layer 1.
+
+
+  ============  Analysis of Variance  ============
+
+ ---  Training Data  ---
+
+Mean target value for input data = 7477.4876
+Mean target value for predicted values = 7477.7704
+
+Variance in input data = 88294.758
+Residual (unexplained) variance after model fit = 49.871429
+Proportion of variance explained by model (R^2) = 0.99944  (99.944%)
+
+Coefficient of variation (CV) = 0.000944
+Normalized mean square error (NMSE) = 0.000565
+Correlation between actual and predicted = 0.999718
+
+Maximum error = 25.189668
+RMSE (Root Mean Squared Error) = 7.0619707
+MSE (Mean Squared Error) = 49.871429
+MAE (Mean Absolute Error) = 5.6709431
+MAPE (Mean Absolute Percentage Error) = 0.0762502
+
+ ---  Validation Data  ---
+
+Mean target value for input data = 7477.4876
+Mean target value for predicted values = 7477.7659
+
+Variance in input data = 88294.758
+Residual (unexplained) variance after model fit = 49.078551
+Proportion of variance explained by model (R^2) = 0.99944  (99.944%)
+
+Coefficient of variation (CV) = 0.000937
+Normalized mean square error (NMSE) = 0.000556
+Correlation between actual and predicted = 0.999723
+
+Maximum error = 43.957315
+RMSE (Root Mean Squared Error) = 7.0056085
+MSE (Mean Squared Error) = 49.078551
+MAE (Mean Absolute Error) = 5.091433
+MAPE (Mean Absolute Percentage Error) = 0.0687566
+
+
+  ============  Lift and Gain  ============
+
+  ---  Lift and Gain for training data  ---
+
+ Bin     Cutoff       Mean        Mean        Cum %     Cum %   Cum       % of      % of
+Index    Target     Predicted    Actual    Population  Target   Gain   Population  Target   Lift
+-----  ----------  ----------  ----------  ----------  ------  ------  ----------  ------  ------
+   1    7933.4086   8023.3973   8024.8828     10.12     10.86    1.07     10.12     10.86    1.07
+   2    7722.9856   7822.1104   7817.1892     20.24     21.44    1.06     10.12     10.58    1.05
+   3    7639.9741   7679.6857   7678.1048     30.36     31.84    1.05     10.12     10.39    1.03
+   4    7536.3027   7597.1072   7596.4492     40.49     42.12    1.04     10.12     10.28    1.02
+   5    7461.8698   7487.6331   7488.7624     50.61     52.26    1.03     10.12     10.14    1.00
+   6    7373.1388   7418.3816   7415.9564     60.73     62.29    1.03     10.12     10.04    0.99
+   7    7265.3791   7310.2804   7312.3480     70.85     72.19    1.02     10.12      9.90    0.98
+   8    7165.1736   7206.4313   7211.3432     80.97     81.95    1.01     10.12      9.76    0.96
+   9    7103.8282   7132.1783   7135.3324     91.09     91.61    1.01     10.12      9.66    0.95
+  10    6919.8498   7049.0530   7042.2832    100.00    100.00    1.00      8.91      8.39    0.94
+
+   Average gain = 1.032
+   Mean value of target variable = 7477.4876
+
+  ---  Lift and Gain for validation data  ---
+
+ Bin     Cutoff       Mean        Mean        Cum %     Cum %   Cum       % of      % of
+Index    Target     Predicted    Actual    Population  Target   Gain   Population  Target   Lift
+-----  ----------  ----------  ----------  ----------  ------  ------  ----------  ------  ------
+   1    7937.7154   8024.0620   8024.8828     10.12     10.86    1.07     10.12     10.86    1.07
+   2    7721.0980   7821.0859   7817.4016     20.24     21.44    1.06     10.12     10.58    1.05
+   3    7646.2842   7679.9511   7677.8924     30.36     31.84    1.05     10.12     10.39    1.03
+   4    7536.0379   7597.6950   7596.4492     40.49     42.12    1.04     10.12     10.28    1.02
+   5    7461.7362   7487.6344   7488.7624     50.61     52.26    1.03     10.12     10.14    1.00
+   6    7370.9232   7416.6147   7415.9564     60.73     62.29    1.03     10.12     10.04    0.99
+   7    7266.4161   7310.3102   7312.5748     70.85     72.19    1.02     10.12      9.90    0.98
+   8    7164.8555   7208.1173   7210.9872     80.97     81.95    1.01     10.12      9.76    0.96
+   9    7106.7051   7131.8145   7134.9396     91.09     91.61    1.01     10.12      9.66    0.95
+  10    6938.6175   7048.9114   7042.8764    100.00    100.00    1.00      8.91      8.39    0.94
+
+   Average gain = 1.032
+   Mean value of target variable = 7477.4876
+
+
+  ============  Overall Importance of Variables  ============
+
+ Variable      Importance
+-----------    ----------
+EMA_26            100.000
+LAG                98.035
+MA_5               44.113
+BIAS_6             16.269
+RDP                12.704
+EMA_12             11.521
+DEM                10.384
+BIAS_24             8.058
+BIAS_12             6.964
+BBands_down         5.510
+OSC                 5.347
+MA_20               1.947
+BBands_up           1.762
+PROC                0.977
+DIF                 0.748
+PSY_12              0.710
+%K                  0.598
+MO                  0.538
+RSI                 0.347
+Volume              0.236
+%D                  0.202
+PSY_24              0.095
+W%R                 0.047
+
+Finished the analysis at  4-Apr-2021 18:54:24
+Analysis run time:  00:02.93

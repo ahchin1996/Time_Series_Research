@@ -1,0 +1,76 @@
+
+. import delimited "D:\Time_Series_Research\index_data\N225\N225_2012.csv", clear 
+(26 vars, 248 obs)
+
+. tsset index
+        time variable:  index, 1 to 248
+                delta:  1 unit
+
+. ardl close ma_5 ma_20 bbands_up ema_26 dif mo lag , lags(5)
+note: L.ma_5 omitted because of collinearity
+note: L.ema_26 omitted because of collinearity
+note: L2.ema_26 omitted because of collinearity
+note: L3.ema_26 omitted because of collinearity
+note: L4.ema_26 omitted because of collinearity
+note: L5.ema_26 omitted because of collinearity
+note: L.dif omitted because of collinearity
+note: L2.dif omitted because of collinearity
+note: L3.dif omitted because of collinearity
+note: L4.dif omitted because of collinearity
+note: L5.dif omitted because of collinearity
+note: mo omitted because of collinearity
+note: L.mo omitted because of collinearity
+note: L2.mo omitted because of collinearity
+note: L3.mo omitted because of collinearity
+note: L4.mo omitted because of collinearity
+note: L5.mo omitted because of collinearity
+note: lag omitted because of collinearity
+note: L.lag omitted because of collinearity
+note: L2.lag omitted because of collinearity
+note: L3.lag omitted because of collinearity
+note: L4.lag omitted because of collinearity
+note: L5.lag omitted because of collinearity
+Collinear variables detected.
+r(9);
+
+. ardl close ma_20 bbands_up , lags(5)
+
+ARDL(5,5,5) regression
+
+Sample:        6 -      248                     Number of obs     =        243
+                                                F(  17,    225)   =     821.99
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9842
+                                                Adj R-squared     =     0.9830
+Log likelihood = -1342.6791                     Root MSE          =    63.1157
+
+------------------------------------------------------------------------------
+       close |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       close |
+         L1. |   .8847345   .0679389    13.02   0.000     .7508566    1.018612
+         L2. |   .0927678   .0901626     1.03   0.305    -.0849033    .2704389
+         L3. |  -.1123794   .0893813    -1.26   0.210    -.2885109    .0637521
+         L4. |  -.0218596   .0773441    -0.28   0.778     -.174271    .1305518
+         L5. |  -.1130386   .0516063    -2.19   0.030    -.2147321    -.011345
+             |
+       ma_20 |
+         --. |   11.49463   .7389008    15.56   0.000     10.03858    12.95068
+         L1. |  -21.14333   1.599339   -13.22   0.000    -24.29493   -17.99173
+         L2. |   9.367886   2.162144     4.33   0.000     5.107244    13.62853
+         L3. |   1.689638   2.246162     0.75   0.453    -2.736567    6.115842
+         L4. |  -.9184467    2.09091    -0.44   0.661    -5.038717    3.201823
+         L5. |   -.269723   .9547788    -0.28   0.778    -2.151175    1.611729
+             |
+   bbands_up |
+         --. |   .0824403   .2293802     0.36   0.720    -.3695678    .5344484
+         L1. |   .2212956   .4456891     0.50   0.620    -.6569631    1.099554
+         L2. |  -.6354264   .4659542    -1.36   0.174    -1.553619     .282766
+         L3. |   .3504157    .465605     0.75   0.452    -.5670886     1.26792
+         L4. |   .1719597   .4408464     0.39   0.697     -.696756    1.040675
+         L5. |   -.159081   .2259567    -0.70   0.482     -.604343    .2861811
+             |
+       _cons |    148.355   107.2456     1.38   0.168    -62.97923    359.6892
+------------------------------------------------------------------------------
+
+. 

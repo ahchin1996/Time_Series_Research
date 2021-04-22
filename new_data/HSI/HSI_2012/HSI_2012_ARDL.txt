@@ -1,0 +1,62 @@
+
+. import delimited "D:\Time_Series_Research\index_data\HSI\HSI_2012.csv", clear 
+(26 vars, 244 obs)
+
+. tsset index
+        time variable:  index, 1 to 244
+                delta:  1 unit
+
+. ardl close ema_12 ema_26 dem dif lag,lags(5)
+note: L2.ema_12 omitted because of collinearity
+note: L3.ema_12 omitted because of collinearity
+note: L4.ema_12 omitted because of collinearity
+note: L5.ema_12 omitted because of collinearity
+note: L.ema_26 omitted because of collinearity
+note: L2.ema_26 omitted because of collinearity
+note: L3.ema_26 omitted because of collinearity
+note: L4.ema_26 omitted because of collinearity
+note: L5.ema_26 omitted because of collinearity
+note: L.dem omitted because of collinearity
+note: L2.dem omitted because of collinearity
+note: L3.dem omitted because of collinearity
+note: L4.dem omitted because of collinearity
+note: L5.dem omitted because of collinearity
+note: dif omitted because of collinearity
+note: L.dif omitted because of collinearity
+note: L2.dif omitted because of collinearity
+note: L3.dif omitted because of collinearity
+note: L4.dif omitted because of collinearity
+note: L5.dif omitted because of collinearity
+note: lag omitted because of collinearity
+note: L.lag omitted because of collinearity
+note: L2.lag omitted because of collinearity
+note: L3.lag omitted because of collinearity
+note: L4.lag omitted because of collinearity
+Collinear variables detected.
+r(9);
+
+. ardl close,lags(5)
+
+ARDL(5) regression
+
+Sample:        6 -      244                     Number of obs     =        239
+                                                F(   5,    233)   =    1153.99
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9612
+                                                Adj R-squared     =     0.9604
+Log likelihood =  -1617.388                     Root MSE          =   212.9565
+
+------------------------------------------------------------------------------
+       close |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       close |
+         L1. |   .9754168   .0653613    14.92   0.000     .8466421    1.104191
+         L2. |    .023093    .090817     0.25   0.800    -.1558345    .2020205
+         L3. |   .0331689    .090785     0.37   0.715    -.1456956    .2120333
+         L4. |   -.063573   .0907377    -0.70   0.484    -.2423441    .1151982
+         L5. |   .0153816   .0654684     0.23   0.814    -.1136042    .1443674
+             |
+       _cons |   353.2093   272.6475     1.30   0.196    -183.9602    890.3789
+------------------------------------------------------------------------------
+
+. 

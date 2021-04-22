@@ -1,0 +1,90 @@
+
+. import delimited "D:\Time_Series_Research\index_data\N225\N225_2017.csv", clear 
+(26 vars, 248 obs)
+
+. tsset index
+        time variable:  index, 1 to 248
+                delta:  1 unit
+
+. ardl close ma_5 bbands_up ma_20 bbands_down ema_12 ema_26 bias_24 mo lag,lags(5)
+note: L.ma_5 omitted because of collinearity
+note: bbands_down omitted because of collinearity
+note: L.bbands_down omitted because of collinearity
+note: L2.bbands_down omitted because of collinearity
+note: L3.bbands_down omitted because of collinearity
+note: L4.bbands_down omitted because of collinearity
+note: L5.bbands_down omitted because of collinearity
+note: L.ema_12 omitted because of collinearity
+note: L2.ema_12 omitted because of collinearity
+note: L3.ema_12 omitted because of collinearity
+note: L4.ema_12 omitted because of collinearity
+note: L5.ema_12 omitted because of collinearity
+note: L.ema_26 omitted because of collinearity
+note: L2.ema_26 omitted because of collinearity
+note: L3.ema_26 omitted because of collinearity
+note: L4.ema_26 omitted because of collinearity
+note: L5.ema_26 omitted because of collinearity
+note: mo omitted because of collinearity
+note: L.mo omitted because of collinearity
+note: L2.mo omitted because of collinearity
+note: L3.mo omitted because of collinearity
+note: L4.mo omitted because of collinearity
+note: L5.mo omitted because of collinearity
+note: lag omitted because of collinearity
+note: L.lag omitted because of collinearity
+note: L2.lag omitted because of collinearity
+note: L3.lag omitted because of collinearity
+note: L4.lag omitted because of collinearity
+note: L5.lag omitted because of collinearity
+Collinear variables detected.
+r(9);
+
+. ardl close bbands_up ma_20  bias_24,lags(5)
+
+ARDL(5,5,5,5) regression
+
+Sample:        6 -      248                     Number of obs     =        243
+                                                F(  23,    219)   =  233161.25
+                                                Prob > F          =     0.0000
+                                                R-squared         =     1.0000
+                                                Adj R-squared     =     1.0000
+Log likelihood = -856.75046                     Root MSE          =     8.6606
+
+------------------------------------------------------------------------------
+       close |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       close |
+         L1. |   .9767903   .0598036    16.33   0.000     .8589259    1.094655
+         L2. |  -.0449118   .0858079    -0.52   0.601    -.2140267    .1242032
+         L3. |  -.0598435   .0851119    -0.70   0.483    -.2275867    .1078997
+         L4. |   .0104776   .0825696     0.13   0.899    -.1522552    .1732104
+         L5. |  -.0016513   .0454701    -0.04   0.971    -.0912663    .0879637
+             |
+   bbands_up |
+         --. |   .0618988   .0247615     2.50   0.013     .0130975       .1107
+         L1. |  -.0922633   .0477213    -1.93   0.054    -.1863152    .0017885
+         L2. |   .0003216   .0512888     0.01   0.995    -.1007612    .1014045
+         L3. |   .0579203   .0513684     1.13   0.261    -.0433193      .15916
+         L4. |   .0015745   .0484424     0.03   0.974    -.0938985    .0970476
+         L5. |  -.0279433   .0250537    -1.12   0.266    -.0773206     .021434
+             |
+       ma_20 |
+         --. |   .2663714   .0884821     3.01   0.003      .091986    .4407569
+         L1. |   -.691409   .1812582    -3.81   0.000    -1.048643   -.3341753
+         L2. |   .6709535   .2033369     3.30   0.001      .270206    1.071701
+         L3. |   -.293057   .2056343    -1.43   0.156    -.6983325    .1122184
+         L4. |   .9991658   .1919433     5.21   0.000     .6208733    1.377458
+         L5. |  -.8335965   .1069302    -7.80   0.000     -1.04434   -.6228526
+             |
+     bias_24 |
+         --. |   205.3704    1.30599   157.25   0.000     202.7964    207.9443
+         L1. |  -191.0259   12.42156   -15.38   0.000    -215.5069   -166.5448
+         L2. |   8.348932   17.32894     0.48   0.630     -25.8039    42.50177
+         L3. |   13.11948   17.18838     0.76   0.446    -20.75632    46.99528
+         L4. |  -11.08147    16.6973    -0.66   0.508    -43.98944    21.82649
+         L5. |   .4232525   9.076165     0.05   0.963    -17.46456    18.31106
+             |
+       _cons |  -16.42516   13.60288    -1.21   0.229    -43.23446    10.38414
+------------------------------------------------------------------------------
+
+. 

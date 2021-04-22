@@ -1,0 +1,185 @@
+Starting analysis at  3-Apr-2021 21:14:18
+DTREG version 10.10.0  (Enterprise Version)
+http://www.dtreg.com
+
+  ============  Project Parameters  ============
+
+Project title: stock_feature_selection
+Project file: C:\Users\cooke\OneDrive\орн▒\DJI_2017.dtr
+Target variable: Close
+Number of predictor variables: 23
+Type of model: General Regression Neural Network (GRNN)
+Type of analysis: Regression
+Validation method: Leave one out (LOO)
+
+  ============  Input Data  ============
+
+Input data file: D:\Time_Series_Research\new_data\TWII\TWII_2013.csv
+Number of variables (data columns): 25
+Data subsetting: Use all data rows
+Number of data rows: 243
+Total weight for all rows: 243
+Rows with missing target or weight values: 0
+Rows with missing predictor values: 0
+
+  ---  Statistics for target variable: Close  ---
+Mean value = 8090.8679
+Standard deviation = 224.98367
+Minimum value = 7616.6401
+Maximum value = 8623.4297
+
+  ============  Summary of Variables  ============
+
+Number   Variable      Class       Type      Missing rows  Categories
+------  -----------  ---------  -----------  ------------  ----------
+    1   Date         Unused     Categorical          0     
+    2   Close        Target     Continuous           0     
+    3   Volume       Predictor  Continuous           0         240
+    4   MA_5         Predictor  Continuous           0         243
+    5   MA_20        Predictor  Continuous           0         243
+    6   BBands_up    Predictor  Continuous           0         243
+    7   BBands_down  Predictor  Continuous           0         243
+    8   RSI          Predictor  Continuous           0         239
+    9   EMA_12       Predictor  Continuous           0         243
+   10   EMA_26       Predictor  Continuous           0         243
+   11   DIF          Predictor  Continuous           0         243
+   12   DEM          Predictor  Continuous           0         243
+   13   OSC          Predictor  Continuous           0         243
+   14   RDP          Predictor  Continuous           0         243
+   15   BIAS_6       Predictor  Continuous           0         243
+   16   BIAS_12      Predictor  Continuous           0         243
+   17   BIAS_24      Predictor  Continuous           0         243
+   18   PSY_12       Predictor  Continuous           0           8
+   19   PSY_24       Predictor  Continuous           0          11
+   20   W%R          Predictor  Continuous           0         162
+   21   %K           Predictor  Continuous           0         148
+   22   %D           Predictor  Continuous           0         200
+   23   PROC         Predictor  Continuous           0         243
+   24   MO           Predictor  Continuous           0         242
+   25   LAG          Predictor  Continuous           0         243
+
+
+
+  ============  Neural Network Parameters  ============
+
+
+ ------- Training Statistics -------
+
+        Process             Time       Evaluations      Error
+----------------------  ------------  -------------  -----------
+Starting parameters      00:00:00.1           4,860  1.4626e+003
+Conjugate gradient       00:00:04.4         137,781  3.2616e+002
+
+
+  ============  Analysis of Variance  ============
+
+ ---  Training Data  ---
+
+Mean target value for input data = 8090.8679
+Mean target value for predicted values = 8090.8163
+
+Variance in input data = 50617.653
+Residual (unexplained) variance after model fit = 31.236696
+Proportion of variance explained by model (R^2) = 0.99938  (99.938%)
+
+Coefficient of variation (CV) = 0.000691
+Normalized mean square error (NMSE) = 0.000617
+Correlation between actual and predicted = 0.999698
+
+Maximum error = 14.475024
+RMSE (Root Mean Squared Error) = 5.5889798
+MSE (Mean Squared Error) = 31.236696
+MAE (Mean Absolute Error) = 4.3969348
+MAPE (Mean Absolute Percentage Error) = 0.054248
+
+ ---  Validation Data  ---
+
+Mean target value for input data = 8090.8679
+Mean target value for predicted values = 8091.3214
+
+Variance in input data = 50617.653
+Residual (unexplained) variance after model fit = 326.16107
+Proportion of variance explained by model (R^2) = 0.99356  (99.356%)
+
+Coefficient of variation (CV) = 0.002232
+Normalized mean square error (NMSE) = 0.006444
+Correlation between actual and predicted = 0.996901
+
+Maximum error = 94.818782
+RMSE (Root Mean Squared Error) = 18.05993
+MSE (Mean Squared Error) = 326.16107
+MAE (Mean Absolute Error) = 12.458939
+MAPE (Mean Absolute Percentage Error) = 0.1544752
+
+
+  ============  Lift and Gain  ============
+
+  ---  Lift and Gain for training data  ---
+
+ Bin     Cutoff       Mean        Mean        Cum %     Cum %   Cum       % of      % of
+Index    Target     Predicted    Actual    Population  Target   Gain   Population  Target   Lift
+-----  ----------  ----------  ----------  ----------  ------  ------  ----------  ------  ------
+   1    8390.3400   8437.2125   8440.7064     10.29     10.73    1.04     10.29     10.73    1.04
+   2    8323.5062   8362.3804   8360.2680     20.58     21.36    1.04     10.29     10.63    1.03
+   3    8245.5090   8267.3461   8270.1548     30.86     31.88    1.03     10.29     10.52    1.02
+   4    8181.0227   8204.1081   8203.0396     41.15     42.31    1.03     10.29     10.43    1.01
+   5    8094.2713   8137.6334   8135.9736     51.44     52.66    1.02     10.29     10.35    1.01
+   6    7991.9455   8030.8224   8031.3416     61.73     62.87    1.02     10.29     10.21    0.99
+   7    7913.3508   7944.0084   7945.2156     72.02     72.97    1.01     10.29     10.10    0.98
+   8    7846.7778   7886.1955   7885.6548     82.30     83.00    1.01     10.29     10.03    0.97
+   9    7776.0583   7812.2280   7810.9944     92.59     92.93    1.00     10.29      9.93    0.97
+  10    7617.0349   7723.3323   7722.0656    100.00    100.00    1.00      7.41      7.07    0.95
+
+   Average gain = 1.021
+   Mean value of target variable = 8090.8679
+
+  ---  Lift and Gain for validation data  ---
+
+ Bin     Cutoff       Mean        Mean        Cum %     Cum %   Cum       % of      % of
+Index    Target     Predicted    Actual    Population  Target   Gain   Population  Target   Lift
+-----  ----------  ----------  ----------  ----------  ------  ------  ----------  ------  ------
+   1    8384.7324   8429.7441   8440.0748     10.29     10.73    1.04     10.29     10.73    1.04
+   2    8335.5159   8362.9339   8360.8996     20.58     21.36    1.04     10.29     10.63    1.03
+   3    8231.9314   8264.2419   8267.7572     30.86     31.88    1.03     10.29     10.51    1.02
+   4    8185.3936   8205.0364   8204.7780     41.15     42.31    1.03     10.29     10.43    1.01
+   5    8094.9576   8142.0746   8134.7964     51.44     52.65    1.02     10.29     10.34    1.01
+   6    7988.6310   8030.2631   8032.2048     61.73     62.87    1.02     10.29     10.21    0.99
+   7    7910.5409   7942.4771   7945.5284     72.02     72.97    1.01     10.29     10.10    0.98
+   8    7840.3021   7885.7883   7885.9968     82.30     83.00    1.01     10.29     10.03    0.97
+   9    7788.8788   7815.3710   7811.3128     92.59     92.93    1.00     10.29      9.93    0.97
+  10    7692.4902   7735.7138   7722.0656    100.00    100.00    1.00      7.41      7.07    0.95
+
+   Average gain = 1.021
+   Mean value of target variable = 8090.8679
+
+
+  ============  Overall Importance of Variables  ============
+
+ Variable      Importance
+-----------    ----------
+EMA_12            100.000
+BIAS_12             3.369
+BIAS_24             2.192
+BIAS_6              0.762
+W%R                 0.032
+%K                  0.031
+MO                  0.005
+RDP                 0.005
+Volume              0.004
+RSI                 0.003
+PROC                0.002
+LAG                 0.001
+BBands_down         0.001
+PSY_12              0.001
+MA_5                0.001
+PSY_24              0.001
+DIF                 0.001
+MA_20               0.001
+DEM                 0.000
+OSC                 0.000
+BBands_up           0.000
+%D                  0.000
+EMA_26              0.000
+
+Finished the analysis at  3-Apr-2021 21:14:23
+Analysis run time:  00:04.75

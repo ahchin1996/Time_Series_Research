@@ -1,0 +1,23 @@
+. import delimited "D:\Time_Series_Research\index_data\N225\N225_2011.csv"
+(26 vars, 245 obs)
+
+. tsset index
+        time variable:  index, 1 to 245
+                delta:  1 unit
+
+. ardl close ma_5  ema_26 lag,lags(5)
+note: L.ma_5 omitted because of collinearity
+note: L.ema_26 omitted because of collinearity
+note: L2.ema_26 omitted because of collinearity
+note: L3.ema_26 omitted because of collinearity
+note: L4.ema_26 omitted because of collinearity
+note: L5.ema_26 omitted because of collinearity
+note: lag omitted because of collinearity
+note: L.lag omitted because of collinearity
+note: L2.lag omitted because of collinearity
+note: L3.lag omitted because of collinearity
+note: L4.lag omitted because of collinearity
+note: L5.lag omitted because of collinearity
+Collinear variables detected.
+r(9);
+
