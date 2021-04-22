@@ -46,7 +46,7 @@ def print_time(text, stime):
 year = 2019
 fd = 'DJI_2019'
 path =  'D:/Time_Series_Research/new_data/DJI/DJI_2019.csv'
-repot_path = 'D:/Time_Series_Research/LSTM code/LSTM_parameter_result/042121224845.csv'
+repot_path = 'D:/Time_Series_Research/LSTM code/LSTM_parameter_result/042221194235.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 
