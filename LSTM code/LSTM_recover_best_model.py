@@ -40,13 +40,13 @@ stime = time.time()
 def print_time(text, stime):
     seconds = (time.time() - stime)
     print()
-    print(text +" "+ str(seconds // 60 // 60)+" hours : " + str(seconds // 60 % 60)  + " minutes : " + str(np.round(seconds % 60)) + " seconds")
+    print(text +" "+ str(seconds // 60 // 60)+" hour(s) : " + str(seconds // 60 % 60)  + " minute(s) : " + str(np.round(seconds % 60)) + " second(s)")
 
 #每次需更改項目
-year = 2019
-fd = 'N225_2019'
-path =  'D:/Time_Series_Research/new_data/N225/N225_2019.csv'
-repot_path = 'D:/Time_Series_Research/LSTM code/LSTM_parameter_result/N225_2019_p.csv'
+year = 2014
+fd = 'DJI_2014'
+path =  'D:/Time_Series_Research/new_data/DJI/DJI_2014.csv'
+repot_path = 'D:/Time_Series_Research/LSTM code/LSTM_parameter_result/DJI_2014_p.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 
@@ -193,3 +193,7 @@ mape = np.mean(np.abs((test_label - new_test_label)/test_label) )*100
 print('Test MAPE: %.4f' % (mape))
 
 print_time("program completed in", stime)
+
+print(fd)
+print(best_p)
+print(par_id)

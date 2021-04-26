@@ -12,7 +12,7 @@ import numpy as np
 from keras.models import Sequential
 from sklearn.preprocessing import MinMaxScaler
 from keras.optimizers import Adam
-from keras.layers import Dense, Flatten, GRU
+from keras.layers import Dense, Flatten, GRU, Dropout, Activation
 from feature_list import chose_list
 import talos as ta
 import time
@@ -40,9 +40,9 @@ def print_time(text, stime):
     print(text +" "+ str(seconds // 60 // 60)+" hours : " + str(seconds // 60 % 60)  + " minutes : " + str(np.round(seconds % 60)) + " seconds")
 
 #每次需更改項目
-year = 2019
-fd = 'DJI_2019'
-path =  'D:/Time_Series_Research/new_data/DJI/DJI_2019.csv'
+year = 2015
+fd = 'DJI_2015'
+path =  'D:/Time_Series_Research/new_data/DJI/DJI_2015.csv'
 
 df_all = pd.read_csv(path,sep=',',header=0)
 date_array = pd.to_datetime(df_all['Date'] )
@@ -123,7 +123,7 @@ def create_model_talos(train_data, train_label, x_val, y_val, params):
     else:
         gru_model.add(Flatten())
 
-    gru_model.add(Dense(1))
+    gru_model.add(Dense(1,activation= "relu"))
 
     if params["optimizer"] == 'Adam':
         optimizer = Adam(lr=params["lr"])
@@ -150,7 +150,7 @@ t = ta.Scan(x= x_train,
             y_val= y_val,
             model=create_model_talos,
             params=search_params,
-            experiment_name = "LSTM_parameter_result",
+            experiment_name = "GRU_parameter_result",
             print_params = True,
             clear_session= True)
 

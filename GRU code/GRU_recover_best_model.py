@@ -12,7 +12,7 @@ import numpy as np
 from keras.models import Sequential
 from sklearn.preprocessing import MinMaxScaler
 from keras.optimizers import Adam
-from keras.layers import GRU, Dense, Flatten, Dropout
+from keras.layers import GRU, Dense, Flatten, Dropout, Activation
 from feature_list import chose_list
 import talos as ta
 import time
@@ -43,10 +43,10 @@ def print_time(text, stime):
     print(text +" "+ str(seconds // 60 // 60)+" hours : " + str(seconds // 60 % 60)  + " minutes : " + str(np.round(seconds % 60)) + " seconds")
 
 #每次需更改項目
-year = 2019
-fd = 'DJI_2019'
-path =  'D:/Time_Series_Research/new_data/DJI/DJI_2019.csv'
-repot_path = 'D:/Time_Series_Research/GRU code/GRU_parameter_result/DJI_2019_p.csv'
+year = 2015
+fd = 'DJI_2015'
+path =  'D:/Time_Series_Research/new_data/DJI/DJI_2015.csv'
+repot_path = 'D:/Time_Series_Research/GRU code/GRU_parameter_result/DJI_2015.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 
@@ -109,7 +109,7 @@ def create_model_talos(train_data, params):
     else:
         gru_model.add(Flatten())
 
-    gru_model.add(Dense(1))
+    gru_model.add(Dense(1,activation="relu"))
 
     if params["optimizer"] == 'Adam':
         optimizer = Adam(lr=params["lr"])
@@ -192,3 +192,7 @@ mape = np.mean(np.abs((test_label - new_test_label)/test_label) )*100
 print('Test MAPE: %.4f' % (mape))
 
 print_time("program completed in", stime)
+
+print(fd)
+print(best_p)
+print(par_id)
