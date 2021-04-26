@@ -41,8 +41,8 @@ def print_time(text, stime):
 
 #每次需更改項目
 year = 2015
-fd = 'DJI_2015'
-path =  'D:/Time_Series_Research/new_data/DJI/DJI_2015.csv'
+fd = 'GSPC_2015'
+path =  'D:/Time_Series_Research/new_data/GSPC/GSPC_2015.csv'
 
 df_all = pd.read_csv(path,sep=',',header=0)
 date_array = pd.to_datetime(df_all['Date'] )

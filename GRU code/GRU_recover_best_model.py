@@ -44,9 +44,9 @@ def print_time(text, stime):
 
 #每次需更改項目
 year = 2015
-fd = 'DJI_2015'
-path =  'D:/Time_Series_Research/new_data/DJI/DJI_2015.csv'
-repot_path = 'D:/Time_Series_Research/GRU code/GRU_parameter_result/DJI_2015.csv'
+fd = 'GSPC_2015'
+path =  'D:/Time_Series_Research/new_data/GSPC/GSPC_2015.csv'
+repot_path = 'D:/Time_Series_Research/GRU code/GRU_parameter_result/GSPC_2015_p.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 
