@@ -12,7 +12,7 @@ import numpy as np
 from keras.models import Sequential
 from sklearn.preprocessing import MinMaxScaler
 from keras.optimizers import Adam
-from keras.layers import LSTM, Dense, Flatten
+from keras.layers import GRU, Dense, Flatten, Dropout, Activation
 from feature_list import chose_list
 import talos as ta
 import time
@@ -40,14 +40,13 @@ stime = time.time()
 def print_time(text, stime):
     seconds = (time.time() - stime)
     print()
-    print(text +" "+ str(seconds // 60 // 60)+" hour(s) : " + str(seconds // 60 % 60)  + " minute(s) : " + str(np.round(seconds % 60)) + " second(s)")
+    print(text +" "+ str(seconds // 60 // 60)+" hours : " + str(seconds // 60 % 60)  + " minutes : " + str(np.round(seconds % 60)) + " seconds")
 
 #每次需更改項目
-year = 2011
-fd = 'DJI_2011'
-path =  'D:/Time_Series_Research/new_data/DJI/DJI_2011.csv'
-repot_path = 'D:/Time_Series_Research/LSTM code/LSTM_parameter_result/DJI_2011_p.csv'
-
+year = 2018
+fd = 'HSI_2018'
+path =  'D:/Time_Series_Research/new_data/HSI/HSI_2018.csv'
+repot_path = 'D:/Time_Series_Research/GRU code/GRU_parameter_result/HSI_2018_p.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 
@@ -101,25 +100,24 @@ custom_early_stopping = EarlyStopping(
 )
 
 def create_model_talos(train_data, params):
-    lstm_model = Sequential()
+    gru_model = Sequential()
     # (batch_size, timesteps, data_dim)
-    lstm_model.add(LSTM(params["lstm_1_nodes"], input_shape=(1, train_data.shape[2]), return_sequences=True))
-
-    if params["lstm_layers"] == 2:
-        lstm_model.add(LSTM(params["lstm_2_nodes"], return_sequences=True))
-        lstm_model.add(Flatten())
+    gru_model.add(GRU(params["gru_1_model"], input_shape=(1, train_data.shape[2]), return_sequences=True))
+    if params["gru_layers"] == 2:
+        gru_model.add(GRU(params["gru_2_model"], return_sequences=True))
+        gru_model.add(Flatten())
     else:
-        lstm_model.add(Flatten())
+        gru_model.add(Flatten())
 
-    lstm_model.add(Dense(1))
+    gru_model.add(Dense(1,activation="relu"))
 
     if params["optimizer"] == 'Adam':
         optimizer = Adam(lr=params["lr"])
 
-    lstm_model.compile(loss='mean_squared_error', optimizer=optimizer, metrics=['acc'])  # binary_crossentropy
+    gru_model.compile(loss='mean_squared_error', optimizer=optimizer, metrics=['acc'])  # binary_crossentropy
     # for key in history.history.keys():
     #     print(key, "--",history.history[key])
-    return lstm_model
+    return gru_model
 
 r = ta.Reporting(repot_path)
 p_list = r.data
@@ -136,8 +134,8 @@ best_p = best_p.to_dict(orient = "list")
 
 newDict= {k: v[0] for k, v in best_p.items()}
 
-lstm_model = create_model_talos(x_train,newDict)
-lstm_model.summary()
+gru_model = create_model_talos(x_train,newDict)
+gru_model.summary()
 
 a = train_data
 b = train_label
@@ -155,7 +153,7 @@ for i in range(0, all_length - split_no):
     #training model
 
     print(a.shape, b.shape)
-    lstm_model.fit(a,
+    gru_model.fit(a,
                    b,
                    epochs=newDict["epochs"],
                    batch_size=newDict["batch_size"],
@@ -168,7 +166,7 @@ for i in range(0, all_length - split_no):
     #predicting
     x = test_data[i, :]
     x = x.reshape(1,1,x.shape[0])
-    testPredict = lstm_model.predict(x)
+    testPredict = gru_model.predict(x)
     # new_test_label = np.concatenate([new_test_label,testPredict],axis = 0)
     new_test_label.append(testPredict)
 

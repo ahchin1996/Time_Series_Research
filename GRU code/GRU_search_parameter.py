@@ -12,7 +12,7 @@ import numpy as np
 from keras.models import Sequential
 from sklearn.preprocessing import MinMaxScaler
 from keras.optimizers import Adam
-from keras.layers import LSTM, Dense, Flatten
+from keras.layers import Dense, Flatten, GRU, Dropout, Activation
 from feature_list import chose_list
 import talos as ta
 import time
@@ -40,9 +40,9 @@ def print_time(text, stime):
     print(text +" "+ str(seconds // 60 // 60)+" hours : " + str(seconds // 60 % 60)  + " minutes : " + str(np.round(seconds % 60)) + " seconds")
 
 #每次需更改項目
-year = 2011
-fd = 'DJI_2011'
-path =  'D:/Time_Series_Research/new_data/DJI/DJI_2011.csv'
+year = 2019
+fd = 'HSI_2019'
+path =  'D:/Time_Series_Research/new_data/HSI/HSI_2019.csv'
 
 df_all = pd.read_csv(path,sep=',',header=0)
 date_array = pd.to_datetime(df_all['Date'] )
@@ -101,9 +101,9 @@ f"y_train shape :{y_train.shape}\n"
 f"y_val shape :{y_val.shape}")
 
 search_params = {
-"lstm_layers": [1,2],
-"lstm_1_nodes" : [30, 50,70],
-"lstm_2_nodes" : [30, 50,70],
+"gru_layers": [1,2],
+"gru_1_model" : [30, 50,70],
+"gru_2_model" : [30, 50,70],
 "batch_size": [64,128],
 "lr": [0.1, 0.01, 0.001],
 "epochs": [50,80],
@@ -113,23 +113,23 @@ search_params = {
 def create_model_talos(train_data, train_label, x_val, y_val, params):
     BATCH_SIZE = params["batch_size"]
     EPOCHS = params["epochs"]
-    lstm_model = Sequential()
+    gru_model = Sequential()
     # (batch_size, timesteps, data_dim)
-    lstm_model.add(LSTM(params["lstm_1_nodes"], input_shape=(1 ,train_data.shape[2]), return_sequences=True))
+    gru_model.add(GRU(params["gru_1_model"], input_shape=(1 ,train_data.shape[2]), return_sequences=True))
 
-    if params["lstm_layers"] == 2:
-        lstm_model.add(LSTM(params["lstm_2_nodes"], return_sequences = True))
-        lstm_model.add(Flatten())
+    if params["gru_layers"] == 2:
+        gru_model.add(GRU(params["gru_2_model"], return_sequences = True))
+        gru_model.add(Flatten())
     else:
-        lstm_model.add(Flatten())
+        gru_model.add(Flatten())
 
-    lstm_model.add(Dense(1))
+    gru_model.add(Dense(1,activation= "relu"))
 
     if params["optimizer"] == 'Adam':
         optimizer = Adam(lr=params["lr"])
 
-    lstm_model.compile(loss='mean_squared_error', optimizer=optimizer, metrics = ['acc'])  # binary_crossentropy
-    history = lstm_model.fit(train_data,
+    gru_model.compile(loss='mean_squared_error', optimizer=optimizer, metrics = ['acc'])  # binary_crossentropy
+    history = gru_model.fit(train_data,
                              train_label,
                              epochs = EPOCHS,
                              verbose=2,
@@ -140,7 +140,7 @@ def create_model_talos(train_data, train_label, x_val, y_val, params):
     #     print(key, "--",history.history[key])
     print_time("program running in", stime)
     print()
-    return history, lstm_model
+    return history, gru_model
 
 
 print("Starting Talos scanning...")
@@ -150,7 +150,7 @@ t = ta.Scan(x= x_train,
             y_val= y_val,
             model=create_model_talos,
             params=search_params,
-            experiment_name = "LSTM_parameter_result",
+            experiment_name = "GRU_parameter_result",
             print_params = True,
             clear_session= True)
 
