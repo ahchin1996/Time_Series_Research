@@ -43,10 +43,10 @@ def print_time(text, stime):
     print(text +" "+ str(seconds // 60 // 60)+" hour(s) : " + str(seconds // 60 % 60)  + " minute(s) : " + str(np.round(seconds % 60)) + " second(s)")
 
 #每次需更改項目
-year = 2011
-fd = 'DJI_2011'
-path =  'D:/Time_Series_Research/new_data/DJI/DJI_2011.csv'
-repot_path = 'D:/Time_Series_Research/LSTM code/LSTM_parameter_result/DJI_2011_p.csv'
+year = 2014
+fd = 'HSI_2014'
+path =  'D:/Time_Series_Research/new_data/HSI/HSI_2014.csv'
+repot_path = 'D:/Time_Series_Research/LSTM code/LSTM_parameter_result/HSI_2014_p.csv'
 
 
 INPUT_PATH = os.path.join(path, "inputs")
