@@ -1,0 +1,223 @@
+Starting analysis at  5-May-2021 13:25:47
+DTREG version 10.10.0  (Enterprise Version)
+http://www.dtreg.com
+
+  ============  Project Parameters  ============
+
+Project title: SVR model
+Project file: D:\Time_Series_Research\SVR code\SVR model.dtr
+Target variable: Close
+Number of predictor variables: 8
+Type of model: Support Vector Machine (SVM)
+Type of SVM model: Epsilon-SVR
+SVM kernel function: Linear
+Type of analysis: Regression
+
+  ============  Input Data  ============
+
+Input data file: D:\Time_Series_Research\new_data\HSI\HSI_2017.csv
+Number of variables (data columns): 26
+Data subsetting: Use all data rows
+Number of data rows: 246
+Total weight for all rows: 246
+Rows with missing target or weight values: 0
+Rows with missing predictor values: 0
+
+  ============  Summary of Variables  ============
+
+Number   Variable      Class       Type      Missing rows  Categories
+------  -----------  ---------  -----------  ------------  ----------
+    1   Date         Unused     Categorical          0     
+    2   Close        Target     Continuous           0     
+    3   Volume       Unused     Continuous           0     
+    4   MA_5         Predictor  Continuous           0         246
+    5   MA_20        Predictor  Continuous           0         246
+    6   BBands_up    Predictor  Continuous           0         246
+    7   BBands_down  Predictor  Continuous           0         246
+    8   RSI          Unused     Continuous           0     
+    9   EMA_12       Predictor  Continuous           0         246
+   10   EMA_26       Predictor  Continuous           0         246
+   11   DIF          Unused     Continuous           0     
+   12   DEM          Unused     Continuous           0     
+   13   OSC          Unused     Continuous           0     
+   14   RDP          Unused     Continuous           0     
+   15   BIAS_6       Unused     Continuous           0     
+   16   BIAS_12      Unused     Continuous           0     
+   17   BIAS_24      Predictor  Continuous           0         246
+   18   PSY_12       Unused     Continuous           0     
+   19   PSY_24       Unused     Continuous           0     
+   20   W%R          Unused     Continuous           0     
+   21   %K           Unused     Continuous           0     
+   22   %D           Unused     Continuous           0     
+   23   PROC         Unused     Continuous           0     
+   24   MO           Unused     Continuous           0     
+   25   LAG          Predictor  Continuous           0         246
+   26   BIAS_24_L1   Unused     Continuous           0     
+
+
+
+  ============  SVM Parameters  ============
+
+Type of SVM model: Epsilon-SVR
+SVM kernel function: Linear
+
+SVM grid and pattern searches found optimal values for parameters:
+  Search criterion: Minimize total error
+  Number of points evaluated during search = 175
+  Minimum error found by search = 24011.933202
+
+Parameter values:
+  Epsilon = 0.001
+  C = 56781.3243
+  P = 22.4222097
+
+Number of support vectors used by the model = 219
+
+
+  ============  Time Series Statistics  ============
+
+Linear trend: Close = 22607.201049 + 29.520673*row
+Variance explained by trend = 96.897%
+
+
+ ---  Training Data  ---
+
+Mean target value for input data = 26223.484
+Mean target value for predicted values = 26218.354
+
+Variance in input data = 4535484
+Residual (unexplained) variance after model fit = 22152.843
+Proportion of variance explained by model (R^2) = 0.99512  (99.512%)
+
+Coefficient of variation (CV) = 0.005676
+Normalized mean square error (NMSE) = 0.004884
+Correlation between actual and predicted = 0.997567
+
+Maximum error = 506.57011
+RMSE (Root Mean Squared Error) = 148.83831
+MSE (Mean Squared Error) = 22152.843
+MAE (Mean Absolute Error) = 121.53328
+MAPE (Mean Absolute Percentage Error) = 0.4704733
+
+
+ --- Forecast Time Series Values ---
+
+ Row   Predicted
+-----  ---------
+  247  30045.403
+  248  30074.924
+  249  30104.445
+  250  30133.965
+  251  30163.486
+  252  30193.007
+  253  30222.527
+  254  30252.048
+  255  30281.569
+  256  30311.089
+  257  30340.610
+  258  30370.131
+  259  30399.651
+  260  30429.172
+  261  30458.693
+  262  30488.213
+  263  30517.734
+  264  30547.255
+  265  30576.775
+  266  30606.296
+  267  30635.817
+  268  30665.337
+  269  30694.858
+  270  30724.379
+  271  30753.899
+  272  30783.420
+  273  30812.941
+  274  30842.461
+  275  30871.982
+  276  30901.503
+  277  30931.023
+  278  30960.544
+  279  30990.065
+  280  31019.586
+  281  31049.106
+  282  31078.627
+  283  31108.148
+  284  31137.668
+  285  31167.189
+  286  31196.710
+
+
+ ==============  Hurst Exponent  ==============
+
+Hurst Exponent (rescaled range (R/S) method) = 0.773462
+Hurst Exponent (Blok's dispersional analysis method) = 0.808013
+
+
+  ==============  Autocorrelations and Partial Autocorrelations  ==============
+
+ -----------------------------  Autocorrelations  ------------------------------
+
+Lag  Correlation  Std.Err.     t     -1 9 8 7 6 5 4 3 2 1 0 1 2 3 4 5 6 7 8 9 1
+  1   0.87046156  0.063758   13.653  |                 .  |*****************   |
+  2   0.74747950  0.101120    7.392  |                .   |***************     |
+  3   0.64742404  0.121522    5.328  |               .    |*************       |
+  4   0.52834832  0.134817    3.919  |               .    |***********         |
+  5   0.41801236  0.142986    2.923  |              .     |********            |
+  6   0.32045659  0.147870    2.167  |              .     |******              |
+  7   0.23917849  0.150667    1.587  |              .     |*****.              |
+  8   0.17534397  0.152203    1.152  |              .     |***  .              |
+  9   0.10237557  0.153022    0.669  |              .     |**   .              |
+ 10   0.04826192  0.153300    0.315  |              .     |*    .              |
+ 11   0.00659417  0.153361    0.043  |              .     |     .              |
+ 12  -0.01924381  0.153363    0.125  |              .     |     .              |
+
+
+ -------------------------  Partial Autocorrelations  --------------------------
+
+Lag  Correlation  Std.Err.     t     -1 9 8 7 6 5 4 3 2 1 0 1 2 3 4 5 6 7 8 9 1
+  1   0.87046156  0.063758   13.653  |                 .  |*****************   |
+  2  -0.04219549  0.063758    0.662  |                 .  |  .                 |
+  3   0.02500084  0.063758    0.392  |                 .  |  .                 |
+  4  -0.13627984  0.063758    2.137  |                 .**|  .                 |
+  5  -0.03588442  0.063758    0.563  |                 .  |  .                 |
+  6  -0.03551145  0.063758    0.557  |                 .  |  .                 |
+  7   0.00620098  0.063758    0.097  |                 .  |  .                 |
+  8   0.00933866  0.063758    0.146  |                 .  |  .                 |
+  9  -0.09091274  0.063758    1.426  |                 . *|  .                 |
+ 10   0.01277617  0.063758    0.200  |                 .  |  .                 |
+ 11  -0.01765163  0.063758    0.277  |                 .  |  .                 |
+ 12   0.03950857  0.063758    0.620  |                 .  |* .                 |
+
+ ----------------------  Autocorrelations for Residuals  -----------------------
+
+Lag  Correlation  Std.Err.     t     -1 9 8 7 6 5 4 3 2 1 0 1 2 3 4 5 6 7 8 9 1
+  1   0.94197900  0.063888   14.744  |                 .  |******************* |
+  2   0.88656626  0.106419    8.331  |                .   |******************  |
+  3   0.83891099  0.133197    6.298  |               .    |*****************   |
+  4   0.79388779  0.153253    5.180  |              .     |****************    |
+  5   0.75854493  0.169208    4.483  |             .      |***************     |
+  6   0.71716977  0.182561    3.928  |             .      |**************      |
+  7   0.67553470  0.193719    3.487  |            .       |**************      |
+  8   0.63203064  0.203107    3.112  |            .       |*************       |
+  9   0.57994820  0.210982    2.749  |            .       |************        |
+ 10   0.53486730  0.217391    2.460  |           .        |***********         |
+ 11   0.48801358  0.222698    2.191  |           .        |**********          |
+ 12   0.43674705  0.227021    1.924  |           .        |*********           |
+
+ ------------------  Partial Autocorrelations for Residuals  -------------------
+
+Lag  Correlation  Std.Err.     t     -1 9 8 7 6 5 4 3 2 1 0 1 2 3 4 5 6 7 8 9 1
+  1   0.94197900  0.063758   14.774  |                 .  |******************* |
+  2  -0.00672880  0.063758    0.106  |                 .  |  .                 |
+  3   0.03996763  0.063758    0.627  |                 .  |* .                 |
+  4   0.00024711  0.063758    0.004  |                 .  |  .                 |
+  5   0.06627032  0.063758    1.039  |                 .  |* .                 |
+  6  -0.06757376  0.063758    1.060  |                 .  |  .                 |
+  7  -0.01617603  0.063758    0.254  |                 .  |  .                 |
+  8  -0.04418737  0.063758    0.693  |                 .  |  .                 |
+  9  -0.09864337  0.063758    1.547  |                 . *|  .                 |
+ 10   0.01721869  0.063758    0.270  |                 .  |  .                 |
+ 11  -0.05186560  0.063758    0.813  |                 .  |  .                 |
+ 12  -0.07139375  0.063758    1.120  |                 .  |  .                 |
+
+Finished the analysis at  5-May-2021 13:25:55
+Analysis run time:  00:07.91

@@ -2,8 +2,8 @@ import os
 import pandas as pd
 import numpy as np
 
-path = 'D:/Time_Series_Research/new_data'
-year_list = list(range(2000,2020))
+path = 'D:/Time_Series_Research/new_data/ALL_DATA'
+year_list = list(range(2011,2020))
 
 def statistics_table(path,year_list):
     result = pd.DataFrame()
@@ -40,7 +40,6 @@ def statistics_table(path,year_list):
                         result = pd.concat([result, lst], axis=0)
                     else:
                         print("Not my choice year!\n")
-            result = pd.concat([result,lst], axis=0)
         else:
             print('檔案:', full_path)
     return result

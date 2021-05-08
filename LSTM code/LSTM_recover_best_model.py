@@ -13,7 +13,7 @@ from keras.models import Sequential
 from sklearn.preprocessing import MinMaxScaler
 from keras.optimizers import Adam
 from keras.layers import LSTM, Dense, Flatten
-from feature_list import chose_list
+from feature_list import *
 import talos as ta
 import time
 import tensorflow as tf
