@@ -35,7 +35,7 @@ sess0 = tf.compat.v1.InteractiveSession(config=config)
 stime = time.time()
 
 def get_result(path,fd,fd_2):
-    path = 'D:/Time_Series_Research/new_data/ALL_DATA/DJI/DJI_2019.csv'
+    # path = 'D:/Time_Series_Research/new_data/ALL_DATA/DJI/DJI_2019.csv'
     df_all = pd.read_csv(path,sep=',',header=0)
     date_array = pd.to_datetime(df_all['Date'] )
     print("Number of rows and columns:", df_all.shape)
@@ -111,7 +111,7 @@ def get_result(path,fd,fd_2):
         print(a.shape, b.shape , '\n')
         model.fit(a,
                   b,
-                  epochs=100,
+                  epochs=50,
                   batch_size=64,
                   verbose=2, shuffle=False,
                   callbacks=[custom_early_stopping])
@@ -145,8 +145,6 @@ def get_result(path,fd,fd_2):
     mape = np.mean(np.abs((test_label - new_test_label) / test_label)) * 100
     print('Test MAPE: %.4f' % (mape))
 
-
-
     return  rmse,mape
 
 def find_fd(path):
@@ -175,17 +173,18 @@ def find_fd(path):
                 y = pd.DataFrame(dict_mape)
                 result = pd.concat([result, x], axis=1)
                 result = pd.concat([result, y], axis=1)
+            file_name = fd + "_result_all_feature.csv"
+            output.to_csv(os.path.join(full_path, file_name), index=0, header=1)
+
         else:
             print('檔案:', full_path)
     return result
 
 import time
 start_time = time.time()
-path = 'D:/Time_Series_Research/ALL_DATA'
+path = 'D:/Time_Series_Research/new_data/ALL_DATA'
 output = find_fd(path)
-finish_time = time.time()
-print('Total times : {:.3f}'.format(finish_time-start_time))
 
-output.to_csv(os.path.join(path, 'LSTM_result.csv'), index=0, header=1)
+output.to_csv(os.path.join(path, 'LSTM_result_all_feature.csv'), index=0, header=1)
 print()
 print_time("program completed in", stime)
