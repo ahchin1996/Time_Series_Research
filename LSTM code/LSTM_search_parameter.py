@@ -41,8 +41,8 @@ def print_time(text, stime):
 
 #每次需更改項目
 year = 2011
-fd = 'DJI_2011'
-path =  'D:/Time_Series_Research/new_data/DJI/DJI_2011.csv'
+fd = 'TWII_2011'
+path =  'D:/Time_Series_Research/new_data/TWII/TWII_2011.csv'
 
 df_all = pd.read_csv(path,sep=',',header=0)
 date_array = pd.to_datetime(df_all['Date'] )

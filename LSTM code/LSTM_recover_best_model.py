@@ -44,9 +44,9 @@ def print_time(text, stime):
 
 #每次需更改項目
 year = 2011
-fd = 'DJI_2011'
-path =  'D:/Time_Series_Research/new_data/DJI/DJI_2011.csv'
-repot_path = 'D:/Time_Series_Research/LSTM code/LSTM_parameter_result/DJI_2011_p.csv'
+fd = 'TWII_2011'
+path =  'D:/Time_Series_Research/new_data/TWII/TWII_2011.csv'
+repot_path = 'D:/Time_Series_Research/LSTM code/LSTM_parameter_result/TWII_2011_p.csv'
 
 
 INPUT_PATH = os.path.join(path, "inputs")
