@@ -9,14 +9,11 @@ import os
 from math import sqrt
 import pandas as pd
 import numpy as np
-from keras.models import Sequential
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 import tensorflow as tf
-from keras.layers import LSTM,Dropout,Dense
-from tensorflow.keras.callbacks import EarlyStopping
 from neupy import algorithms
-from feature_list import chose_list
+from feature_list import *
 
 # 控制顯卡內核
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
@@ -34,7 +31,7 @@ def get_result(path,fd,fd_2):
     year = int(year.strip('_.csv'))
 
     #get feature list
-    feature_list = chose_list(fd_2)
+    feature_list = chose_list_all()
 
     new_df = df[['Date', 'Close']]
     for i in range(0, len(feature_list)):
@@ -69,6 +66,7 @@ def get_result(path,fd,fd_2):
 
     new_test_label = []
     all_length = len(new_df)
+    n = split_no
 
     for i in range(0, all_length - split_no):
         print()
@@ -124,36 +122,34 @@ def find_fd(path):
         full_path=os.path.join(path,fd)
         if os.path.isdir(full_path):
             print('Enter dir:',full_path)
-            lst = []
+            rmse_list = []
+            mape_list = []
             for fd_2 in os.listdir(full_path):
                 full_path_2 = os.path.join(full_path, fd_2)
                 if os.path.isdir(full_path_2):
                     continue
                 else:
                     print('檔案:', full_path_2)
-                    year_list = (2001, 2003, 2004, 2008)
-                    year = fd_2.strip(f'{fd}')
-                    year = int(year.strip('_.csv'))
-                    if int(year) in year_list:
-                        rmse, mape = get_result(full_path_2, fd,fd_2)
-                        # lst.append(np.format_float_positional(mse,precision = 5))
-                        lst.append(np.format_float_positional(rmse, precision=5))
-                        lst.append(np.format_float_positional(mape, precision=5))
-                    else:
-                        print("Not my choice year!\n")
-            dict = {fd: lst}
-            x = pd.DataFrame(dict)
+                    rmse, mape = get_result(full_path_2, fd, fd_2)
+                    # lst.append(np.format_float_positional(mse,precision = 5))
+                    rmse_list.append(np.format_float_positional(rmse, precision=5))
+                    mape_list.append(np.format_float_positional(mape, precision=5))
+            dict_rmse = {fd: rmse_list}
+            dict_mape = {fd: mape_list}
+            x = pd.DataFrame(dict_rmse)
+            y = pd.DataFrame(dict_mape)
             result = pd.concat([result, x], axis=1)
+            result = pd.concat([result, y], axis=1)
         else:
             print('檔案:', full_path)
     return result
 
 import time
 start_time = time.time()
-path = 'D:/Time_Series_Research/new_data'
+path = 'D:/Time_Series_Research/new_data/ALL_DATA'
 output = find_fd(path)
 finish_time = time.time()
 print('Total times : {:.3f}'.format(finish_time-start_time))
 
-output.to_csv(os.path.join(path, 'GRNN_result.csv'), index=0, header=1)
+output.to_csv(os.path.join(path, 'GRNN_result_all_feature.csv'), index=0, header=1)
 

@@ -29,7 +29,7 @@ config = tf.compat.v1.ConfigProto(allow_soft_placement=True)
 # 指定GPU顯示卡記憶體用量上限
 gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=0.9)
 # 自動增長GPU記憶體用量
-config.gpu_options.allow_growth = True
+# config.gpu_options.allow_growth = True
 sess0 = tf.compat.v1.InteractiveSession(config=config)
 
 stime = time.time()
@@ -167,12 +167,12 @@ def find_fd(path):
                     # lst.append(np.format_float_positional(mse,precision = 5))
                     rmse_list.append(np.format_float_positional(rmse, precision=5))
                     mape_list.append(np.format_float_positional(mape, precision=5))
-                dict_rmse = {fd: rmse_list}
-                dict_mape = {fd: mape_list}
-                x = pd.DataFrame(dict_rmse)
-                y = pd.DataFrame(dict_mape)
-                result = pd.concat([result, x], axis=1)
-                result = pd.concat([result, y], axis=1)
+            dict_rmse = {fd: rmse_list}
+            dict_mape = {fd: mape_list}
+            x = pd.DataFrame(dict_rmse)
+            y = pd.DataFrame(dict_mape)
+            result = pd.concat([result, x], axis=1)
+            result = pd.concat([result, y], axis=1)
             file_name = fd + "_result_all_feature.csv"
             output.to_csv(os.path.join(full_path, file_name), index=0, header=1)
 

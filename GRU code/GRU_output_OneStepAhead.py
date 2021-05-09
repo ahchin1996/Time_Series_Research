@@ -16,6 +16,8 @@ import tensorflow as tf
 from keras.layers import Dense,GRU
 from tensorflow.keras.callbacks import EarlyStopping
 from keras.optimizers import Adam
+from feature_list import *
+import time
 
 # 控制顯卡內核
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
@@ -24,11 +26,19 @@ gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=0.9)
 config.gpu_options.allow_growth = True
 sess0 = tf.compat.v1.InteractiveSession(config=config)
 
+stime = time.time()
+
 def get_result(path,fd,fd_2):
     # fd_path = 'D:/Data/Stock/new_data/^DJI/^DJI_2000.csv'
-    df = pd.read_csv(path,sep=',',header=0)
-    date_array = pd.to_datetime(df['Date'] )
-    print("Number of rows and columns:", df.shape)
+    df_all = pd.read_csv(path,sep=',',header=0)
+    date_array = pd.to_datetime(df_all['Date'] )
+    print("Number of rows and columns:", df_all.shape)
+
+    feature_list = chose_list_all()
+    df = df_all[['Date', 'Close']]
+    for i in range(0, len(feature_list)):
+        df = pd.concat([df, df_all.iloc[:, feature_list[i]]], axis=1)
+
     year = fd_2.strip(f'{fd}')
     year = int(year.strip('_.csv'))
 
@@ -78,6 +88,7 @@ def get_result(path,fd,fd_2):
 
     new_test_label = []
     all_length = len(df)
+    n = split_no
 
     for i in range(0, all_length - split_no):
         print()
@@ -98,22 +109,23 @@ def get_result(path,fd,fd_2):
 
         # predicting
         x = test_data[i, :]
-        x = x.reshape(1, 23, 1)
+        x = x.reshape(1, x.shape[0], 1)
         testPredict = model.predict(x)
         # new_test_label = np.concatenate([new_test_label,testPredict],axis = 0)
         new_test_label.append(testPredict)
 
         # add next data
-        y = test_data[i, :].reshape(1, 23)
+        y = test_data[i, :]
+        y = y.reshape(1, y.shape[0])
         train_data = np.concatenate([train_data, y], axis=0)
         z = test_label[i].reshape(1, )
         train_label = np.concatenate([train_label, z], axis=0)
 
     new_test_label = np.array(new_test_label)
     new_test_label = new_test_label.reshape(new_test_label.shape[0], 1)
-    test_data = np.concatenate([test_data, new_test_label], axis=1)
-    new_test_label = sc_df.inverse_transform(test_data)
-    new_test_label = new_test_label[:, 23]
+    new_test_set = np.concatenate([test_data, new_test_label], axis=1)
+    new_test_set = sc_df.inverse_transform(new_test_set)
+    new_test_label = new_test_set[:, new_test_set.shape[1] - 1]
 
     test_set = sc_df.inverse_transform(test_set)
     test_label = test_set[:, 0]
@@ -136,36 +148,35 @@ def find_fd(path):
         full_path=os.path.join(path,fd)
         if os.path.isdir(full_path):
             print('Enter dir:',full_path)
-            lst = []
+            rmse_list = []
+            mape_list = []
             for fd_2 in os.listdir(full_path):
                 full_path_2 = os.path.join(full_path, fd_2)
                 if os.path.isdir(full_path_2):
                     continue
                 else:
                     print('檔案:', full_path_2)
-                    year_list = (2001, 2003, 2004, 2008)
-                    year = fd_2.strip(f'{fd}')
-                    year = int(year.strip('_.csv'))
-                    if int(year) in year_list:
-                        rmse, mape = get_result(full_path_2, fd,fd_2)
-                        # lst.append(np.format_float_positional(mse,precision = 5))
-                        lst.append(np.format_float_positional(rmse, precision=5))
-                        lst.append(np.format_float_positional(mape, precision=5))
-                    else:
-                        print("Not my choice year!\n")
-            dict = {fd: lst}
-            x = pd.DataFrame(dict)
+                    mse, mape = get_result(full_path_2, fd, fd_2)
+                    # lst.append(np.format_float_positional(mse,precision = 5))
+                    rmse_list.append(np.format_float_positional(rmse, precision=5))
+                    mape_list.append(np.format_float_positional(mape, precision=5))
+            dict_rmse = {fd: rmse_list}
+            dict_mape = {fd: mape_list}
+            x = pd.DataFrame(dict_rmse)
+            y = pd.DataFrame(dict_mape)
             result = pd.concat([result, x], axis=1)
+            result = pd.concat([result, y], axis=1)
+
         else:
             print('檔案:', full_path)
     return result
 
 import time
 start_time = time.time()
-path = 'D:/chin/new_data'
+path ='D:/Time_Series_Research/new_data/ALL_DATA'
 output = find_fd(path)
-finish_time = time.time()
-print('Total times : {:.3f}'.format(finish_time-start_time))
 
-output.to_csv(os.path.join(path, 'GRU_result.csv'), index=0, header=1)
+output.to_csv(os.path.join(path, 'GRU_result_all_feature.csv'), index=0, header=1)
+print()
+print_time("program completed in", stime)
 
