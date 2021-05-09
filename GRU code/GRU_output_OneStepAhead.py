@@ -19,11 +19,17 @@ from keras.optimizers import Adam
 from feature_list import *
 import time
 
-# 控制顯卡內核
+# hide INFO and WARNING message
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+# control the kernal inside of GPU
+# assgin which one GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+# automatic selection running device
 config = tf.compat.v1.ConfigProto(allow_soft_placement=True)
+# 指定GPU顯示卡記憶體用量上限
 gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=0.9)
-config.gpu_options.allow_growth = True
+# 自動增長GPU記憶體用量
+# config.gpu_options.allow_growth = True
 sess0 = tf.compat.v1.InteractiveSession(config=config)
 
 stime = time.time()
@@ -73,7 +79,6 @@ def get_result(path,fd,fd_2):
     mode='auto'
     )
 
-
     model = Sequential()
     model.add(GRU(units=75, return_sequences=True, input_shape=(train_data.shape[1], 1)))
     model.add(GRU(units=30, return_sequences=True))
@@ -102,10 +107,11 @@ def get_result(path,fd,fd_2):
         print(a.shape, b.shape)
         model.fit(a,
                   b,
-                  epochs=100,
+                  epochs=50,
                   batch_size=64,
                   verbose=2, shuffle=False,
-                  callbacks=[custom_early_stopping])
+                  # callbacks=[custom_early_stopping]
+                  )
 
         # predicting
         x = test_data[i, :]
@@ -136,8 +142,6 @@ def get_result(path,fd,fd_2):
     mape = np.mean(np.abs((test_label - new_test_label) / test_label)) * 100
     print('Test MAPE: %.4f' % (mape))
 
-
-
     return  rmse,mape
 
 def find_fd(path):
@@ -166,7 +170,6 @@ def find_fd(path):
             y = pd.DataFrame(dict_mape)
             result = pd.concat([result, x], axis=1)
             result = pd.concat([result, y], axis=1)
-
         else:
             print('檔案:', full_path)
     return result
@@ -177,6 +180,7 @@ path ='D:/Time_Series_Research/new_data/ALL_DATA'
 output = find_fd(path)
 
 output.to_csv(os.path.join(path, 'GRU_result_all_feature.csv'), index=0, header=1)
+
 print()
 print_time("program completed in", stime)
 

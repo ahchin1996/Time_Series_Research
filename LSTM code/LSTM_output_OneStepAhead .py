@@ -173,9 +173,6 @@ def find_fd(path):
             y = pd.DataFrame(dict_mape)
             result = pd.concat([result, x], axis=1)
             result = pd.concat([result, y], axis=1)
-            file_name = fd + "_result_all_feature.csv"
-            output.to_csv(os.path.join(full_path, file_name), index=0, header=1)
-
         else:
             print('檔案:', full_path)
     return result
