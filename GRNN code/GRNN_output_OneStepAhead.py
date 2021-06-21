@@ -15,12 +15,20 @@ import tensorflow as tf
 from neupy import algorithms
 from feature_list import *
 
-# 控制顯卡內核
+# hide INFO and WARNING message
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+# control the kernal inside of GPU
+# assgin which one GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+# automatic selection running device
 config = tf.compat.v1.ConfigProto(allow_soft_placement=True)
+# 指定GPU顯示卡記憶體用量上限
 gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=0.9)
-config.gpu_options.allow_growth = True
+# 自動增長GPU記憶體用量
+# config.gpu_options.allow_growth = True
 sess0 = tf.compat.v1.InteractiveSession(config=config)
+
+stime = time.time()
 
 def get_result(path,fd,fd_2):
     # fd_path = 'D:/Data/Stock/new_data/^DJI/^DJI_2000.csv'
@@ -145,11 +153,9 @@ def find_fd(path):
     return result
 
 import time
-start_time = time.time()
 path = 'D:/Time_Series_Research/new_data/ALL_DATA'
 output = find_fd(path)
-finish_time = time.time()
-print('Total times : {:.3f}'.format(finish_time-start_time))
 
 output.to_csv(os.path.join(path, 'GRNN_result_all_feature.csv'), index=0, header=1)
 
+print_time("program completed in", stime)

@@ -5,6 +5,8 @@ import backtrader.feeds as btfeeds
 import pandas_datareader as pdr
 from tiingo import TiingoClient
 import time
+import pandas_datareader.data as web
+
 
 
 class RSI_Sta(bt.Strategy):
@@ -34,9 +36,28 @@ class RSI_Sta(bt.Strategy):
 if __name__ == "__main__":
 
     cerebro = bt.Cerebro()
-    data = btfeeds.YahooFinanceData(dataname='AAPL',
-                                    fromdate=datetime.datetime(2019, 1, 1),
-                                    todate=datetime.datetime(2019, 12, 31))
+    # data = btfeeds.YahooFinanceData(dataname='AAPL',
+    #                                 fromdate=datetime.datetime(2019, 1, 1),
+    #                                 todate=datetime.datetime(2019, 12, 31))
+    # data = web.DataReader("^GSPC", 'yahoo', datetime.datetime(2010, 1, 1), datetime.datetime(2019, 12, 31))
+    # data.reset_index(inplace=True)
+    #
+    # data.to_csv("D:/Time_Series_Research/new_data/GSPC.csv", index=0, header=1)
+
+    data = btfeeds.GenericCSVData(
+        dataname="D:/Time_Series_Research/new_data/GSPC.csv",
+        fromdate=datetime.datetime(2019, 1, 1),
+        todate=datetime.datetime(2019, 12, 31),
+        nullvalue=0.0,
+        dtformat=('%Y-%m-%d'),
+        datetime=0,
+        high=2,
+        low=3,
+        open=1,
+        close=4,
+        volume=5,
+        openinterest=-1
+    )
     cerebro.adddata(data)
 
     cerebro.addstrategy(RSI_Sta)

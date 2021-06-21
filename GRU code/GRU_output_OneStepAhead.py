@@ -160,7 +160,7 @@ def find_fd(path):
                     continue
                 else:
                     print('檔案:', full_path_2)
-                    mse, mape = get_result(full_path_2, fd, fd_2)
+                    rmse, mape = get_result(full_path_2, fd, fd_2)
                     # lst.append(np.format_float_positional(mse,precision = 5))
                     rmse_list.append(np.format_float_positional(rmse, precision=5))
                     mape_list.append(np.format_float_positional(mape, precision=5))

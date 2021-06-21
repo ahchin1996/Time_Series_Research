@@ -37,16 +37,11 @@ sess = tf.compat.v1.InteractiveSession(config=config)
 
 stime = time.time()
 
-def print_time(text, stime):
-    seconds = (time.time() - stime)
-    print()
-    print(text +" "+ str(seconds // 60 // 60)+" hours : " + str(seconds // 60 % 60)  + " minutes : " + str(np.round(seconds % 60)) + " seconds")
-
 #每次需更改項目
-year = 2011
-fd = 'TWII_2011'
-path =  'D:/Time_Series_Research/new_data/TWII/TWII_2011.csv'
-repot_path = 'D:/Time_Series_Research/GRU code/GRU_parameter_result/TWII_2011_p.csv'
+year = 2019
+fd = 'DJI_2019'
+path =  'D:/Time_Series_Research/new_data/DJI/DJI_2019.csv'
+repot_path = 'D:/Time_Series_Research/GRU code/GRU_parameter_result/DJI_2019_p.csv'
 
 INPUT_PATH = os.path.join(path, "inputs")
 

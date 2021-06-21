@@ -34,15 +34,10 @@ sess = tf.compat.v1.InteractiveSession(config=config)
 
 stime = time.time()
 
-def print_time(text, stime):
-    seconds = (time.time() - stime)
-    print()
-    print(text +" "+ str(seconds // 60 // 60)+" hours : " + str(seconds // 60 % 60)  + " minutes : " + str(np.round(seconds % 60)) + " seconds")
-
 #每次需更改項目
-year = 2011
-fd = 'TWII_2011'
-path =  'D:/Time_Series_Research/new_data/TWII/TWII_2011.csv'
+year = 2017
+fd = 'HSI_2017'
+path =  'D:/Time_Series_Research/new_data/HSI/HSI_2017.csv'
 
 df_all = pd.read_csv(path,sep=',',header=0)
 date_array = pd.to_datetime(df_all['Date'] )
@@ -119,9 +114,9 @@ def create_model_talos(train_data, train_label, x_val, y_val, params):
 
     if params["gru_layers"] == 2:
         gru_model.add(GRU(params["gru_2_model"], return_sequences = True))
-        gru_model.add(Flatten())
+        gru_model.add(GRU(units=30))
     else:
-        gru_model.add(Flatten())
+        gru_model.add(GRU(units=30))
 
     gru_model.add(Dense(1,activation= "relu"))
 

@@ -14,35 +14,48 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
 from tensorflow.keras.callbacks import EarlyStopping
-from keras.layers import LSTM, Dropout, Dense, GRU
+from keras.layers import  Dense, GRU, Dropout, Flatten
 import tensorflow as tf
-from keras.optimizers import Adadelta
+from feature_list import *
 from keras.optimizers import Adam
 
-# 控制顯卡內核
+# hide INFO and WARNING message
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+# assgin which one GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-config = tf.compat.v1.ConfigProto(allow_soft_placement=True)
-gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=0.9)
+# control the kernal inside of GPU
+config = tf.compat.v1.ConfigProto()
+# 指定GPU顯示卡記憶體用量上限
+# config.gpu_options.per_process_gpu_memory_fraction = .75
+# automatic selection running device
+config.allow_soft_placement = True
+# 自動增長GPU記憶體用量
 config.gpu_options.allow_growth = True
-sess0 = tf.compat.v1.InteractiveSession(config=config)
+sess = tf.compat.v1.InteractiveSession(config=config)
 
-fd_path =  'D:/Time_Series_Research/new_data/TWII/TWII_2008.csv'
-df = pd.read_csv(fd_path, sep=',', header=0)
+stime = time.time()
 
-str_in = input("Whic feature you want to choose？")
-year = eval(input("Input your year?"))
+#每次需更改項目
+path =  'D:/Time_Series_Research/new_data/ALL_DATA/DJI/DJI_2019.csv'
 
-if str_in.lower() == "all":
-    new_df = df
-else:
-    choose_feature = [int(n) for n in str_in.split()]
-    new_df = df[['Date', 'Close']]
-    for i in range(0,len(choose_feature)):
-        new_df = pd.concat([new_df, df.iloc[:, choose_feature[i]]], axis=1)
+dirname, basename = os.path.split(path)
+root, extension = os.path.splitext(path)
+stockName = dirname.split("/")[-1]
+year = int(basename.strip(extension)[-4:])
+fd = basename.strip(extension)
+
+df_all = pd.read_csv(path,sep=',',header=0)
+date_array = pd.to_datetime(df_all['Date'] )
+print("Number of rows and columns:", df_all.shape)
+
+# feature_list = chose_list_all()
+feature_list = chose_list(fd)
+
+new_df = df_all[['Date', 'Close']]
+for i in range(0, len(feature_list)):
+    new_df = pd.concat([new_df, df_all.iloc[:, feature_list[i]]], axis=1)
 
 new_df.columns
-
-date_array = pd.to_datetime(new_df['Date'])
 print("Number of rows and columns:", new_df.shape)
 
 split_no = 0
@@ -52,6 +65,8 @@ print(split_no)
 
 new_df.drop(['Date'], axis=1, inplace=True)
 new_df.head(5)
+
+new_df_orign = pd.DataFrame(new_df)
 
 sc_df = MinMaxScaler(feature_range = (0, 1))
 new_df = sc_df.fit_transform(new_df)
@@ -64,36 +79,43 @@ train_label = train_set[:,0]
 test_data = test_set[:,1:]
 test_label = test_set[:,0]
 
+x_train = np.reshape(train_data,(train_data.shape[0],1,train_data.shape[1]))
+y_train = np.reshape(train_label,(train_label.shape[0],1))
+
 print(f"Train_data shape : {train_data.shape}\n"
       f"Train_label shape :{train_label.shape}\n"
       f"Test_data shape :{test_data.shape}\n"
       f"Test_label shape :{test_label.shape}\n")
 
-print(fd_path,"\n")
-
 custom_early_stopping = EarlyStopping(
     monitor='loss',
-    patience=30,
+    patience=100,
     min_delta=0.01,
-    mode='auto'
+    mode='min'
 )
 
 #Built Model
 model = Sequential()
-model.add(GRU(units = 75, return_sequences = True, input_shape = (train_data.shape[1], 1)))
-model.add(GRU(units = 30, return_sequences = True))
-model.add(GRU(units = 30, return_sequences = True))
-model.add(GRU(units = 30))
-model.add(Dense(units = 1))
+model.add(GRU(units=80, return_sequences=True, input_shape=(1,x_train.shape[2])))
+# model.add(GRU(units=50, return_sequences=True))
+# model.add(GRU(units=30, return_sequences=True))
+# model.add(GRU(units=30))
+model.add(Flatten())
+model.add(Dense(units=1))
 
 # sgd = Adadelta(lr=1.0, rho=0.95, epsilon=None, decay=0.0)
 # ad = Adam(learning_rate=0.001)
 
-model.compile(optimizer = "adam" , loss = 'mean_squared_error',metrics=['accuracy'])
+model.compile(optimizer = Adam(lr = 0.001) , loss = 'mean_squared_error',metrics=['accuracy'])
 
 # model.save('Model_LSTM.h5')
 
 model.summary()
+
+a = train_data
+b = train_label
+a = a.reshape(a.shape[0],1, a.shape[1])
+b = b.reshape(b.shape[0], )
 
 new_test_label = []
 all_length = len(new_df)
@@ -102,60 +124,67 @@ n = split_no
 for i in range(0, all_length - split_no):
     print()
     print(f"No. {i + 1} Model training! Total number of times {all_length - split_no}!\n")
-    print(fd_path + "\n")
+    print(path + "\n")
     #training model
-    a = train_data
-    b = train_label
-    a = a.reshape((a.shape[0], a.shape[1], 1))
-    b = b.reshape((b.shape[0], 1))
-    print(a.shape, b.shape , '\n')
+
+    print(a.shape, b.shape)
     model.fit(a,
               b,
-              epochs=100,
-              batch_size=64,
-              verbose=2, shuffle=False,
+              epochs=80,
+              batch_size = 64,
+              verbose=2,
+              shuffle=False,
               callbacks=[custom_early_stopping])
 
     # fit network
     #predicting
     x = test_data[i, :]
-    x = x.reshape(1,x.shape[0],1)
+    x = x.reshape(1,1,x.shape[0])
     testPredict = model.predict(x)
     # new_test_label = np.concatenate([new_test_label,testPredict],axis = 0)
     new_test_label.append(testPredict)
 
     #add next data
     y = test_data[i, :]
-    y = y.reshape(1,y.shape[0])
-    train_data = np.concatenate([train_data,y],axis = 0)
-    z = test_label[i].reshape(1,)
-    train_label = np.concatenate([train_label,z], axis=0)
+    y = y.reshape(1, 1, y.shape[0])
+    train_data = np.concatenate([a, y], axis=0)
+    z = test_label[i].reshape(1, )
+    train_label = np.concatenate([b, z], axis=0)
 
 new_test_label = np.array(new_test_label)
-new_test_label = new_test_label.reshape(new_test_label.shape[0],1)
-new_test_set = np.concatenate([test_data,new_test_label],axis = 1)
+new_test_label = new_test_label.reshape(new_test_label.shape[0], 1)
+new_test_set = np.concatenate([test_data, new_test_label], axis=1)
 new_test_set = sc_df.inverse_transform(new_test_set)
-new_test_label = new_test_set[:,new_test_set.shape[1]-1]
+new_test_label = new_test_set[:, new_test_set.shape[1] - 1]
 
-test_set = sc_df.inverse_transform(test_set)
-test_label = test_set[:,0]
+test_label = np.array(new_df_orign.iloc[split_no:,0])
 
+print(fd)
 testScore = sqrt(mean_squared_error(test_label, new_test_label))
 print('Test RMSE: %.4f' % (testScore))
 
-mape = sum(np.abs((test_label - new_test_label)/test_label))/n*100
+mape = np.mean(np.abs((test_label - new_test_label)/test_label) )*100
 print('Test MAPE: %.4f' % (mape))
 
-flg ,ax = plt.subplots(1,1)
-plt.plot(date_array[split_no:], test_label, color ='red', label ='Real Stock Price')
-plt.plot(date_array[split_no:], new_test_label, color ='blue', label ='Predicted Stock Price')
-plt.title('Stock Price Prediction')
-plt.xlabel('Time')
-plt.xticks(rotation = 30)
-plt.ylabel('Stock Price')
-plt.legend()
-plt.show()
+print_time("program completed in", stime)
 
+
+new_test_label = pd.DataFrame(new_test_label)
+# new_test_label.to_csv("D:/Time_Series_Research/remuneration/"+fd+"_GRU_full.csv", index=0, header=0)
+new_test_label.to_csv("D:/Time_Series_Research/remuneration/"+fd+"_GRU_selected.csv", index=0, header=0)
+
+# flg ,ax = plt.subplots(1,1)
+# plt.plot(date_array[split_no:], test_label, color ='red', label ='Real Stock Price')
+# plt.plot(date_array[split_no:], new_test_label, color ='blue', label ='Predicted Stock Price')
+# plt.title(fd+" GRU")
+# plt.xlabel('Time')
+# plt.xticks(rotation = 30)
+# plt.ylabel('Stock Price')
+# plt.legend()
+# plt.show()
+#
+# new_test_label = pd.DataFrame(new_test_label)
+# new_test_label.to_csv("D:/Time_Series_Research/remuneration/GSPC_2012_GRU_pred.csv", index=0, header=0)
 # # flg ,ax = plt.subplots(1,1)
 # # plt.plot(history.history['loss'], label='train')
 # # plt.plot(history.history['val_loss'], label='test')

@@ -14,11 +14,12 @@ from keras.models import Sequential
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 from keras.optimizers import Adam
-from keras.layers import LSTM, Dense
+from keras.layers import LSTM, Dense, Dropout,Flatten
 import tensorflow as tf
-from feature_list import chose_list
+from feature_list import *
 from keras.callbacks import EarlyStopping
 import time
+import matplotlib.pyplot as plt
 
 # hide INFO and WARNING message
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -27,30 +28,31 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 # control the kernal inside of GPU
 config = tf.compat.v1.ConfigProto()
 # 指定GPU顯示卡記憶體用量上限
-config.gpu_options.per_process_gpu_memory_fraction = .85
+# config.gpu_options.per_process_gpu_memory_fraction = .85
 # automatic selection running device
 config.allow_soft_placement = True
 # 自動增長GPU記憶體用量
-# config.gpu_options.allow_growth = True
+config.gpu_options.allow_growth = True
 sess = tf.compat.v1.InteractiveSession(config=config)
 
 stime = time.time()
 
-def print_time(text, stime):
-    seconds = (time.time() - stime)
-    print()
-    print(text + " " + str(seconds // 60) + " minutes : " + str(np.round(seconds % 60)) + " seconds")
-
 #每次需更改項目
-year = 2019
-fd = 'TWII_2019'
-path =  'D:/Time_Series_Research/new_data/TWII/TWII_2019.csv'
+path =  'D:/Time_Series_Research/new_data/ALL_DATA/DJI/DJI_2019.csv'
+
+dirname, basename = os.path.split(path)
+root, extension = os.path.splitext(path)
+stockName = dirname.split("/")[-1]
+year = int(basename.strip(extension)[-4:])
+fd = basename.strip(extension)
 
 df_all = pd.read_csv(path,sep=',',header=0)
 date_array = pd.to_datetime(df_all['Date'] )
 print("Number of rows and columns:", df_all.shape)
 
+# feature_list = chose_list_all()
 feature_list = chose_list(fd)
+
 new_df = df_all[['Date', 'Close']]
 for i in range(0, len(feature_list)):
     new_df = pd.concat([new_df, df_all.iloc[:, feature_list[i]]], axis=1)
@@ -63,19 +65,6 @@ split_no = 0
 while date_array.iloc[split_no] < datetime(year, 11, 1, 0, 0):
     split_no +=1
 print(split_no)
-
-def getLAG(price, period):
-    lag = price.shift(period)
-    return lag
-#
-# new_df["BBands_down_L1"] = getLAG(new_df.BBands_down,1)
-# new_df["BBands_down_L2"] = getLAG(new_df.BBands_down,2)
-# new_df.fillna(new_df.BBands_down[0],inplace=True)
-#
-# new_df["BIAS_6_L1"] = getLAG(new_df.BIAS_6,1)
-# new_df.fillna(new_df.BIAS_6[0],inplace=True)
-# new_df["BIAS_24_L1"] = getLAG(new_df.BIAS_24,1)
-# new_df.fillna(new_df.BIAS_24[0],inplace=True)
 
 new_df.drop(['Date'], axis=1, inplace=True)
 new_df.head(5)
@@ -93,28 +82,13 @@ train_label = train_set[:,0]
 test_data = test_set[:,1:]
 test_label = test_set[:,0]
 
+x_train = np.reshape(train_data,(train_data.shape[0],1,train_data.shape[1]))
+y_train = np.reshape(train_label,(train_label.shape[0],1))
+
 print(f"Train_data shape : {train_data.shape}\n"
       f"Train_label shape :{train_label.shape}\n"
       f"Test_data shape :{test_data.shape}\n"
       f"Test_label shape :{test_label.shape}")
-
-# x_train = train_data[:-10,:]
-# x_val = train_data[-10:,:]
-#
-# y_train = train_label[:-10]
-# y_val = train_label[-10:]
-#
-# ######################################
-# x_train = x_train.reshape(x_train.shape[0],1,x_train.shape[1])
-# x_val = np.reshape(x_val,(x_val.shape[0],1,x_val.shape[1]))
-#
-# y_train = np.reshape(y_train,(y_train.shape[0],1))
-# y_val = np.reshape(y_val,(y_val.shape[0],1))
-#
-# print(f"x_train shape : {x_train.shape}\n"
-# f"x_val shape :{x_val.shape}\n"
-# f"y_train shape :{y_train.shape}\n"
-# f"y_val shape :{y_val.shape}")
 
 custom_early_stopping = EarlyStopping(
     monitor='loss',
@@ -125,14 +99,21 @@ custom_early_stopping = EarlyStopping(
 
 # Built Model
 model = Sequential()
-model.add(LSTM(units = 30, input_shape=(1,train_data.shape[1]), return_sequences=True) )
-# model.add(LSTM(units = 30, return_sequences = True))
-model.add(LSTM(units = 70))
+model.add(LSTM(units = 50, input_shape=(1,x_train.shape[2]), return_sequences=True) )
+# model.add(LSTM(units = 50, return_sequences = True))
+# model.add(LSTM(units = 1))
+model.add(Flatten())
 model.add(Dense(units = 1))
-model.compile(optimizer=Adam(lr=0.1), loss='mean_squared_error', metrics=['accuracy'])
+
+model.compile(optimizer=Adam(lr=0.001), loss='mean_squared_error', metrics=['accuracy'])
 # model.save('Model_LSTM.h5')
 
 model.summary()
+
+# model.save("DJI_2018_LSTM.h5")
+# from keras.models import load_model
+#
+# model = load_model("DJI_2018_LSTM.h5")
 
 a = train_data
 b = train_label
@@ -152,8 +133,8 @@ for i in range(0, all_length - split_no):
     print(a.shape, b.shape)
     model.fit(a,
               b,
-              epochs=50,
-              batch_size=128,
+              epochs=80,
+              batch_size = 64,
               verbose=2,
               shuffle=False,
               callbacks=[custom_early_stopping])
@@ -181,6 +162,7 @@ new_test_label = new_test_set[:, new_test_set.shape[1] - 1]
 
 test_label = np.array(new_df_orign.iloc[split_no:,0])
 
+print(fd)
 testScore = sqrt(mean_squared_error(test_label, new_test_label))
 print('Test RMSE: %.4f' % (testScore))
 
@@ -188,3 +170,17 @@ mape = np.mean(np.abs((test_label - new_test_label)/test_label) )*100
 print('Test MAPE: %.4f' % (mape))
 
 print_time("program completed in", stime)
+
+new_test_label = pd.DataFrame(new_test_label)
+# new_test_label.to_csv("D:/Time_Series_Research/remuneration/"+fd+"_LSTM_full.csv", index=0, header=0)
+new_test_label.to_csv("D:/Time_Series_Research/remuneration/"+fd+"_LSTM_selected.csv", index=0, header=0)
+
+# flg ,ax = plt.subplots(1,1)
+# plt.plot(date_array[split_no:], test_label, color ='red', label ='Real Stock Price')
+# plt.plot(date_array[split_no:], new_test_label, color ='blue', label ='Predicted Stock Price')
+# plt.title(fd + "_LSTM")
+# plt.xlabel('Time')
+# plt.xticks(rotation = 30)
+# plt.ylabel('Stock Price')
+# plt.legend()
+# plt.show()
