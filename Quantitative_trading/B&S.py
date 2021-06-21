@@ -35,11 +35,11 @@ def Profitability(forecast_path,origin_path):
 
     for i in range(0,len(origin_close)-1):
         #buy
-        if (forecast_close[i + 1] - origin_close[i]) < 0 and stock == 0:
+        if (forecast_close[i + 1] - origin_close[i]) > 0 and stock == 0:
             stock += 1
             sig.append(1)
         #sell
-        elif (forecast_close[i + 1] - origin_close[i]) > 0  and stock == 1:
+        elif (forecast_close[i + 1] - origin_close[i]) < 0  and stock == 1:
             stock -= 1
             sig.append(-1)
         else:
@@ -140,4 +140,4 @@ pro_list = pd.DataFrame(pro)
 name_list = pd.DataFrame(name)
 result = pd.concat([name_list,pro_list],axis=1)
 
-result.to_csv( "D:/Time_Series_Research/remuneration/A_pro.csv",index=0,header=0)
+# result.to_csv( "D:/Time_Series_Research/remuneration/A_pro.csv",index=0,header=0)
