@@ -34,11 +34,11 @@ def Profitability(forecast_path,origin_path):
     sig = []
 
     for i in range(0,len(origin_close)-1):
-        #buy
+        #買入訊號
         if (forecast_close[i + 1] - origin_close[i]) > 0 and stock == 0:
             stock += 1
             sig.append(1)
-        #sell
+        #賣出訊號
         elif (forecast_close[i + 1] - origin_close[i]) < 0  and stock == 1:
             stock -= 1
             sig.append(-1)
